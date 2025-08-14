@@ -22,16 +22,8 @@ This adds an immersive and fun mechanic to the game, allowing for creative traps
 **Server-Side Config Path:**  
 /YOUR_WORLD/serverconfig/attracttochat-server.toml
 
-arduino
-Copiar
-Editar
-
 **Client-Side (Per-World) Config Path:**  
 /saves/YOUR_WORLD/serverconfig/attracttochat-server.toml
-
-yaml
-Copiar
-Editar
 
 You can edit these files to:
 - Change the maximum hearing range.
