@@ -8,7 +8,7 @@ This adds an immersive and fun mechanic to the game, allowing for creative traps
 🔗 Official Download Sources
 
 - [GitHub Repository](https://github.com/bielzinrx/Attract-To-Chat/)  
-- *(Coming soon)* CurseForge Page
+- [📥 CurseForge Page](https://www.curseforge.com/minecraft/mc-mods/attract-to-chat)
 - *(Coming soon)* Modrinth Page
 ---
 
