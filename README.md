@@ -5,6 +5,12 @@ When you type a message in the chat, nearby mobs listed in the configuration wil
 
 This adds an immersive and fun mechanic to the game, allowing for creative traps, roleplay scenarios, or just a new challenge when exploring.
 
+🔗 Official Download Sources
+
+Modrinth
+CurseForge
+GitHub
+
 ---
 
 ## Main Features
