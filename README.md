@@ -9,7 +9,7 @@ This adds an immersive and fun mechanic to the game, allowing for creative traps
 
 - [GitHub Repository](https://github.com/bielzinrx/Attract-To-Chat/)  
 - *(Coming soon)* CurseForge Page
-
+- *(Coming soon)* Modrinth Page
 ---
 
 ## Main Features
