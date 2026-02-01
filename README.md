@@ -26,22 +26,22 @@ This adds a unique mechanic to the game, perfect for creative traps, roleplay sc
 
 ## ✨ Main Features
 
-### 🎯 Mob Attraction by Chat
+### Mob Attraction by Chat
 - Specific mobs will navigate to your position when you send a chat message
 - Works with both vanilla and modded mobs
 
-### 📢 CAPS LOCK = LOUDER!
+### CAPS LOCK = LOUDER!
 - **More uppercase letters = Greater range**
 - **More uppercase letters = Mobs chase longer**
 - **More uppercase letters = Mobs move faster**
 - But be careful... shouting too much has consequences!
 
-### 😫 Vocal Fatigue System
+### Vocal Fatigue System
 - Spamming CAPS LOCK can cause **Vocal Fatigue** effect
 - While fatigued, you cannot speak or use voice commands
 - Trying to speak while fatigued makes it worse!
 
-### 💊 Healing System
+### Healing System
 | Item | Effect |
 |------|--------|
 | 🍯 **Honey Bottle** | Strong relief (60s) |
@@ -50,7 +50,7 @@ This adds a unique mechanic to the game, perfect for creative traps, roleplay sc
 | 💧 **Water Bottle** | Light relief (10s) |
 | ☠️ **Poison/Harming** | Makes it WORSE! (+60s) |
 
-### ✨ Visual Feedback
+### Visual Feedback
 - Particles appear above mobs when they hear you
 - Action bar messages for warnings (less intrusive than chat)
 - Sound effects for healing and damage
@@ -146,21 +146,21 @@ Works in both **singleplayer** and **multiplayer**!
 ## 📝 Changelog
 
 ### v2.0.0
-- ✨ **NEW:** Vocal Fatigue System - Shouting (CAPS LOCK) can strain your voice!
-- ✨ **NEW:** CAPS LOCK Boost - More uppercase = Greater range + Faster mobs + Longer chase
-- ✨ **NEW:** Healing System - Honey, Milk, Water, and Soups heal your throat
-- ✨ **NEW:** `/attracthelp` command for help
-- ✨ **NEW:** `/attractstats` command for session statistics
-- ✨ **NEW:** `/attractdebug` command for debug mode
-- ✨ **NEW:** Visual particles when mobs are attracted (configurable)
-- ✨ **NEW:** Action bar messages (less intrusive)
-- ✨ **NEW:** Sound feedback for throat warnings
-- ✨ **NEW:** Automatic cleanup of dead mobs
-- ✨ **NEW:** 3 Languages: English, Portuguese, Spanish
-- ✅ **FIXED:** `scanCooldownTicks` now works correctly
-- ✅ **FIXED:** `forgetTargetAfterSeconds` now controls mob pursuit time
-- 🎨 **IMPROVED:** Better formatted messages with colors
-- 🎨 **IMPROVED:** Thread-safe mob data storage
+-  **NEW:** Vocal Fatigue System - Shouting (CAPS LOCK) can strain your voice!
+-  **NEW:** CAPS LOCK Boost - More uppercase = Greater range + Faster mobs + Longer chase
+-  **NEW:** Healing System - Honey, Milk, Water, and Soups heal your throat
+-  **NEW:** `/attracthelp` command for help
+-  **NEW:** `/attractstats` command for session statistics
+-  **NEW:** `/attractdebug` command for debug mode
+-  **NEW:** Visual particles when mobs are attracted (configurable)
+-  **NEW:** Action bar messages (less intrusive)
+-  **NEW:** Sound feedback for throat warnings
+-  **NEW:** Automatic cleanup of dead mobs
+-  **NEW:** 3 Languages: English, Portuguese, Spanish
+-  **FIXED:** `scanCooldownTicks` now works correctly
+-  **FIXED:** `forgetTargetAfterSeconds` now controls mob pursuit time
+-  **IMPROVED:** Better formatted messages with colors
+-  **IMPROVED:** Thread-safe mob data storage
 
 ### v1.0.1
 - Added English and Portuguese tips in config file
@@ -174,5 +174,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 <p align="center">
-  Made with ❤️ by <b>Bielzinrx</b>
+  Made with ❤️ by <b>Bielzinrx and Theus452</b>
 </p>
