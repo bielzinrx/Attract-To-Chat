@@ -1,7 +1,5 @@
 # Changelog para Upload (CurseForge/Modrinth)
 
-Este é o changelog que aparece quando clicam em "Files" > versão específica:
-
 ---
 
 ## v2.0.0 - The Vocal Fatigue Update
