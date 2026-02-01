@@ -1,7 +1,5 @@
 PLANET MINECRAFT - Main Page Description
 
-Copy this BBCode for your Planet Minecraft mod page:
-
 ============================================================
 
 [center][size=6][b]🔊 Attract to Chat[/b][/size]
