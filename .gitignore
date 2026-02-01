@@ -1,0 +1,42 @@
+# Compiled files
+build/
+out/
+bin/
+*.class
+
+# Gradle
+.gradle/
+gradle/wrapper/gradle-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.project
+.classpath
+.settings/
+*.launch
+.metadata/
+eclipse/
+.vscode/
+
+# Mac
+.DS_Store
+
+# Run folder (Minecraft test environment)
+run/
+runs/
+
+# Logs
+logs/
+*.log
+
+# Temp files
+*.tmp
+*.bak
+*.swp
+*~
+
+# Generated
+src/generated/

@@ -1,0 +1,47 @@
+modLoader="javafml"
+loaderVersion="${loader_version_range}"
+license="${mod_license}"
+issueTrackerURL="${mod_issue_tracker}"
+displayURL="${mod_url}"
+
+[[mods]]
+modId="${mod_id}"
+version="${mod_version}"
+displayName="${mod_name}"
+authors="${mod_authors}"
+credits="${mod_credits}"
+logoFile="icon.png"
+description='''${mod_description}
+
+=== Features / Recursos ===
+
+[Mob Attraction / Atração de Mobs]
+• Mobs "hear" chat messages and move toward the sender's location
+• Mobs "ouvem" mensagens do chat e vão até o local do jogador
+
+[CAPS LOCK Boost]
+• Typing in CAPS LOCK increases the hearing range of mobs
+• Digitar em CAPS LOCK aumenta o alcance de audição dos mobs
+
+[Voice Fatigue System / Sistema de Fadiga Vocal]
+• Spamming chat applies the "Vocal Fatigue" debuff effect
+• Spam no chat aplica o efeito negativo "Fadiga Vocal"
+• Higher levels reduce attraction range and movement speed
+• Níveis mais altos reduzem o alcance e velocidade de movimento
+• Effect stacks with repeated spam - use chat wisely!
+• O efeito acumula com spam repetido - use o chat com sabedoria!
+'''
+
+[[dependencies.${mod_id}]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="forge"
+    mandatory=true
+    versionRange="${forge_version_range}"
+    ordering="NONE"
+    side="BOTH"

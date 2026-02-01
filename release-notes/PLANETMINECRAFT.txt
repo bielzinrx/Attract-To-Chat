@@ -1,0 +1,84 @@
+PLANET MINECRAFT - Main Page Description
+
+Copy this BBCode for your Planet Minecraft mod page:
+
+============================================================
+
+[center][size=6][b]🔊 Attract to Chat[/b][/size]
+
+[i]Make mobs react to your chat messages![/i][/center]
+
+[hr]
+
+[b]Attract to Chat[/b] is a gameplay mod that makes mobs react to player chat messages!
+
+When you type a message in the chat, nearby mobs will "hear" it and walk toward the exact location where the message was sent. This adds an immersive mechanic to the game, perfect for creative traps, roleplay scenarios, or just a new challenge when exploring.
+
+[hr]
+
+[size=5][b]🎯 Main Features[/b][/size]
+
+[b]📢 Mob Attraction by Chat[/b]
+Specific mobs will navigate to your position when you send a chat message. Works with both vanilla and modded mobs!
+
+[b]🔊 CAPS LOCK = LOUDER![/b]
+• More uppercase = Greater hearing range
+• More uppercase = Mobs chase longer
+• More uppercase = Mobs move faster
+• But be careful... shouting has consequences!
+
+[b]😫 Vocal Fatigue System[/b]
+Spamming CAPS LOCK can strain your voice!
+• Vocal Fatigue debuff prevents you from speaking
+• Trying to speak while fatigued makes it worse
+• At extreme levels, you'll also get Nausea
+
+[b]💊 Healing System[/b]
+• 🍯 Honey Bottle - Strong relief (60s)
+• 🥛 Milk Bucket - Complete cure
+• 🍲 Soups/Stews - Moderate relief (15s)
+• 💧 Water Bottle - Light relief (10s)
+• ☠️ Poison potions - Makes it WORSE!
+
+[b]✨ Visual Feedback[/b]
+• Particles appear above mobs when attracted
+• Action bar warnings (less intrusive)
+• Sound effects for healing and damage
+
+[hr]
+
+[size=5][b]📜 Commands[/b][/size]
+
+• /attracthelp - Shows help
+• /attractstats - View your statistics
+• /attractlist - List enabled mobs (OP)
+• /attractreload - Reload config (OP)
+• /attractdebug - Debug mode (OP)
+
+[hr]
+
+[size=5][b]🌐 Languages[/b][/size]
+
+• 🇺🇸 English
+• 🇧🇷 Portuguese (Brazil)
+• 🇪🇸 Spanish
+
+[hr]
+
+[size=5][b]📥 Downloads[/b][/size]
+
+[url=https://www.curseforge.com/minecraft/mc-mods/attract-to-chat]CurseForge[/url] | [url=https://modrinth.com/mod/attract-to-chat]Modrinth[/url] | [url=https://github.com/bielzinrx/Attract-To-Chat]GitHub[/url]
+
+[hr]
+
+[size=5][b]⚙️ Requirements[/b][/size]
+
+• Minecraft: 1.20.1
+• Mod Loader: Forge 47.4.0+
+• Side: Server-side only (clients don't need it)
+
+Works in singleplayer and multiplayer!
+
+[hr]
+
+[center][size=3]Made with ❤️ by [b]Bielzinrx[/b][/size][/center]
