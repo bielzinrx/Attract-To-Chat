@@ -1,7 +1,5 @@
 # CurseForge - Main Page Description
 
-Copy this for your CurseForge mod description:
-
 ---
 
 **Attract to Chat** is a gameplay mod that makes mobs react to player chat messages!
