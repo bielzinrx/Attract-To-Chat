@@ -1,7 +1,5 @@
 # Modrinth - Main Page Description
 
-Copy this for your Modrinth mod description:
-
 ---
 
 # 🔊 Attract to Chat
