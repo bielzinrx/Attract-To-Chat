@@ -6,6 +6,10 @@
   <img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="License"/>
 </p>
 
+<p align="center">
+  <img src="https://media.forgecdn.net/attachments/description/null/description_6350cc0a-6b1d-426b-afe3-ce097e3105e8.png" alt="Attract to Chat Mod"/>
+</p>
+
 **Attract to Chat** is an immersive gameplay mod for Minecraft that makes mobs react to player chat messages!  
 When you type a message in chat, nearby mobs will "hear" it and walk toward the exact location where the message was sent.
 
