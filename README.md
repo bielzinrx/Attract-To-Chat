@@ -21,7 +21,7 @@ This adds a unique mechanic to the game, perfect for creative traps, roleplay sc
  
 - [📥 CurseForge Page](https://www.curseforge.com/minecraft/mc-mods/attract-to-chat)
 - [📥 Modrinth Page](https://modrinth.com/mod/attract-to-chat)
-- [📥 Planet Minecraft Page](Coming Soon...)
+- 📥 Planet Minecraft Page (Coming Soon...)
 
 ---
 
