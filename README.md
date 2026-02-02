@@ -21,6 +21,7 @@ This adds a unique mechanic to the game, perfect for creative traps, roleplay sc
  
 - [📥 CurseForge Page](https://www.curseforge.com/minecraft/mc-mods/attract-to-chat)
 - [📥 Modrinth Page](https://modrinth.com/mod/attract-to-chat)
+- [📥 Planet Minecraft Page]([https://modrinth.com/mod/attract-to-chat](https://www.planetminecraft.com/mod/attract-to-chat-mob-attraction-by-chat-messages/))
 
 ---
 
@@ -161,9 +162,6 @@ Works in both **singleplayer** and **multiplayer**!
 -  **FIXED:** `forgetTargetAfterSeconds` now controls mob pursuit time
 -  **IMPROVED:** Better formatted messages with colors
 -  **IMPROVED:** Thread-safe mob data storage
-
-### v1.0.1
-- Added English and Portuguese tips in config file
 
 ---
 
