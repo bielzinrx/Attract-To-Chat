@@ -1,4 +1,4 @@
-# 🔊 Attract to Chat
+#  Attract to Chat
 
 <p align="center">
   <img src="https://img.shields.io/badge/Minecraft-1.20.1-green?style=for-the-badge&logo=minecraft" alt="Minecraft 1.20.1"/>
@@ -17,7 +17,7 @@ This adds a unique mechanic to the game, perfect for creative traps, roleplay sc
 
 ---
 
-## 🔗 Official Download Sources
+## • Official Download Sources
  
 - [📥 CurseForge Page](https://www.curseforge.com/minecraft/mc-mods/attract-to-chat)
 - [📥 Modrinth Page](https://modrinth.com/mod/attract-to-chat)
@@ -25,7 +25,7 @@ This adds a unique mechanic to the game, perfect for creative traps, roleplay sc
 
 ---
 
-## ✨ Main Features
+## • Main Features
 
 ### Mob Attraction by Chat
 - Specific mobs will navigate to your position when you send a chat message
@@ -58,7 +58,7 @@ This adds a unique mechanic to the game, perfect for creative traps, roleplay sc
 
 ---
 
-## ⚙️ Configuration
+## • Configuration
 
 **Config Path:**  
 `config/attracttochat-common.toml`
@@ -103,7 +103,7 @@ poisonWorsen = 60
 
 ---
 
-## 📜 Commands
+## • Commands
 
 | Command | Permission | Description |
 |---------|------------|-------------|
@@ -115,7 +115,7 @@ poisonWorsen = 60
 
 ---
 
-## 🌐 Supported Languages
+## • Supported Languages
 
 - 🇺🇸 English (en_us)
 - 🇧🇷 Portuguese - Brazil (pt_br)
@@ -123,7 +123,7 @@ poisonWorsen = 60
 
 ---
 
-## 📊 Compatibility
+## • Compatibility
 
 | | |
 |---|---|
@@ -136,7 +136,7 @@ Works in both **singleplayer** and **multiplayer**!
 
 ---
 
-## ⚠️ Notes
+## • Notes
 
 - This mod affects mob pathfinding; large groups of mobs reacting at once may impact performance on weaker servers
 - To disable mob reactions, clear the entity list or set `hearingRange = 0` in the config
@@ -144,7 +144,7 @@ Works in both **singleplayer** and **multiplayer**!
 
 ---
 
-## 📝 Changelog
+## • Changelog
 
 ### v2.0.0
 -  **NEW:** Vocal Fatigue System - Shouting (CAPS LOCK) can strain your voice!
@@ -165,7 +165,7 @@ Works in both **singleplayer** and **multiplayer**!
 
 ---
 
-## 📄 License
+## • License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
