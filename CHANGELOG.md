@@ -2,7 +2,7 @@
 
 All notable changes to Attract to Chat will be documented in this file.
 
-## [2.0.0] - 2025
+## [2.0.0] - 2026
 
 ### 🆕 Added
 - **Vocal Fatigue System** - Shouting (CAPS LOCK) can strain your voice!
@@ -36,14 +36,14 @@ All notable changes to Attract to Chat will be documented in this file.
 
 ---
 
-## [1.0.1] - 2024
+## [1.0.1] - 2025
 
 ### 🆕 Added
 - English and Portuguese tips in config file
 
 ---
 
-## [1.0.0] - 2024
+## [1.0.0] - 2025
 
 ### 🆕 Added
 - Initial release
