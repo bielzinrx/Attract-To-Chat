@@ -40,7 +40,7 @@ This adds a unique mechanic to the game, perfect for creative traps, roleplay sc
 ### Vocal Fatigue System
 - Spamming CAPS LOCK can cause **Vocal Fatigue** effect
 - While fatigued, you cannot speak or use voice commands
-- Trying to speak while fatigued makes it worse!
+- The more you speak, the longer Vocal Fatigue will last
 
 ### Healing System
 | Item | Effect |
