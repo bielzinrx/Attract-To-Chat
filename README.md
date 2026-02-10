@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <img src="https://media.forgecdn.net/attachments/description/null/description_6350cc0a-6b1d-426b-afe3-ce097e3105e8.png" alt="Attract to Chat Mod"/>
+  <img src="https://res.cloudinary.com/diexbbgwe/image/upload/v1770755896/description_6350cc0a-6b1d-426b-afe3-ce097e3105e8_n8l2kh.png" alt="Attract to Chat Mod"/>
 </p>
 
 **Attract to Chat** is an immersive gameplay mod for Minecraft that makes mobs react to player chat messages!  
@@ -21,7 +21,7 @@ This adds a unique mechanic to the game, perfect for creative traps, roleplay sc
  
 - [📥 CurseForge Page](https://www.curseforge.com/minecraft/mc-mods/attract-to-chat)
 - [📥 Modrinth Page](https://modrinth.com/mod/attract-to-chat)
-- 📥 Planet Minecraft Page (Coming Soon...)
+- [📥 Planet Minecraft Page](https://www.planetminecraft.com/mod/attract-to-chat-mob-attraction-by-chat-messages/)
 
 ---
 
