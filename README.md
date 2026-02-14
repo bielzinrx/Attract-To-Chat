@@ -78,9 +78,8 @@ Spamming the chat or shouting (CAPS) too much triggers **Vocal Fatigue**.
 
 ## • Support the Project
 
-<a href="https://url-shortener.curseforge.com/zFhxc">
-  <img src="https://www.bisecthosting.com/partners/custom-banners/88340d04-1877-4404-b97c-9b813d11b241.webp" alt="BisectHosting">
-</a>
+**[Click here to Rent a Server with 25% OFF!](https://url-shortener.curseforge.com/zFhxc)**
+*Support the development by using the partner link above!*
 
 **[Click here to Rent a Server with 25% OFF!](https://url-shortener.curseforge.com/zFhxc)**
 
