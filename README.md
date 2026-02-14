@@ -1,175 +1,94 @@
-#  Attract to Chat
+# 🤫 Attract to Chat - Minecraft Mod
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Minecraft-1.20.1-green?style=for-the-badge&logo=minecraft" alt="Minecraft 1.20.1"/>
-  <img src="https://img.shields.io/badge/Forge-47.4.0+-orange?style=for-the-badge" alt="Forge"/>
-  <img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="License"/>
+  <img src="https://media.forgecdn.net/attachments/description/null/description_6350cc0a-6b1d-426b-afe3-ce097e3105e8.png" alt="Banner"/>
 </p>
 
 <p align="center">
-  <img src="https://res.cloudinary.com/diexbbgwe/image/upload/v1770755896/description_6350cc0a-6b1d-426b-afe3-ce097e3105e8_n8l2kh.png" alt="Attract to Chat Mod"/>
+  <img src="https://img.shields.io/badge/Minecraft-1.20.1-green?style=for-the-badge&logo=minecraft" alt="Version"/>
+  <img src="https://img.shields.io/badge/Loader-Forge-orange?style=for-the-badge" alt="Forge"/>
+  <img src="https://img.shields.io/badge/Side-Server_Only-blue?style=for-the-badge" alt="Server Side"/>
+  <img src="https://img.shields.io/badge/License-MIT-lightgrey?style=for-the-badge" alt="License"/>
 </p>
 
-**Attract to Chat** is an immersive gameplay mod for Minecraft that makes mobs react to player chat messages!  
-When you type a message in chat, nearby mobs will "hear" it and walk toward the exact location where the message was sent.
-
-This adds a unique mechanic to the game, perfect for creative traps, roleplay scenarios, or just a new challenge when exploring!
+> **Attract to Chat** introduces a new layer of difficulty and immersion: **Mobs can hear your chat messages.**
+> Typing in chat triggers a vibration event, causing nearby entities to investigate your location. Perfect for Hardcore servers, Roleplay, and "Don't Scream" challenges.
 
 ---
 
 ## • Official Download Sources
- 
-- [📥 CurseForge Page](https://www.curseforge.com/minecraft/mc-mods/attract-to-chat)
+
+- [📥 CurseForge Page](https://www.curseforge.com/minecraft/mc-mods/attract-to-chat-mob-attraction-by-chat-messages)
 - [📥 Modrinth Page](https://modrinth.com/mod/attract-to-chat)
 - [📥 Planet Minecraft Page](https://www.planetminecraft.com/mod/attract-to-chat-mob-attraction-by-chat-messages/)
 
 ---
 
-## • Main Features
+## • Core Features
 
-### Mob Attraction by Chat
-- Specific mobs will navigate to your position when you send a chat message
-- Works with both vanilla and modded mobs
+### 🧠 Chat Detection AI
+When you type, zombies, skeletons, and other mobs pathfind to your exact position.
 
-### CAPS LOCK = LOUDER!
-- **More uppercase letters = Greater range**
-- **More uppercase letters = Mobs chase longer**
-- **More uppercase letters = Mobs move faster**
-- But be careful... shouting too much has consequences!
+### 🔊 Dynamic Volume (CAPS LOCK)
+* **lowercase messages** = Small range (Whisper)
+* **UPPERCASE MESSAGES** = Huge range + Faster Mobs (Shout)
 
-### Vocal Fatigue System
-- Spamming CAPS LOCK can cause **Vocal Fatigue** effect
-- While fatigued, you cannot speak or use voice commands
-- The more you speak, the longer Vocal Fatigue will last
+### 👁️ Visual Feedback
+Particles appear when a mob "hears" you, giving you visual cues of danger.
 
-### Healing System
-| Item | Effect |
-|------|--------|
-| 🍯 **Honey Bottle** | Strong relief (60s) |
-| 🥛 **Milk Bucket** | Complete cure |
-| 🍲 **Soups/Stews** | Moderate relief (15s) |
-| 💧 **Water Bottle** | Light relief (10s) |
-| ☠️ **Poison/Harming** | Makes it WORSE! (+60s) |
-
-### Visual Feedback
-- Particles appear above mobs when they hear you
-- Action bar messages for warnings (less intrusive than chat)
-- Sound effects for healing and damage
+![Basic Function](https://res.cloudinary.com/diexbbgwe/image/upload/v1770045836/testando-funcao-basica_aw4jfd.gif)
 
 ---
 
-## • Configuration
+## • Vocal Fatigue System
 
-**Config Path:**  
-`config/attracttochat-common.toml`
+Spamming the chat or shouting (CAPS) too much triggers **Vocal Fatigue**.
 
-The config auto-reloads when saved - no restart needed!
+* 🚫 **Effect:** You cannot type/speak in chat while fatigued.
+* 🤢 **Penalty:** Extreme spamming causes Nausea.
+* 🧪 **The Cure:**
+    * 🍯 **Honey:** Strong Relief (60s)
+    * 🥛 **Milk:** Instant Cure
+    * 💧 **Water:** Slight Relief (10s)
+    * 🍲 **Soups/Stews:** Moderate relief (15s)
 
-### Example Configuration
-```toml
-[general]
-hearingRange = 30.0        # Base range in blocks
-capsRangeBonus = 5.0       # Extra blocks per CAPS letter
-scanCooldownTicks = 20     # Cooldown between messages (20 ticks = 1 sec)
-forgetTargetAfterSeconds = 5
-
-enabledEntities = [
-    "minecraft:zombie",
-    "minecraft:skeleton",
-    "minecraft:creeper",
-    "minecraft:spider",
-    "minecraft:enderman",
-    "minecraft:husk",
-    "minecraft:drowned",
-    "minecraft:stray",
-    "minecraft:phantom"
-]
-
-[visual]
-showAttractionParticles = true
-showAttractionFeedback = true
-
-[vocal_fatigue]
-fatigueChanceMultiplier = 1.5
-fatigueDurationBase = 30
-fatiguePenalty = 10
-
-[healing]
-honeyRelief = 60
-waterRelief = 10
-stewRelief = 15
-poisonWorsen = 60
-```
+![Vocal Fatigue](https://res.cloudinary.com/diexbbgwe/image/upload/v1770045839/testando-vocal-fatigue_zmcqeh.gif)
 
 ---
 
-## • Commands
+## • Commands & Permissions
 
-| Command | Permission | Description |
-|---------|------------|-------------|
+| Command | Permission | Function |
+| :--- | :--- | :--- |
 | `/attracthelp` | Everyone | Shows help and information |
 | `/attractstats` | Everyone | Shows your session statistics |
-| `/attractlist` | OP (level 2) | Lists enabled mobs and active goals |
-| `/attractreload` | OP (level 2) | Reloads goals from config |
-| `/attractdebug [on\|off]` | OP (level 2) | Toggles debug mode |
+| `/attractlist` | OP | Lists enabled mobs |
+| `/attractreload` | OP | Reloads config |
+| `/attractdebug` | OP | Toggle debug mode |
 
 ---
 
-## • Supported Languages
+## • Compatibility & Notes
 
-- 🇺🇸 English (en_us)
-- 🇧🇷 Portuguese - Brazil (pt_br)
-- 🇪🇸 Spanish (es_es)
-
----
-
-## • Compatibility
-
-| | |
-|---|---|
-| **Minecraft** | 1.20.1 |
-| **Mod Loader** | Forge 47.4.0+ |
-| **Java** | 17+ |
-| **Side** | Server (clients don't need it) |
-
-Works in both **singleplayer** and **multiplayer**!
+* **Modpack Friendly:** Works with modded mobs (Alex's Mobs, etc.) automatically.
+* **Server-Side Only:** Clients do **NOT** need to install the mod. Drop it in the `mods` folder of your server and play.
+* **Performance:** Optimized code. Checks only occur on chat events (Zero tick lag when idle).
 
 ---
 
-## • Notes
+## • Support the Project
 
-- This mod affects mob pathfinding; large groups of mobs reacting at once may impact performance on weaker servers
-- To disable mob reactions, clear the entity list or set `hearingRange = 0` in the config
-- Use `/attractdebug on` to see detailed information about mob behavior
+<a href="https://url-shortener.curseforge.com/zFhxc">
+  <img src="https://www.bisecthosting.com/partners/custom-banners/88340d04-1877-4404-b97c-9b813d11b241.webp" alt="BisectHosting">
+</a>
 
----
-
-## • Changelog
-
-### v2.0.0
--  **NEW:** Vocal Fatigue System - Shouting (CAPS LOCK) can strain your voice!
--  **NEW:** CAPS LOCK Boost - More uppercase = Greater range + Faster mobs + Longer chase
--  **NEW:** Healing System - Honey, Milk, Water, and Soups heal your throat
--  **NEW:** `/attracthelp` command for help
--  **NEW:** `/attractstats` command for session statistics
--  **NEW:** `/attractdebug` command for debug mode
--  **NEW:** Visual particles when mobs are attracted (configurable)
--  **NEW:** Action bar messages (less intrusive)
--  **NEW:** Sound feedback for throat warnings
--  **NEW:** Automatic cleanup of dead mobs
--  **NEW:** 3 Languages: English, Portuguese, Spanish
--  **FIXED:** `scanCooldownTicks` now works correctly
--  **FIXED:** `forgetTargetAfterSeconds` now controls mob pursuit time
--  **IMPROVED:** Better formatted messages with colors
--  **IMPROVED:** Thread-safe mob data storage
+**[Click here to Rent a Server with 25% OFF!](https://url-shortener.curseforge.com/zFhxc)**
 
 ---
 
 ## • License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
 
 <p align="center">
   Made with ❤️ by <b>Bielzinrx and Theus452</b>
