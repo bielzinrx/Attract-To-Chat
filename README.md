@@ -81,8 +81,6 @@ Spamming the chat or shouting (CAPS) too much triggers **Vocal Fatigue**.
 **[Click here to Rent a Server with 25% OFF!](https://url-shortener.curseforge.com/zFhxc)**
 *Support the development by using the partner link above!*
 
-**[Click here to Rent a Server with 25% OFF!](https://url-shortener.curseforge.com/zFhxc)**
-
 ---
 
 ## • License
