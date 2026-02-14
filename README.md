@@ -42,7 +42,7 @@ Particles appear when a mob "hears" you, giving you visual cues of danger.
 
 ## • Vocal Fatigue System
 
-Spamming the chat or shouting (CAPS) too much triggers **Vocal Fatigue**.
+Spamming the chat (CAPS LOCK) too much triggers **Vocal Fatigue**.
 
 * 🚫 **Effect:** You cannot type/speak in chat while fatigued.
 * 🤢 **Penalty:** Extreme spamming causes Nausea.
@@ -70,7 +70,7 @@ Spamming the chat or shouting (CAPS) too much triggers **Vocal Fatigue**.
 
 ## • Compatibility & Notes
 
-* **Modpack Friendly:** Works with modded mobs (Alex's Mobs, etc.) automatically.
+* **Modpack Friendly:** Works with modded mobs (Alex's Mobs, etc.)
 * **Server-Side Only:** Clients do **NOT** need to install the mod. Drop it in the `mods` folder of your server and play.
 * **Performance:** Optimized code. Checks only occur on chat events (Zero tick lag when idle).
 
