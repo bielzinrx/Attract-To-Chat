@@ -1,7 +1,7 @@
 # Attract to Chat - Minecraft Mod
 
 <p align="center">
-  <img src="https://media.forgecdn.net/attachments/description/null/description_6350cc0a-6b1d-426b-afe3-ce097e3105e8.png" alt="Banner"/>
+  <img src="https://i.imgur.com/fHrcosQ.png" alt="Banner"/>
 </p>
 
 <p align="center">
