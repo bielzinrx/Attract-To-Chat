@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Specification-Title: attracttochat
-Specification-Vendor: bielzinrx
-Specification-Version: 1
-Implementation-Title: attracttochat_project
-Implementation-Version: 1.0.0
-Implementation-Vendor: bielzinrx
-Implementation-Timestamp: 2025-08-14T11:31:46-0400
-

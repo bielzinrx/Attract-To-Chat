@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Specification-Title: chatlistener
-Specification-Vendor: bielzinrx
-Specification-Version: 1
-Implementation-Title: ChatListener
-Implementation-Version: 1.0.0
-Implementation-Vendor: bielzinrx
-Implementation-Timestamp: 2025-08-09T19:15:50-0300
-
