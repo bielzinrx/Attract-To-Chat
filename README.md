@@ -18,7 +18,7 @@
 
 ## • Official Download Sources
 
-- [📥 CurseForge Page](https://www.curseforge.com/minecraft/mc-mods/attract-to-chat-mob-attraction-by-chat-messages)
+- [📥 CurseForge Page](https://www.curseforge.com/minecraft/mc-mods/attract-to-chat)
 - [📥 Modrinth Page](https://modrinth.com/mod/attract-to-chat)
 - [📥 Planet Minecraft Page](https://www.planetminecraft.com/mod/attract-to-chat-mob-attraction-by-chat-messages/)
 
