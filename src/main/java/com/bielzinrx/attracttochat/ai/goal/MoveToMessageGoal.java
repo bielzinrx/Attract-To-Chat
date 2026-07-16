@@ -32,7 +32,7 @@ public class MoveToMessageGoal extends Goal {
             targetPos = null;
             return false;
         }
-        // Só anda se estiver longe o suficiente
+        
         double distSq = mob.distanceToSqr(targetPos.x, targetPos.y, targetPos.z);
         return distSq > 4.0;
     }
