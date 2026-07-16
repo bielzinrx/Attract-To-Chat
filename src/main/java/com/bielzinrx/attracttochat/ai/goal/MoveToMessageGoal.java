@@ -26,7 +26,6 @@ public class MoveToMessageGoal extends Goal {
     @Override
     public boolean canUse() {
         if (targetPos == null) return false;
-        // Se já passou do tempo configurado, esquece
         long forgetTicks = AttractToChatConfig.SERVER.forgetTargetAfterSeconds.get() * 20L;
         if (mob.level().getGameTime() - heardGameTime > forgetTicks) {
             targetPos = null;
