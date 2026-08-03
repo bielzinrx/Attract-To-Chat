@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "attracttochat",
+  "version": "${version}",
+  "name": "Attract-To-Chat",
+  "description": "Mobs hear chat messages and investigate the source. Includes CAPS loudness, presets, vocal fatigue, anti-spam, and Troll Mode.",
+  "authors": [
+    "bielzinrx"
+  ],
+  "icon": "icon.png",
+  "contact": {},
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.bielzinrx.attracttochat.fabric.AtcFabricMod"
+    ],
+    "client": [
+      "com.bielzinrx.attracttochat.fabric.AtcFabricClient"
+    ]
+  },
+  "mixins": [
+    "attracttochat.common.mixins.json",
+    "attracttochat.fabric.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.0",
+    "minecraft": "~1.20.1",
+    "java": ">=17"
+  }
+}

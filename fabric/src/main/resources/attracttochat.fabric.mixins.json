@@ -1,0 +1,12 @@
+{
+    "required": true,
+    "package": "com.bielzinrx.attracttochat.fabric.mixin",
+    "compatibilityLevel": "JAVA_17",
+    "mixins": [
+      "FabricChatMixin"
+    ],
+    "client": [],
+    "injectors": {
+      "defaultRequire": 1
+    }
+  }
