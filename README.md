@@ -221,10 +221,10 @@ Attract to Chat is **server-first**.
 - Installing it on the client is optional and enables personal particle preference detection.
 - Java 17 is required.
 
-| Loader | 1.19.2 || 1.20.1 |
+| Loader | 1.19.2 | 1.20.1 |
 | --- | :---: | :---: |
-| Forge | ✔ || ✔ |
-| Fabric | ✔ || ✔ |
+| Forge | ✔ | ✔ |
+| Fabric | ✔ | ✔ |
 
 ---
 
