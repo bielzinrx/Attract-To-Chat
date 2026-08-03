@@ -38,7 +38,6 @@ public final class AtcForgeMod {
 
     private void onServerStarting(net.minecraftforge.event.server.ServerStartingEvent event) {
         AttractToChat.setServer(event.getServer());
-
         AtcEngine.refreshCaches();
     }
 
@@ -50,7 +49,6 @@ public final class AtcForgeMod {
             event.setCanceled(true);
             return;
         }
-
         if (event.isCanceled()) return;
         AtcEngine.handleChatAfter(player, message);
     }

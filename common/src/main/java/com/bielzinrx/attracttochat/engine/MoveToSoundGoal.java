@@ -34,11 +34,11 @@ public class MoveToSoundGoal extends Goal {
 
     private int particleCooldown;
 
+    private boolean followLivePlayer;
+
     private static final double ARRIVAL_DIST_SQ = 6.25;
 
     private static final int NEAR_SOUND_LINGER_TICKS = 40;
-
-    private boolean followLivePlayer;
 
     public MoveToSoundGoal(Mob mob, int baseTicks) {
         this.mob = mob;
@@ -178,7 +178,6 @@ public class MoveToSoundGoal extends Goal {
                 clearSoundInvestigation();
                 return false;
             }
-
             if (mob.blockPosition().distSqr(trollPlayer.blockPosition()) > currentRangeSq) {
                 clearSoundInvestigation();
                 return false;
@@ -217,7 +216,6 @@ public class MoveToSoundGoal extends Goal {
 
     @Override
     public boolean requiresUpdateEveryTick() {
-
         return targetPos != null && timeout > 0;
     }
 
@@ -300,12 +298,11 @@ public class MoveToSoundGoal extends Goal {
             return;
         }
         AtcEngine.trySpawnPathParticles(mob, targetPos, false);
-
         particleCooldown = urgentShout ? 6 : 8;
     }
 
     private BlockPos sanitizeTarget(BlockPos pos) {
-        if (pos == null || !(mob.level() instanceof ServerLevel level)) return null;
+        if (pos == null || !(mob.level instanceof ServerLevel level)) return null;
         int minY = level.getMinBuildHeight();
         int maxY = level.getMaxBuildHeight() - 1;
         int y = Math.max(minY, Math.min(maxY, pos.getY()));
@@ -336,12 +333,11 @@ public class MoveToSoundGoal extends Goal {
                 return above.immutable();
             }
         }
-
         return null;
     }
 
     private boolean isTargetLoadedAndValid() {
-        return targetPos != null && (mob.level() instanceof ServerLevel level)
+        return targetPos != null && (mob.level instanceof ServerLevel level)
             && targetPos.getY() >= level.getMinBuildHeight()
             && targetPos.getY() < level.getMaxBuildHeight()
             && level.isLoaded(targetPos)
@@ -367,24 +363,20 @@ public class MoveToSoundGoal extends Goal {
             return;
         }
         double x = targetPos.getX() + 0.5D;
-
         double y = AtcEngine.usesAirNavigation(mob)
             ? targetPos.getY() + 0.5D
             : targetPos.getY();
         double z = targetPos.getZ() + 0.5D;
         try {
-
             if (mob.getNavigation().moveTo(x, y, z, currentSpeed)) {
                 return;
             }
         } catch (Throwable ex) {
-
             AttractToChat.LOGGER.warn("Skipped unsafe path calculation for sound investigation: mob={}, target={}, reason={}",
                 mob.getType(), targetPos, ex.toString());
 
         }
         try {
-
             mob.getMoveControl().setWantedPosition(x, y, z, currentSpeed);
         } catch (Throwable ex) {
             AttractToChat.LOGGER.debug("Skipped move-control update for sound investigation: {}", ex.toString());
@@ -406,9 +398,9 @@ public class MoveToSoundGoal extends Goal {
     }
 
     private ServerPlayer resolveTargetPlayer() {
-        if (playerUUID == null || mob.level().getServer() == null) return null;
-        ServerPlayer player = mob.level().getServer().getPlayerList().getPlayer(playerUUID);
-        return player != null && player.isAlive() && player.level() == mob.level() ? player : null;
+        if (playerUUID == null || mob.level.getServer() == null) return null;
+        ServerPlayer player = mob.level.getServer().getPlayerList().getPlayer(playerUUID);
+        return player != null && player.isAlive() && player.level == mob.level ? player : null;
     }
 
     public static boolean shouldVillagerPrioritizeSafety(Mob candidate) {
@@ -479,12 +471,10 @@ public class MoveToSoundGoal extends Goal {
             control.atc_setDirection(yRot, true);
             control.atc_setWantedMovement(currentSpeed);
         } else {
-
             try {
                 mob.getMoveControl().setWantedPosition(
                     targetPos.getX() + 0.5, targetPos.getY(), targetPos.getZ() + 0.5, currentSpeed);
             } catch (Throwable ignored) {
-
             }
         }
     }

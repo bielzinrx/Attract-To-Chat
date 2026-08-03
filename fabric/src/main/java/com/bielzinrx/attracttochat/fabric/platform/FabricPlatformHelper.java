@@ -4,7 +4,7 @@ import com.bielzinrx.attracttochat.mixin.MobAccessorMixin;
 import com.bielzinrx.attracttochat.platform.IPlatformHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
@@ -39,6 +39,6 @@ public final class FabricPlatformHelper implements IPlatformHelper {
 
     @Override
     public String getEntityTypeId(EntityType<?> type) {
-        return BuiltInRegistries.ENTITY_TYPE.getKey(type).toString();
+        return Registry.ENTITY_TYPE.getKey(type).toString();
     }
 }

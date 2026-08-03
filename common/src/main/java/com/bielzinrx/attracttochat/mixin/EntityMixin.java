@@ -14,7 +14,7 @@ public class EntityMixin {
     @Inject(method = "remove", at = @At("HEAD"))
     private void atc_unregisterOnRemove(Entity.RemovalReason reason, CallbackInfo ci) {
         Entity self = (Entity) (Object) this;
-        if (self.level().isClientSide()) return;
+        if (self.level.isClientSide()) return;
         if (self instanceof Mob) {
             AtcEngine.unregisterMob(self.getUUID());
         }

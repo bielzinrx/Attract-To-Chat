@@ -34,7 +34,7 @@ public class LivingEntityMixin {
     @Inject(method = "die", at = @At("TAIL"))
     private void onDie(DamageSource damageSource, CallbackInfo ci) {
         LivingEntity self = (LivingEntity) (Object) this;
-        if (self.level().isClientSide()) return;
+        if (self.level.isClientSide()) return;
         if (self instanceof ServerPlayer player) {
             FatigueTracker.clear(player.getUUID());
             AtcEngine.clearMute(player.getUUID());

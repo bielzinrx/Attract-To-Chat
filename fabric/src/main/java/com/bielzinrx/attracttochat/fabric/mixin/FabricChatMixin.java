@@ -1,7 +1,7 @@
 package com.bielzinrx.attracttochat.fabric.mixin;
 
 import com.bielzinrx.attracttochat.engine.AtcEngine;
-import net.minecraft.network.chat.PlayerChatMessage;
+import net.minecraft.network.protocol.game.ServerboundChatPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,15 +15,16 @@ public class FabricChatMixin {
 
     @Shadow public ServerPlayer player;
 
-    @Inject(method = "broadcastChatMessage", at = @At("HEAD"), cancellable = true)
-    private void atc_onBroadcast(PlayerChatMessage message, CallbackInfo ci) {
-        String content = message.signedContent();
+    @Inject(method = "handleChat", at = @At("HEAD"), cancellable = true)
+    private void atc_onChat(ServerboundChatPacket packet, CallbackInfo ci) {
+        String content = packet.message();
         if (content == null || content.isEmpty()) return;
 
         if (AtcEngine.handleChatCancellable(player, content)) {
             ci.cancel();
             return;
         }
+
         AtcEngine.handleChatAfter(player, content);
     }
 }

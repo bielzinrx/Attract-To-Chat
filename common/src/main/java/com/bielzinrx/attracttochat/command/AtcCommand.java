@@ -13,7 +13,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.ResourceLocationArgument;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -157,7 +157,6 @@ public final class AtcCommand {
                                     int cleared = AtcEngine.clearSoundInvestigations();
                                     feedback(ctx.getSource(), "message.attracttochat.command.ignore_all_added", cleared);
                                 } else {
-
                                     for (ServerPlayer p : ctx.getSource().getServer().getPlayerList().getPlayers()) {
                                         if (p.getName().getString().equalsIgnoreCase(name)) {
                                             AtcEngine.clearInvestigationsForPlayer(p.getUUID());
@@ -206,7 +205,6 @@ public final class AtcCommand {
                                 "message.attracttochat.command.config_save_failed"), true);
                             return 0;
                         }
-
                         if (!AttractToChatConfig.COMMON.showParticles.get()) {
                             if (ctx.getSource().hasPermission(2)) {
                                 AttractToChatConfig.COMMON.showParticles.set(true);
@@ -264,7 +262,6 @@ public final class AtcCommand {
                             }
                             AttractToChatConfig.COMMON.trollPlayers.set(list);
                             if (!saveConfig(ctx.getSource(), AtcEngine::refreshPlayerRules)) return 0;
-
                             ServerPlayer online = ctx.getSource().getServer()
                                 .getPlayerList().getPlayerByName(name);
                             if (online != null) {
@@ -374,20 +371,20 @@ public final class AtcCommand {
                             })))))
             .then(Commands.literal("status").executes(ctx -> {
                 CommandSourceStack src = ctx.getSource();
-                src.sendSuccess(() -> Component.translatable("message.attracttochat.command.status_header"), false);
-                src.sendSuccess(() -> Component.translatable("message.attracttochat.command.status_hearing", AttractToChatConfig.COMMON.hearingRange.get()), false);
-                src.sendSuccess(() -> Component.translatable("message.attracttochat.command.status_capsfeature", AttractToChatConfig.COMMON.enableCapsFeature.get()), false);
-                src.sendSuccess(() -> Component.translatable("message.attracttochat.command.status_capsbonus", AttractToChatConfig.COMMON.capsRangeBonus.get()), false);
-                src.sendSuccess(() -> Component.translatable("message.attracttochat.command.status_fatigue", AttractToChatConfig.COMMON.enableVocalFatigue.get()), false);
-                src.sendSuccess(() -> Component.translatable("message.attracttochat.command.status_antispam", AttractToChatConfig.COMMON.enableAntiSpam.get()), false);
-                src.sendSuccess(() -> Component.translatable("message.attracttochat.command.status_antispam_detail",
+                src.sendSuccess(Component.translatable("message.attracttochat.command.status_header"), false);
+                src.sendSuccess(Component.translatable("message.attracttochat.command.status_hearing", AttractToChatConfig.COMMON.hearingRange.get()), false);
+                src.sendSuccess(Component.translatable("message.attracttochat.command.status_capsfeature", AttractToChatConfig.COMMON.enableCapsFeature.get()), false);
+                src.sendSuccess(Component.translatable("message.attracttochat.command.status_capsbonus", AttractToChatConfig.COMMON.capsRangeBonus.get()), false);
+                src.sendSuccess(Component.translatable("message.attracttochat.command.status_fatigue", AttractToChatConfig.COMMON.enableVocalFatigue.get()), false);
+                src.sendSuccess(Component.translatable("message.attracttochat.command.status_antispam", AttractToChatConfig.COMMON.enableAntiSpam.get()), false);
+                src.sendSuccess(Component.translatable("message.attracttochat.command.status_antispam_detail",
                     AttractToChatConfig.COMMON.scanCooldownTicks.get() / 20.0,
                     AttractToChatConfig.COMMON.antiSpamMaxMessages.get(),
                     AttractToChatConfig.COMMON.antiSpamWindowSeconds.get()), false);
-                src.sendSuccess(() -> Component.translatable("message.attracttochat.command.status_mobspeed_base", AttractToChatConfig.COMMON.mobSpeedBase.get()), false);
-                src.sendSuccess(() -> Component.translatable("message.attracttochat.command.status_mobspeed_max", AttractToChatConfig.COMMON.mobSpeedMax.get()), false);
-                src.sendSuccess(() -> Component.translatable("message.attracttochat.command.status_particles", AttractToChatConfig.COMMON.showParticles.get()), false);
-                src.sendSuccess(() -> Component.translatable("message.attracttochat.command.status_footer"), false);
+                src.sendSuccess(Component.translatable("message.attracttochat.command.status_mobspeed_base", AttractToChatConfig.COMMON.mobSpeedBase.get()), false);
+                src.sendSuccess(Component.translatable("message.attracttochat.command.status_mobspeed_max", AttractToChatConfig.COMMON.mobSpeedMax.get()), false);
+                src.sendSuccess(Component.translatable("message.attracttochat.command.status_particles", AttractToChatConfig.COMMON.showParticles.get()), false);
+                src.sendSuccess(Component.translatable("message.attracttochat.command.status_footer"), false);
                 return 1;
             }))
             .then(Commands.literal("help")
@@ -551,7 +548,7 @@ public final class AtcCommand {
 
     private static Stream<ResourceLocation> attractableEntityIds(CommandSourceStack source) {
         MinecraftServer server = source.getServer();
-        int registrySize = BuiltInRegistries.ENTITY_TYPE.size();
+        int registrySize = Registry.ENTITY_TYPE.size();
         List<ResourceLocation> cached = entitySuggestionCache;
 
         if (entitySuggestionCacheServer != server
@@ -559,7 +556,7 @@ public final class AtcCommand {
             synchronized (ENTITY_SUGGESTION_CACHE_LOCK) {
                 if (entitySuggestionCacheServer != server
                     || entitySuggestionCacheRegistrySize != registrySize) {
-                    entitySuggestionCache = BuiltInRegistries.ENTITY_TYPE.keySet().stream()
+                    entitySuggestionCache = Registry.ENTITY_TYPE.keySet().stream()
                         .filter(id -> isAttractableEntityId(source, id))
                         .sorted(Comparator.comparing(ResourceLocation::toString))
                         .toList();
@@ -595,7 +592,7 @@ public final class AtcCommand {
 
     private static boolean isAttractableEntityId(CommandSourceStack source, ResourceLocation id) {
         if (!AttractToChatConfig.isConfigurableEntityId(id)) return false;
-        EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(id);
+        EntityType<?> type = Registry.ENTITY_TYPE.get(id);
         if (type == null) return false;
 
         Entity probe = null;
@@ -785,6 +782,6 @@ public final class AtcCommand {
     }
 
     private static void feedback(CommandSourceStack src, String key, Object... args) {
-        src.sendSuccess(() -> Component.translatable("message.attracttochat.prefix").append(Component.translatable(key, args)), true);
+        src.sendSuccess(Component.translatable("message.attracttochat.prefix").append(Component.translatable(key, args)), true);
     }
 }

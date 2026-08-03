@@ -14,14 +14,14 @@ public class ServerPlayerMixin {
 
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
     private void atc_saveFatigue(CompoundTag nbt, CallbackInfo ci) {
-        java.util.UUID id = ((ServerPlayer) (Object) this).getUUID();
+        java.util.UUID id = ((ServerPlayer)(Object)this).getUUID();
         FatigueTracker.saveForPlayer(id, nbt);
         AtcEngine.saveMuteForPlayer(id, nbt);
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
     private void atc_loadFatigue(CompoundTag nbt, CallbackInfo ci) {
-        java.util.UUID id = ((ServerPlayer) (Object) this).getUUID();
+        java.util.UUID id = ((ServerPlayer)(Object)this).getUUID();
         FatigueTracker.loadForPlayer(id, nbt);
         AtcEngine.loadMuteForPlayer(id, nbt);
     }

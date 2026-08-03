@@ -4,7 +4,7 @@ import com.bielzinrx.attracttochat.platform.Platform;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -739,7 +739,7 @@ public final class AttractToChatConfig {
     }
 
     public static Stream<ResourceLocation> configurableEntityIds() {
-        return BuiltInRegistries.ENTITY_TYPE.keySet().stream()
+        return Registry.ENTITY_TYPE.keySet().stream()
             .filter(AttractToChatConfig::isConfigurableEntityId)
             .sorted(Comparator.comparing(ResourceLocation::toString));
     }
@@ -749,7 +749,7 @@ public final class AttractToChatConfig {
     }
 
     private static boolean isLegacyBroadConfigurableEntityId(ResourceLocation id) {
-        if (id == null || !BuiltInRegistries.ENTITY_TYPE.containsKey(id)) return false;
+        if (id == null || !Registry.ENTITY_TYPE.containsKey(id)) return false;
         String raw = id.toString();
         String path = id.getPath();
         if (NON_CONFIGURABLE_ENTITY_IDS.contains(raw)) return false;
@@ -772,7 +772,7 @@ public final class AttractToChatConfig {
     }
 
     private static List<String> buildLegacyAllEntityList() {
-        return BuiltInRegistries.ENTITY_TYPE.keySet().stream()
+        return Registry.ENTITY_TYPE.keySet().stream()
             .filter(AttractToChatConfig::isLegacyBroadConfigurableEntityId)
             .sorted(Comparator.comparing(ResourceLocation::toString))
             .map(ResourceLocation::toString)

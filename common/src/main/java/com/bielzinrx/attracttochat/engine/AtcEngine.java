@@ -5,7 +5,7 @@ import com.bielzinrx.attracttochat.fatigue.FatigueTracker;
 import com.bielzinrx.attracttochat.platform.Platform;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -37,7 +37,6 @@ public final class AtcEngine {
 
     private static final Map<UUID, Deque<Long>>  PLAYER_MESSAGE_WINDOW = new ConcurrentHashMap<>();
     private static final Map<UUID, Long>         MUTED_UNTIL      = new ConcurrentHashMap<>();
-
     private static final Map<UUID, Long>         MUTED_UNTIL_WALL = new ConcurrentHashMap<>();
     private static final String                  MUTE_NBT_KEY     = "AttractToChatMuteEnd";
     private static final Map<UUID, PlayerStats>  PLAYER_STATS     = new ConcurrentHashMap<>();
@@ -219,7 +218,6 @@ public final class AtcEngine {
     public static boolean isAttractableMob(Mob mob) {
         if (mob == null || mob.isRemoved() || !mob.isAlive()) return false;
         if (mob.isNoAi()) return false;
-
         if (!mob.isEffectiveAi()) return false;
         return true;
     }
@@ -365,7 +363,6 @@ public final class AtcEngine {
         if (playerId == null || tag == null || !tag.contains(MUTE_NBT_KEY)) return;
         long end = tag.getLong(MUTE_NBT_KEY);
         long now = System.currentTimeMillis();
-
         long maxMs = 60L * 60L * 1000L;
         if (end > now && end <= now + maxMs) {
             MUTED_UNTIL_WALL.put(playerId, end);
@@ -403,7 +400,7 @@ public final class AtcEngine {
             LOGGER.info("[ATC-Debug] Chat from {}: loudness={}, saturation={}, range={}",
                 player.getName().getString(), score.loudness, score.saturation, range);
         }
-        int[] attracted = attractMobsAtPosition((ServerLevel) player.level(), player.blockPosition(), range, score);
+        int[] attracted = attractMobsAtPosition((ServerLevel) player.level, player.blockPosition(), range, score);
         PLAYER_STATS.computeIfAbsent(uuid, k -> new PlayerStats()).record(attracted.length, score.caps);
 
         if (isDebugMode()) {
@@ -447,7 +444,7 @@ public final class AtcEngine {
         double traumaRange = Math.min(MAX_TRAUMA_RANGE,
             Math.max(AttractToChatConfig.COMMON.hearingRange.get(),
                 AttractToChatConfig.COMMON.hearingRange.get() * 1.5));
-        attractMobsAtPosition((ServerLevel) player.level(), player.blockPosition(),
+        attractMobsAtPosition((ServerLevel) player.level, player.blockPosition(),
             traumaRange, new MessageScore("vocal strain", player.getUUID()),
             false, MAX_TRAUMA_TARGETS);
 
@@ -524,7 +521,6 @@ public final class AtcEngine {
             }
 
             if (data != null && data.goal() != null) {
-
                 if (data.goal().isLockedToTrollTarget() && !trollTarget) continue;
 
                 if (!trollTarget && mob.getTarget() != null && mob.getTarget().isAlive()) continue;
@@ -580,7 +576,10 @@ public final class AtcEngine {
         BlockPos last = null;
         for (int i = 1; i < steps; i++) {
             double t = i * inv;
-            BlockPos pos = BlockPos.containing(from.x + dx * t, from.y + dy * t, from.z + dz * t);
+            BlockPos pos = new BlockPos(
+                net.minecraft.util.Mth.floor(from.x + dx * t),
+                net.minecraft.util.Mth.floor(from.y + dy * t),
+                net.minecraft.util.Mth.floor(from.z + dz * t));
             if (pos.equals(last) || !level.isLoaded(pos)) continue;
             last = pos;
             BlockState state = level.getBlockState(pos);
@@ -598,7 +597,7 @@ public final class AtcEngine {
     private static final double PATH_PARTICLE_STEP = 0.65;
 
     public static void trySpawnPathParticles(Mob mob, BlockPos targetPos, boolean burst) {
-        if (mob == null || targetPos == null || !(mob.level() instanceof ServerLevel level)) return;
+        if (mob == null || targetPos == null || !(mob.level instanceof ServerLevel level)) return;
         if (!AttractToChatConfig.COMMON.showParticles.get()) return;
 
         double[] xs = new double[PATH_PARTICLE_MAX_POINTS];
@@ -616,18 +615,14 @@ public final class AtcEngine {
                     || isParticlesDisabled(viewer.getUUID())) {
                 continue;
             }
-
-            int step = burst ? 1 : 1;
-            for (int i = 0; i < count; i += step) {
+            for (int i = 0; i < count; i++) {
                 level.sendParticles(viewer, ParticleTypes.END_ROD,
                     true, xs[i], ys[i], zs[i], 1, 0.02, 0.03, 0.02, 0.0);
-
                 if (burst || (i % 2) == 0) {
                     level.sendParticles(viewer, ParticleTypes.SOUL_FIRE_FLAME,
                         true, xs[i], ys[i] - 0.05, zs[i], 1, 0.04, 0.02, 0.04, 0.0);
                 }
             }
-
             double tx = targetPos.getX() + 0.5;
             double ty = targetPos.getY() + 0.35;
             double tz = targetPos.getZ() + 0.5;
@@ -640,7 +635,6 @@ public final class AtcEngine {
 
     private static int sampleInvestigationPath(Mob mob, BlockPos targetPos,
             double[] xs, double[] ys, double[] zs) {
-
         try {
             var path = mob.getNavigation().getPath();
             if (path != null && path.getNodeCount() > 0) {
@@ -653,12 +647,10 @@ public final class AtcEngine {
                     for (int i = start; i < nodeCount && written < PATH_PARTICLE_MAX_POINTS; i += stride) {
                         var node = path.getNode(i);
                         xs[written] = node.x + 0.5;
-
                         ys[written] = node.y + 0.25;
                         zs[written] = node.z + 0.5;
                         written++;
                     }
-
                     if (written > 0 && written < PATH_PARTICLE_MAX_POINTS) {
                         var last = path.getNode(nodeCount - 1);
                         if (xs[written - 1] != last.x + 0.5 || zs[written - 1] != last.z + 0.5) {
@@ -686,7 +678,6 @@ public final class AtcEngine {
         double dz = z1 - z0;
         double dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
         if (dist < 0.4) {
-
             xs[0] = x0;
             ys[0] = y0;
             zs[0] = z0;
@@ -705,7 +696,6 @@ public final class AtcEngine {
 
     @Deprecated
     public static void trySpawnHeardBurst(Mob mob) {
-
         if (mob != null) {
             trySpawnPathParticles(mob, mob.blockPosition(), true);
         }
@@ -786,7 +776,7 @@ public final class AtcEngine {
 
     private static void teleportEndermanToSound(EnderMan enderman, BlockPos target,
             boolean blockTarget) {
-        if (!(enderman.level() instanceof ServerLevel level) || target == null) return;
+        if (!(enderman.level instanceof ServerLevel level) || target == null) return;
         BlockPos center = blockTarget ? target.above() : target;
         BlockPos safe = findSafeTeleportNear(level, center, 4);
         if (safe == null) {
