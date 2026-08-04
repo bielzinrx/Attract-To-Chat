@@ -1,8 +1,24 @@
-![Attract to Chat](https://i.imgur.com/3U9J050.png)
+<p align="center">
+  <img src="https://i.imgur.com/3U9J050.png" alt="Attract to Chat" width="100%">
+</p>
 
-[![Modrinth Downloads](https://img.shields.io/modrinth/dt/attract-to-chat?style=flat-square&logo=modrinth&logoColor=white&label=Modrinth&color=1bd96a)](https://modrinth.com/mod/attract-to-chat) [![CurseForge Downloads](https://img.shields.io/curseforge/dt/1327186?style=flat-square&logo=curseforge&logoColor=white&label=CurseForge&color=f16436)](https://www.curseforge.com/minecraft/mc-mods/attract-to-chat) [![Latest Release](https://img.shields.io/github/v/release/bielzinrx/Attract-To-Chat?style=flat-square&label=Latest&color=blue)](https://github.com/bielzinrx/Attract-To-Chat/releases)
+<p align="center">
+  <a href="https://modrinth.com/mod/attract-to-chat">
+    <img src="https://img.shields.io/modrinth/dt/attract-to-chat?style=flat-square&logo=modrinth&logoColor=white&label=Modrinth&color=1bd96a" alt="Modrinth Downloads">
+  </a>
+  <a href="https://www.curseforge.com/minecraft/mc-mods/attract-to-chat">
+    <img src="https://img.shields.io/curseforge/dt/1327186?style=flat-square&logo=curseforge&logoColor=white&label=CurseForge&color=f16436" alt="CurseForge Downloads">
+  </a>
+  <a href="https://github.com/bielzinrx/Attract-To-Chat/releases">
+    <img src="https://img.shields.io/github/v/release/bielzinrx/Attract-To-Chat?style=flat-square&label=Latest&color=blue" alt="Latest Release">
+  </a>
+</p>
 
-![Forge 1.20.1](https://img.shields.io/badge/Forge-1.20.1-b07219?style=flat-square&logo=curseforge&logoColor=white) ![Server Side](https://img.shields.io/badge/Server--Side-Client Optional-1a6b8a?style=flat-square) ![Java 17](https://img.shields.io/badge/Java-17-orange?style=flat-square)
+<p align="center">
+  <img src="https://img.shields.io/badge/Forge-1.20.1-b07219?style=flat-square&logo=curseforge&logoColor=white" alt="Forge 1.20.1">
+  <img src="https://img.shields.io/badge/Server--Side-Client%20Optional-1a6b8a?style=flat-square" alt="Server Side · Client Optional">
+  <img src="https://img.shields.io/badge/Java-17-orange?style=flat-square" alt="Java 17">
+</p>
 
 ***
 
