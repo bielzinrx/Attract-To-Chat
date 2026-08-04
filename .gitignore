@@ -21,3 +21,6 @@ dist/
 # System
 .DS_Store
 Thumbs.db
+
+# Architectury build cache
+.architectury-transformer/

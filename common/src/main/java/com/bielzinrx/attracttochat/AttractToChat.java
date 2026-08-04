@@ -2,8 +2,8 @@ package com.bielzinrx.attracttochat;
 
 import com.bielzinrx.attracttochat.config.AttractToChatConfig;
 import com.bielzinrx.attracttochat.engine.AtcEngine;
+import com.bielzinrx.attracttochat.i18n.ServerTranslations;
 import com.bielzinrx.attracttochat.platform.Platform;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +44,7 @@ public final class AttractToChat {
     }
 
     public void sendHelp(ServerPlayer player, String category) {
-        player.sendSystemMessage(Component.translatable("message.attracttochat.command.help.header"));
+        player.sendSystemMessage(ServerTranslations.component(player, "message.attracttochat.command.help.header"));
         String safeCategory = category == null ? "overview" : category.toLowerCase(Locale.ROOT);
         switch (safeCategory) {
             case "overview" -> {
@@ -80,7 +80,8 @@ public final class AttractToChat {
                     sendHelpLine(player, "message.attracttochat.command.help.client");
                     sendHelpLine(player, "message.attracttochat.command.help.client_note");
                 } else {
-                    sendHelpLine(player, "message.attracttochat.command.client_no_mod");
+                    player.sendSystemMessage(ServerTranslations.component(
+                        player, "message.attracttochat.command.help.unknown_category", safeCategory));
                 }
             }
             case "admin" -> {
@@ -90,12 +91,12 @@ public final class AttractToChat {
                 sendHelpLine(player, "message.attracttochat.command.help.mobspeed");
                 sendHelpLine(player, "message.attracttochat.command.help.forgettime");
             }
-            default -> player.sendSystemMessage(Component.translatable(
-                "message.attracttochat.command.help.unknown_category", safeCategory));
+            default -> player.sendSystemMessage(ServerTranslations.component(
+                player, "message.attracttochat.command.help.unknown_category", safeCategory));
         }
     }
 
     private static void sendHelpLine(ServerPlayer player, String key) {
-        player.sendSystemMessage(Component.translatable(key));
+        player.sendSystemMessage(ServerTranslations.component(player, key));
     }
 }

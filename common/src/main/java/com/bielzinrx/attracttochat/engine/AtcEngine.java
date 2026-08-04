@@ -1,12 +1,13 @@
 package com.bielzinrx.attracttochat.engine;
 
 import com.bielzinrx.attracttochat.config.AttractToChatConfig;
+import com.bielzinrx.attracttochat.client.ClientPresence;
+import com.bielzinrx.attracttochat.i18n.ServerTranslations;
 import com.bielzinrx.attracttochat.fatigue.FatigueTracker;
 import com.bielzinrx.attracttochat.platform.Platform;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -45,7 +46,7 @@ public final class AtcEngine {
     private static final Set<String>             IGNORED_PLAYERS  = Collections.newSetFromMap(new ConcurrentHashMap<>());
     private static final Set<String>             TROLL_PLAYERS    = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
-    private static final Set<UUID> DISABLE_PARTICLES = Collections.newSetFromMap(new ConcurrentHashMap<>());
+    private static final Set<UUID> ENABLE_PARTICLES = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
     private static long serverTicks = 0;
     private static final double MIN_EFFECTIVE_CHAT_RANGE = 0.0;
@@ -113,11 +114,11 @@ public final class AtcEngine {
     }
 
     public static void refreshClientPreferences() {
-        DISABLE_PARTICLES.clear();
-        List<String> particlesOptOut = AttractToChatConfig.COMMON.clientParticlesOptOut.get();
-        if (particlesOptOut != null) {
-            for (String raw : particlesOptOut) {
-                try { DISABLE_PARTICLES.add(UUID.fromString(raw)); }
+        ENABLE_PARTICLES.clear();
+        List<String> particlesOptIn = AttractToChatConfig.COMMON.clientParticlesOptIn.get();
+        if (particlesOptIn != null) {
+            for (String raw : particlesOptIn) {
+                try { ENABLE_PARTICLES.add(UUID.fromString(raw)); }
                 catch (IllegalArgumentException ignored) {}
             }
         }
@@ -149,8 +150,8 @@ public final class AtcEngine {
         if (player == null || !player.isAlive()) return false;
         if (isVocallyMuted(player.getUUID())) {
             if (!isTrollPlayer(player)) {
-                player.displayClientMessage(Component.translatable(
-                    "message.attracttochat.fatigue.exhausted_self"), true);
+                player.displayClientMessage(ServerTranslations.component(
+                    player, "message.attracttochat.fatigue.exhausted_self"), true);
             }
             return true;
         }
@@ -166,6 +167,8 @@ public final class AtcEngine {
     public static void onPlayerDisconnect(UUID uuid) {
         PLAYER_COOLDOWNS.remove(uuid);
         PLAYER_MESSAGE_WINDOW.remove(uuid);
+        ServerTranslations.forgetPlayer(uuid);
+        ClientPresence.forget(uuid);
 
         PLAYER_STATS.remove(uuid);
 
@@ -177,10 +180,12 @@ public final class AtcEngine {
         PLAYER_STATS.clear();
         PLAYER_COOLDOWNS.clear();
         PLAYER_MESSAGE_WINDOW.clear();
+        ClientPresence.clear();
+        ServerTranslations.clearPlayerLanguages();
 
         serverTicks = 0;
         debugModeOverride = null;
-        DISABLE_PARTICLES.clear();
+        ENABLE_PARTICLES.clear();
     }
 
     public static int clearInvestigationsForPlayer(UUID playerId) {
@@ -253,7 +258,7 @@ public final class AtcEngine {
         long remain = getAntiSpamWaitSeconds(player.getUUID());
         if (remain > 0) {
             player.displayClientMessage(
-                Component.translatable("message.attracttochat.antispam.wait", remain), true);
+                ServerTranslations.component(player, "message.attracttochat.antispam.wait", remain), true);
             return false;
         }
         return true;
@@ -453,7 +458,7 @@ public final class AtcEngine {
 
         if (!isTrollPlayer(player)) {
             player.displayClientMessage(
-                Component.translatable("message.attracttochat.fatigue.alert"), true);
+                ServerTranslations.component(player, "message.attracttochat.fatigue.alert"), true);
         }
 
         LOGGER.debug("Player [{}] triggered vocal trauma.", player.getUUID());
@@ -613,7 +618,8 @@ public final class AtcEngine {
 
         for (ServerPlayer viewer : level.players()) {
             if (viewer.distanceToSqr(midX, midY, midZ) > PARTICLE_VIEW_RANGE_SQ
-                    || isParticlesDisabled(viewer.getUUID())) {
+                    || !Platform.getHelper().hasClientMod(viewer)
+                    || !isParticlesEnabled(viewer.getUUID())) {
                 continue;
             }
 
@@ -740,13 +746,13 @@ public final class AtcEngine {
     }
 
 
-    public static boolean isParticlesDisabled(UUID id) {
-        return DISABLE_PARTICLES.contains(id);
+    public static boolean isParticlesEnabled(UUID id) {
+        return id != null && ENABLE_PARTICLES.contains(id);
     }
 
-    public static boolean setParticlesDisabled(UUID id, boolean disabled) {
-        return setUuidPreference(id, disabled, DISABLE_PARTICLES,
-            AttractToChatConfig.COMMON.clientParticlesOptOut);
+    public static boolean setParticlesEnabled(UUID id, boolean enabled) {
+        return setUuidPreference(id, enabled, ENABLE_PARTICLES,
+            AttractToChatConfig.COMMON.clientParticlesOptIn);
     }
 
     public static void clearMute(UUID id) {
@@ -756,19 +762,19 @@ public final class AtcEngine {
         }
     }
 
-    private static boolean setUuidPreference(UUID id, boolean disabled, Set<UUID> liveSet,
+    private static boolean setUuidPreference(UUID id, boolean enabled, Set<UUID> liveSet,
             AttractToChatConfig.ConfigValue<List<String>> configList) {
         if (id == null) return false;
-        if (disabled) {
+        if (enabled) {
             liveSet.add(id);
         } else {
             liveSet.remove(id);
         }
         List<String> values = new ArrayList<>(configList.get());
         String raw = id.toString();
-        if (disabled && !values.contains(raw)) {
+        if (enabled && !values.contains(raw)) {
             values.add(raw);
-        } else if (!disabled) {
+        } else if (!enabled) {
             values.removeIf(raw::equalsIgnoreCase);
         }
         configList.set(values);
@@ -780,8 +786,8 @@ public final class AtcEngine {
 
     private static void sendDebugFeedback(ServerPlayer player, double range,
             int attracted, int caps) {
-        player.displayClientMessage(Component.translatable(
-            "message.attracttochat.debug_info", range, attracted, caps), true);
+        player.displayClientMessage(ServerTranslations.component(
+            player, "message.attracttochat.debug_info", range, attracted, caps), true);
     }
 
     private static void teleportEndermanToSound(EnderMan enderman, BlockPos target,

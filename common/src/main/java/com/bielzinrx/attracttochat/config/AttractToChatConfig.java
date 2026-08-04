@@ -28,7 +28,7 @@ public final class AttractToChatConfig {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("AttractToChat-Config");
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final int CONFIG_VERSION = 14;
+    private static final int CONFIG_VERSION = 15;
     private static final int SAFE_DEFAULTS_VERSION = 4;
     private static final int EXPLICIT_ENTITY_LIST_VERSION = 7;
     private static final int HOSTILE_DEFAULTS_VERSION = 8;
@@ -74,7 +74,7 @@ public final class AttractToChatConfig {
         public final ConfigValue<List<String>> enabledEntities = new ConfigValue<>(new ArrayList<>(DEFAULT_ENTITIES));
         public final ConfigValue<List<String>> ignoredPlayers = new ConfigValue<>(new ArrayList<>());
         public final ConfigValue<List<String>> trollPlayers = new ConfigValue<>(new ArrayList<>());
-        public final ConfigValue<List<String>> clientParticlesOptOut = new ConfigValue<>(new ArrayList<>());
+        public final ConfigValue<List<String>> clientParticlesOptIn = new ConfigValue<>(new ArrayList<>());
 
         public final ConfigValue<Boolean> enableVocalFatigue = new ConfigValue<>(false);
 
@@ -338,7 +338,8 @@ public final class AttractToChatConfig {
         List<String> enabledEntities = COMMON.enabledEntities.get();
         List<String> ignoredPlayers = COMMON.ignoredPlayers.get();
         List<String> trollPlayers = COMMON.trollPlayers.get();
-        List<String> clientParticlesOptOut = COMMON.clientParticlesOptOut.get();
+        List<String> clientParticlesOptIn = COMMON.clientParticlesOptIn.get();
+        List<String> clientParticlesOptOut;
         boolean enableVocalFatigue = COMMON.enableVocalFatigue.get();
         boolean enableAntiSpam = COMMON.enableAntiSpam.get();
         boolean enableCapsFeature = COMMON.enableCapsFeature.get();
@@ -451,7 +452,12 @@ public final class AttractToChatConfig {
 
         if (data.ignoredPlayers != null) COMMON.ignoredPlayers.set(sanitizeNames(data.ignoredPlayers));
         if (data.trollPlayers != null) COMMON.trollPlayers.set(sanitizeNames(data.trollPlayers));
-        if (data.clientParticlesOptOut != null) COMMON.clientParticlesOptOut.set(sanitizeUuids(data.clientParticlesOptOut));
+        if (root.has("clientParticlesOptIn") && data.clientParticlesOptIn != null) {
+            COMMON.clientParticlesOptIn.set(sanitizeUuids(data.clientParticlesOptIn));
+        } else {
+            COMMON.clientParticlesOptIn.set(new ArrayList<>());
+            needsRewrite = true;
+        }
         COMMON.enableVocalFatigue.set(migratedLegacyDefaults ? false : data.enableVocalFatigue);
         COMMON.enableAntiSpam.set(migratedLegacyDefaults ? false : data.enableAntiSpam);
         if (root.has("enableCapsFeature")) {
@@ -462,7 +468,7 @@ public final class AttractToChatConfig {
             needsRewrite = true;
         }
         COMMON.debugMode.set(data.debugMode);
-        COMMON.showParticles.set(migratedLegacyDefaults ? false : data.showParticles);
+        COMMON.showParticles.set(data.showParticles);
         COMMON.hearingRange.set(data.hearingRange);
         COMMON.capsRangeBonus.set(data.capsRangeBonus);
         COMMON.mobSpeedBase.set(data.mobSpeedBase);
@@ -522,7 +528,7 @@ public final class AttractToChatConfig {
         snapshot.enabledEntities = new ArrayList<>(COMMON.enabledEntities.get());
         snapshot.ignoredPlayers = new ArrayList<>(COMMON.ignoredPlayers.get());
         snapshot.trollPlayers = new ArrayList<>(COMMON.trollPlayers.get());
-        snapshot.clientParticlesOptOut = new ArrayList<>(COMMON.clientParticlesOptOut.get());
+        snapshot.clientParticlesOptIn = new ArrayList<>(COMMON.clientParticlesOptIn.get());
         snapshot.customPresets = copyCustomPresets(customPresets);
         snapshot.presetRestorePoint = copyPresetRestorePoint(presetRestorePoint);
         return snapshot;
@@ -533,7 +539,7 @@ public final class AttractToChatConfig {
         COMMON.enabledEntities.set(new ArrayList<>(snapshot.enabledEntities));
         COMMON.ignoredPlayers.set(new ArrayList<>(snapshot.ignoredPlayers));
         COMMON.trollPlayers.set(new ArrayList<>(snapshot.trollPlayers));
-        COMMON.clientParticlesOptOut.set(new ArrayList<>(snapshot.clientParticlesOptOut));
+        COMMON.clientParticlesOptIn.set(new ArrayList<>(snapshot.clientParticlesOptIn));
         COMMON.enableVocalFatigue.set(snapshot.enableVocalFatigue);
         COMMON.enableAntiSpam.set(snapshot.enableAntiSpam);
         COMMON.enableCapsFeature.set(snapshot.enableCapsFeature);

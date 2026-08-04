@@ -3,6 +3,7 @@ package com.bielzinrx.attracttochat.command;
 import com.bielzinrx.attracttochat.AttractToChat;
 import com.bielzinrx.attracttochat.config.AttractToChatConfig;
 import com.bielzinrx.attracttochat.engine.AtcEngine;
+import com.bielzinrx.attracttochat.i18n.ServerTranslations;
 import com.bielzinrx.attracttochat.platform.Platform;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
@@ -14,7 +15,6 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -129,12 +129,12 @@ public final class AtcCommand {
                             .map(value -> value.startsWith("!") ? value.substring(1) : value)
                             .toList());
                         feedback(ctx.getSource(), "message.attracttochat.command.entity_list",
-                            enabledCount, Component.translatable(
-                                "message.attracttochat.command.entity_all_except", excluded));
+                            enabledCount, ServerTranslations.translate(
+                                ctx.getSource(), "message.attracttochat.command.entity_all_except", excluded));
                     } else {
                         feedback(ctx.getSource(), "message.attracttochat.command.entity_list",
                             entities.size(), entities.isEmpty()
-                                ? Component.translatable("message.attracttochat.command.entity_none")
+                                ? ServerTranslations.translate(ctx.getSource(), "message.attracttochat.command.entity_none")
                                 : String.join(", ", entities));
                     }
                     return 1;
@@ -201,9 +201,9 @@ public final class AtcCommand {
                 .then(Commands.literal("particles")
                     .then(Commands.literal("enable").executes(ctx -> {
                         ServerPlayer sp = ctx.getSource().getPlayerOrException();
-                        if (!AtcEngine.setParticlesDisabled(sp.getUUID(), false)) {
-                            sp.displayClientMessage(Component.translatable(
-                                "message.attracttochat.command.config_save_failed"), true);
+                        if (!AtcEngine.setParticlesEnabled(sp.getUUID(), true)) {
+                            sp.displayClientMessage(ServerTranslations.component(
+                                sp, "message.attracttochat.command.config_save_failed"), true);
                             return 0;
                         }
 
@@ -211,27 +211,27 @@ public final class AtcCommand {
                             if (ctx.getSource().hasPermission(2)) {
                                 AttractToChatConfig.COMMON.showParticles.set(true);
                                 if (!saveConfig(ctx.getSource(), null)) return 0;
-                                sp.displayClientMessage(Component.translatable(
-                                    "message.attracttochat.command.client_particles_enabled_and_server"), true);
+                                sp.displayClientMessage(ServerTranslations.component(
+                                    sp, "message.attracttochat.command.client_particles_enabled_and_server"), true);
                             } else {
-                                sp.displayClientMessage(Component.translatable(
-                                    "message.attracttochat.command.client_particles_enabled_server_off"), true);
+                                sp.displayClientMessage(ServerTranslations.component(
+                                    sp, "message.attracttochat.command.client_particles_enabled_server_off"), true);
                             }
                             return 1;
                         }
-                        sp.displayClientMessage(Component.translatable(
-                            "message.attracttochat.command.client_particles_enabled"), true);
+                        sp.displayClientMessage(ServerTranslations.component(
+                            sp, "message.attracttochat.command.client_particles_enabled"), true);
                         return 1;
                     }))
                     .then(Commands.literal("disable").executes(ctx -> {
                         ServerPlayer sp = ctx.getSource().getPlayerOrException();
-                        if (!AtcEngine.setParticlesDisabled(sp.getUUID(), true)) {
-                            sp.displayClientMessage(Component.translatable(
-                                "message.attracttochat.command.config_save_failed"), true);
+                        if (!AtcEngine.setParticlesEnabled(sp.getUUID(), false)) {
+                            sp.displayClientMessage(ServerTranslations.component(
+                                sp, "message.attracttochat.command.config_save_failed"), true);
                             return 0;
                         }
-                        sp.displayClientMessage(Component.translatable(
-                            "message.attracttochat.command.client_particles_disabled"), true);
+                        sp.displayClientMessage(ServerTranslations.component(
+                            sp, "message.attracttochat.command.client_particles_disabled"), true);
                         return 1;
                     }))))
             .then(Commands.literal("trollmode")
@@ -374,20 +374,20 @@ public final class AtcCommand {
                             })))))
             .then(Commands.literal("status").executes(ctx -> {
                 CommandSourceStack src = ctx.getSource();
-                src.sendSuccess(() -> Component.translatable("message.attracttochat.command.status_header"), false);
-                src.sendSuccess(() -> Component.translatable("message.attracttochat.command.status_hearing", AttractToChatConfig.COMMON.hearingRange.get()), false);
-                src.sendSuccess(() -> Component.translatable("message.attracttochat.command.status_capsfeature", AttractToChatConfig.COMMON.enableCapsFeature.get()), false);
-                src.sendSuccess(() -> Component.translatable("message.attracttochat.command.status_capsbonus", AttractToChatConfig.COMMON.capsRangeBonus.get()), false);
-                src.sendSuccess(() -> Component.translatable("message.attracttochat.command.status_fatigue", AttractToChatConfig.COMMON.enableVocalFatigue.get()), false);
-                src.sendSuccess(() -> Component.translatable("message.attracttochat.command.status_antispam", AttractToChatConfig.COMMON.enableAntiSpam.get()), false);
-                src.sendSuccess(() -> Component.translatable("message.attracttochat.command.status_antispam_detail",
+                src.sendSuccess(() -> ServerTranslations.component(src, "message.attracttochat.command.status_header"), false);
+                src.sendSuccess(() -> ServerTranslations.component(src, "message.attracttochat.command.status_hearing", AttractToChatConfig.COMMON.hearingRange.get()), false);
+                src.sendSuccess(() -> ServerTranslations.component(src, "message.attracttochat.command.status_capsfeature", AttractToChatConfig.COMMON.enableCapsFeature.get()), false);
+                src.sendSuccess(() -> ServerTranslations.component(src, "message.attracttochat.command.status_capsbonus", AttractToChatConfig.COMMON.capsRangeBonus.get()), false);
+                src.sendSuccess(() -> ServerTranslations.component(src, "message.attracttochat.command.status_fatigue", AttractToChatConfig.COMMON.enableVocalFatigue.get()), false);
+                src.sendSuccess(() -> ServerTranslations.component(src, "message.attracttochat.command.status_antispam", AttractToChatConfig.COMMON.enableAntiSpam.get()), false);
+                src.sendSuccess(() -> ServerTranslations.component(src, "message.attracttochat.command.status_antispam_detail",
                     AttractToChatConfig.COMMON.scanCooldownTicks.get() / 20.0,
                     AttractToChatConfig.COMMON.antiSpamMaxMessages.get(),
                     AttractToChatConfig.COMMON.antiSpamWindowSeconds.get()), false);
-                src.sendSuccess(() -> Component.translatable("message.attracttochat.command.status_mobspeed_base", AttractToChatConfig.COMMON.mobSpeedBase.get()), false);
-                src.sendSuccess(() -> Component.translatable("message.attracttochat.command.status_mobspeed_max", AttractToChatConfig.COMMON.mobSpeedMax.get()), false);
-                src.sendSuccess(() -> Component.translatable("message.attracttochat.command.status_particles", AttractToChatConfig.COMMON.showParticles.get()), false);
-                src.sendSuccess(() -> Component.translatable("message.attracttochat.command.status_footer"), false);
+                src.sendSuccess(() -> ServerTranslations.component(src, "message.attracttochat.command.status_mobspeed_base", AttractToChatConfig.COMMON.mobSpeedBase.get()), false);
+                src.sendSuccess(() -> ServerTranslations.component(src, "message.attracttochat.command.status_mobspeed_max", AttractToChatConfig.COMMON.mobSpeedMax.get()), false);
+                src.sendSuccess(() -> ServerTranslations.component(src, "message.attracttochat.command.status_particles", AttractToChatConfig.COMMON.showParticles.get()), false);
+                src.sendSuccess(() -> ServerTranslations.component(src, "message.attracttochat.command.status_footer"), false);
                 return 1;
             }))
             .then(Commands.literal("help")
@@ -395,7 +395,11 @@ public final class AtcCommand {
                 .then(Commands.argument("category", StringArgumentType.word())
                     .suggests((ctx, builder) -> {
                         List<String> categories = new ArrayList<>(Arrays.asList(
-                            "overview", "gameplay", "mobs", "client", "admin", "feature"));
+                            "overview", "gameplay", "mobs", "admin", "feature"));
+                        if (ctx.getSource().getEntity() instanceof ServerPlayer player
+                                && Platform.getHelper().hasClientMod(player)) {
+                            categories.add("client");
+                        }
                         return SharedSuggestionProvider.suggest(categories, builder);
                     })
                     .executes(ctx -> sendHelp(ctx.getSource(),
@@ -785,6 +789,8 @@ public final class AtcCommand {
     }
 
     private static void feedback(CommandSourceStack src, String key, Object... args) {
-        src.sendSuccess(() -> Component.translatable("message.attracttochat.prefix").append(Component.translatable(key, args)), true);
+        src.sendSuccess(() -> ServerTranslations.component(src, "message.attracttochat.prefix")
+            .copy()
+            .append(ServerTranslations.component(src, key, args)), true);
     }
 }

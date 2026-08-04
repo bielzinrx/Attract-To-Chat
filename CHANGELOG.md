@@ -75,3 +75,4 @@ Attract to Chat 2.1.0 expands the original Forge-only implementation into a shar
 - Debug output no longer depends on ordinary player feedback settings.
 - Corrected villager investigation priority around zombies.
 - Corrected preset restoration and custom entity-list persistence.
+- Corrected server-side localization so vanilla clients receive readable translated command, status, debug, fatigue, anti-spam, and particle messages without installing ATC.
