@@ -1,4 +1,3 @@
----
 <p align="center">
   <img src="https://i.imgur.com/3U9J050.png" alt="Attract to Chat" width="100%">
 </p>
