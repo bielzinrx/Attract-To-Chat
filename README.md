@@ -1,25 +1,17 @@
 ---
 <p align="center">
-  <img src="https://i.imgur.com/3bd8h6a.png" alt="Attract to Chat" width="100%">
+  <img src="https://i.imgur.com/3U9J050.png" alt="Attract to Chat" width="100%">
 </p>
 
-<p align="center">
-  <a href="https://modrinth.com/mod/attract-to-chat"><img src="https://img.shields.io/modrinth/dt/o7LRRWJo?style=flat-square&logo=modrinth&logoColor=white&label=Modrinth&color=1bd96a" alt="Modrinth Downloads"></a>
-  <a href="https://www.curseforge.com/minecraft/mc-mods/attract-to-chat"><img src="https://img.shields.io/curseforge/dt/1327186?style=flat-square&logo=curseforge&logoColor=white&label=CurseForge&color=f16436" alt="CurseForge Downloads"></a>
-  <a href="https://github.com/bielzinrx/Attract-To-Chat/releases"><img src="https://img.shields.io/github/v/release/bielzinrx/Attract-To-Chat?style=flat-square&label=Latest&color=blue" alt="Latest Release"></a>
-  <a href="https://github.com/bielzinrx/Attract-To-Chat/blob/main/LICENSE"><img src="https://img.shields.io/github/license/bielzinrx/Attract-To-Chat?style=flat-square&color=lightgrey" alt="License"></a>
-</p>
+<p align="center"> <a href="https://modrinth.com/mod/attract-to-chat"><img src="https://img.shields.io/modrinth/dt/attract-to-chat?style=flat-square&logo=modrinth&logoColor=white&label=Modrinth&color=1bd96a" alt="Modrinth Downloads"></a> <a href="https://www.curseforge.com/minecraft/mc-mods/attract-to-chat"><img src="https://img.shields.io/curseforge/dt/1327186?style=flat-square&logo=curseforge&logoColor=white&label=CurseForge&color=f16436" alt="CurseForge Downloads"></a> <a href="https://github.com/bielzinrx/Attract-To-Chat/releases"><img src="https://img.shields.io/github/v/release/bielzinrx/Attract-To-Chat?style=flat-square&label=Latest&color=blue" alt="Latest Release"></a> <a href="https://github.com/bielzinrx/Attract-To-Chat/blob/1.20.1/LICENSE"><img src="https://img.shields.io/github/license/bielzinrx/Attract-To-Chat?style=flat-square&color=lightgrey" alt="License"></a> </p>
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Forge-1.19.2%20%7C%201.20.1-b07219?style=flat-square&logo=curseforge&logoColor=white" alt="Forge">
-  <img src="https://img.shields.io/badge/Fabric-1.19.2%20%7C%201.20.1-5c7a4e?style=flat-square" alt="Fabric">
-  <img src="https://img.shields.io/badge/Side-Server--First-1a6b8a?style=flat-square" alt="Server First">
-  <img src="https://img.shields.io/badge/Java-17-orange?style=flat-square" alt="Java 17">
-</p>
+<p align="center"> <img src="https://img.shields.io/badge/Forge-1.20.1-b07219?style=flat-square&logo=curseforge&logoColor=white" alt="Forge 1.20.1"> <img src="https://img.shields.io/badge/Side-Server--First-1a6b8a?style=flat-square" alt="Server First"> <img src="https://img.shields.io/badge/Client-Optional-5965d9?style=flat-square" alt="Optional Client"> <img src="https://img.shields.io/badge/Java-17-orange?style=flat-square" alt="Java 17"> </p>
 
 ---
 
-**Attract to Chat** turns Minecraft chat into a gameplay mechanic — mobs hear what you type, investigate the sender's position, and react to CAPS loudness.
+**Attract to Chat** turns Minecraft chat into a gameplay mechanic.
+
+When a player sends a message, configured mobs can go to the exact location where the message was sent. Uppercase letters and exclamation marks make the message louder
 
 <p align="center">
   <img src="https://res.cloudinary.com/diexbbgwe/image/upload/v1785719396/chat_attraction_bri8qk.gif" alt="Chat attraction demonstration" width="80%">
