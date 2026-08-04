@@ -1,313 +1,102 @@
-<p align="center">
-  <img src="https://i.imgur.com/3U9J050.png" alt="Attract to Chat" width="100%">
-</p>
+![Attract to Chat](https://i.imgur.com/3U9J050.png)
 
-<p align="center">
-  <a href="https://modrinth.com/mod/attract-to-chat"><img src="https://img.shields.io/modrinth/dt/attract-to-chat?style=flat-square&logo=modrinth&logoColor=white&label=Modrinth&color=1bd96a" alt="Modrinth Downloads"></a>
-  <a href="https://www.curseforge.com/minecraft/mc-mods/attract-to-chat"><img src="https://img.shields.io/curseforge/dt/1327186?style=flat-square&logo=curseforge&logoColor=white&label=CurseForge&color=f16436" alt="CurseForge Downloads"></a>
-  <a href="https://github.com/bielzinrx/Attract-To-Chat/releases"><img src="https://img.shields.io/github/v/release/bielzinrx/Attract-To-Chat?style=flat-square&label=Latest&color=blue" alt="Latest Release"></a>
-  <a href="https://github.com/bielzinrx/Attract-To-Chat/blob/1.20.1/LICENSE"><img src="https://img.shields.io/github/license/bielzinrx/Attract-To-Chat?style=flat-square&color=lightgrey" alt="License"></a>
-</p>
+[![Modrinth Downloads](https://img.shields.io/modrinth/dt/attract-to-chat?style=flat-square&logo=modrinth&logoColor=white&label=Modrinth&color=1bd96a)](https://modrinth.com/mod/attract-to-chat) [![CurseForge Downloads](https://img.shields.io/curseforge/dt/1327186?style=flat-square&logo=curseforge&logoColor=white&label=CurseForge&color=f16436)](https://www.curseforge.com/minecraft/mc-mods/attract-to-chat) [![Latest Release](https://img.shields.io/github/v/release/bielzinrx/Attract-To-Chat?style=flat-square&label=Latest&color=blue)](https://github.com/bielzinrx/Attract-To-Chat/releases)
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Forge%201.20.1-Stable-b07219?style=flat-square&logo=curseforge&logoColor=white" alt="Forge 1.20.1 Stable">
-  <img src="https://img.shields.io/badge/Fabric%201.20.1-In%20Development-d6a85f?style=flat-square" alt="Fabric 1.20.1 In Development">
-  <img src="https://img.shields.io/badge/Forge%201.19.2-In%20Testing-8a6d4b?style=flat-square&logo=curseforge&logoColor=white" alt="Forge 1.19.2 In Testing">
-  <img src="https://img.shields.io/badge/Fabric%201.19.2-In%20Testing-6f7f5d?style=flat-square" alt="Fabric 1.19.2 In Testing">
-</p>
+![Forge 1.20.1](https://img.shields.io/badge/Forge-1.20.1-b07219?style=flat-square&logo=curseforge&logoColor=white) ![Server Side](https://img.shields.io/badge/Server--Side-Client Optional-1a6b8a?style=flat-square) ![Java 17](https://img.shields.io/badge/Java-17-orange?style=flat-square)
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Side-Server--First-1a6b8a?style=flat-square" alt="Server First">
-  <img src="https://img.shields.io/badge/Client-Optional-5965d9?style=flat-square" alt="Optional Client">
-  <img src="https://img.shields.io/badge/Java-17-orange?style=flat-square" alt="Java 17">
-</p>
+***
 
-<p align="center">
-  <strong>Current stable release: Minecraft 1.20.1 · Forge</strong><br>
-  Fabric 1.20.1 and both Minecraft 1.19.2 builds are undergoing final compatibility testing.
-</p>
+**Attract to Chat** makes Minecraft mobs react to player messages.
 
----
+Send a message and nearby mobs may hear it, travel toward the place where it was sent and investigate the area. Writing in CAPS or using exclamation marks makes the message louder, reaching mobs from farther away and making them react faster.
 
-**Attract to Chat** turns Minecraft chat into a gameplay mechanic.
+![Chat attraction demonstration](https://res.cloudinary.com/diexbbgwe/image/upload/v1785719396/chat_attraction_bri8qk.gif)
 
-When a player sends a message, configured mobs can go to the exact location where the message was sent. Uppercase letters and exclamation marks make the message louder.
+***
 
-<p align="center">
-  <img src="https://res.cloudinary.com/diexbbgwe/image/upload/v1785719396/chat_attraction_bri8qk.gif" alt="Chat attraction demonstration" width="80%">
-</p>
+## ◈ More Than Just Danger
 
----
+Tired of struggling to move villagers with boats and minecarts?
 
-## ◈ How It Works
+Use chat to call them toward farms, bases, villages or trading halls.
 
-Each accepted chat message creates a temporary sound source at the sender's position. The mod evaluates:
+You can also use messages to:
 
-- the configured base hearing range;
-- uppercase letters and exclamation marks;
-- whether the mob is already fighting, fleeing, or handling a higher-priority task;
-- whether the entity is enabled in the server configuration;
-- cooldown, anti-spam, ignore, and player-specific rules.
+*   lure hostile mobs away from another player;
+*   create distractions while escaping;
+*   turn multiplayer chat into a stealth mechanic;
+*   make survival and horror servers more intense;
+*   attract supported creatures from other mods;
+*   punish players who cannot stop shouting.
 
-Messages beginning with `/`, `!`, `@`, or `#` are ignored by the attraction engine, so commands and selected chat formats stay silent.
+![CAPS loudness demonstration](https://res.cloudinary.com/diexbbgwe/image/upload/v1785719396/caps_dnnpi4.gif)
 
-**CAPS loudness** — Uppercase text increases the effective hearing range and investigation speed. The full CAPS system is optional and can be toggled at runtime.
+***
 
-**Temporary investigation** — Mobs investigate the message location instead of receiving a permanent target. Investigation ends when the destination becomes invalid, the timer expires, or a more important AI behavior takes priority.
+## ◈ Mobs Still Act Like Mobs
 
-<p align="center">
-  <img src="https://res.cloudinary.com/diexbbgwe/image/upload/v1785719396/caps_dnnpi4.gif" alt="Normal chat versus CAPS loudness" width="80%">
-</p>
+Attract to Chat works alongside Minecraft's existing AI instead of replacing it.
 
----
+*   Fighting mobs keep their real targets.
+*   Villagers prioritize escaping zombies.
+*   Sleeping villagers can wake after hearing loud messages.
+*   Flying, aquatic and jumping mobs use compatible movement.
+*   Invalid or unreachable destinations are ignored.
+*   Investigations end when a more important behavior takes priority.
 
-## ◈ AI-Aware Reactions
+***
 
-Attract to Chat cooperates with Minecraft's existing mob AI instead of replacing it.
+## ◈ Features
 
-- Mobs keep real combat targets instead of abandoning a fight for chat noise.
-- Villagers prioritize escaping zombies over investigating messages.
-- Sleeping villagers can wake when they hear a sufficiently loud message.
-- Flying mobs receive air-compatible destinations.
-- Slimes use movement behavior suited to their navigation.
-- Endermen can react differently to sufficiently loud shouts.
-- Unsafe, unloaded, or unreachable destinations are rejected.
-- Active investigations are cancelled when a higher-priority survival behavior appears.
+*   Configurable hearing range
+*   Louder CAPS and exclamation marks
+*   Vanilla and modded mob support
+*   Villager attraction
+*   Player ignore rules
+*   Troll Mode
+*   Optional Vocal Fatigue
+*   Optional Anti-Spam
+*   Built-in and custom presets
+*   Live in-game configuration
+*   Command autocomplete
+*   Optional investigation-path particles
 
-<p align="center">
-  <img src="https://res.cloudinary.com/diexbbgwe/image/upload/v1785719395/villager_xfwilc.gif" alt="Villager survival priority demonstration" width="80%">
-</p>
+***
 
----
+## ◈ Troll Mode
 
-## ◈ Vanilla and Modded Entities
+Troll Mode allows admins to secretly make selected players much more attractive to mobs.
 
-The default configuration includes a curated selection of hostile mobs. Admins can add or remove any compatible mob, including entities added by other mods.
+Affected players can be heard from farther away, trigger faster reactions and face more aggressive pursuit — without changing the experience for everyone else on the server.
 
-```text
-/atc entity add <modid:entity>
-/atc entity remove <modid:entity>
-/atc entity list
+![Troll Mode demonstration](https://res.cloudinary.com/diexbbgwe/image/upload/v1785719396/troll_opvctf.gif)
+
+***
+
+## ◈ Server-Side Friendly
+
+Install Attract to Chat on a **Forge 1.20.1 server** and players can join without installing the mod themselves.
+
+Installing it on the client is optional and unlocks personal investigation-path particle controls.
+
 ```
-
-Autocomplete reads the server's registry. Non-mob entities without usable pathfinding — projectiles, dropped items, displays, vehicles — are filtered out.
-
-An exclusion-style entity list is also supported: when every configured entry begins with `!`, all compatible mobs are enabled except the listed ones.
-
----
-
-## ◈ Path Feedback
-
-Optional vanilla particles can display the path a mob is following toward the message source — useful for testing or playing with visible feedback.
-
-Particles are disabled by default. They only become available to a player when:
-
-1. Attract to Chat is installed on the server;
-2. the matching Forge 1.20.1 JAR is also installed on that player's client;
-3. the player enables particles manually.
-
-```text
 /atc client particles enable
 /atc client particles disable
 ```
 
-Clients without Attract to Chat can join normally and never receive these particles. The `/atc client` command only appears after the server confirms that the player has the optional client installation.
+Particles are disabled by default.
 
-<p align="center">
-  <img src="https://res.cloudinary.com/diexbbgwe/image/upload/v1785719397/particles_zml8qn.gif" alt="Mob investigation path particles" width="80%">
-</p>
-
----
-
-## ◈ Optional Vocal Fatigue
-
-Adds a consequence for repeatedly sending loud messages. Loud chat accumulates server-side strain; reaching the configured threshold temporarily prevents the player from sending chat. Fatigue and mute time persist through logout and login.
-
-- Death clears the current fatigue state.
-- Threshold and mute duration are configurable.
-- Disabled by default — no custom status effect required.
-
-```text
-/atc feature fatigue enable
-/atc feature fatigue disable
-/atc feature fatigue status
-```
-
----
-
-## ◈ Optional Anti-Spam
-
-Limits how often chat can trigger new attraction scans without hiding or deleting the player's message.
-
-- Minimum cooldown between accepted scans
-- Sliding message window
-- Configurable limits and duration
-- Runtime status and configuration commands
-
-```text
-/atc feature antispam enable
-/atc feature antispam disable
-/atc feature antispam status
-```
-
----
-
-## ◈ Ignore Rules
-
-Ignored players do not generate attraction events.
-
-```text
-/atc ignore add <player>
-/atc ignore remove <player>
-```
-
-Use `@a` to apply or remove a global rule, including players who join later:
-
-```text
-/atc ignore add @a
-/atc ignore remove @a
-```
-
-Applying an ignore rule also clears any active investigations it affects.
-
----
-
-## ◈ Troll Mode
-
-An admin-controlled chaos profile for selected players.
-
-```text
-/atc trollmode add <player>
-/atc trollmode remove <player>
-/atc trollmode list
-```
-
-For affected players, the mod can use a larger hearing range, faster investigation, direct player pursuit, and different anti-spam behavior. Troll Mode is player-specific and never changes the server globally.
-
-<p align="center">
-  <img src="https://res.cloudinary.com/diexbbgwe/image/upload/v1785719396/troll_opvctf.gif" alt="Troll Mode demonstration" width="80%">
-</p>
-
----
-
-## ◈ Presets
-
-Built-in presets for different server styles:
-
-| Preset | Intended use |
-| --- | --- |
-| `safe` | Lower-risk attraction for relaxed survival. |
-| `casual` | Balanced settings for general multiplayer. |
-| `chaos` | High range, strong CAPS impact, rapid reactions. |
-| `silent` | Normal attraction behavior without server path particles. |
-
-```text
-/atc preset set <safe|casual|chaos|silent>
-```
-
-**Custom presets** capture the current preset-managed settings and the full enabled-entity list.
-
-```text
-/atc preset custom save <name>
-/atc preset custom update <name>
-/atc preset custom rename <old> <new>
-/atc preset custom delete <name>
-/atc preset custom list
-```
-
-Apply a custom preset the same way as a built-in one: `/atc preset set <name>`.
-
-**Undo and reset**
-
-```text
-/atc preset undo    # restores the state recorded before the latest preset application
-/atc preset reset   # restores only preset-managed gameplay values
-/atc preset status
-```
-
-`undo` preserves manual changes made afterward whenever possible. `reset` does not erase ignored players, Troll Mode assignments, or saved custom presets. Preset data and undo state persist across server restarts.
-
----
-
-## ◈ Server and Client Requirements
-
-Attract to Chat is **server-first**.
-
-- The current stable release supports **Minecraft 1.20.1 with Forge**.
-- Install the Forge 1.20.1 build on the server.
-- The attraction engine, AI behavior, configuration, fatigue, anti-spam and presets run server-side.
-- Clients do not need the mod for core gameplay.
-- Installing the same JAR on the client is optional and enables personal particle controls.
-- Java 17 is required.
-
-| Loader | Minecraft version | Status |
-| --- | :---: | :---: |
-| Forge | 1.20.1 | **Stable** |
-| Fabric | 1.20.1 | Development and compatibility testing |
-| Forge | 1.19.2 | Development and compatibility testing |
-| Fabric | 1.19.2 | Development and compatibility testing |
-
-Development source may be visible in the repository before a public build is released. Only files attached to the latest GitHub release, CurseForge project or Modrinth project should be treated as supported downloads.
-
----
+***
 
 ## ◈ Installation
 
-1. Download `Attract-To-Chat-1.20.1-Forge-2.1.0.jar`.
-2. Drop the `.jar` into your Forge 1.20.1 server's `mods` folder.
-3. Start the server once to generate the configuration.
-4. Use `/atc help` in-game, or edit the generated config file directly.
+1.  Place the mod inside the Forge 1.20.1 server's `mods` folder.
+2.  Start the server.
+3.  Use `/atc help` to explore the available commands.
 
-The shared configuration lives at:
+Java 17 is required.
 
-```text
-config/attracttochat-common.json
-```
-
-Command changes are saved atomically. Valid manual edits are detected and applied live while the server is running; invalid edits are rejected without replacing the last valid runtime configuration.
-
-### Optional client installation
-
-Players may install the same Forge 1.20.1 JAR on their clients to unlock personal particle controls.
-
-Core gameplay does not require a client installation.
-
----
-
-## ◈ Command Overview
-
-All features are organized under `/atc`.
-
-| Command | Access | Purpose |
-| --- | --- | --- |
-| `/atc help [category]` | Everyone | Contextual in-game command reference. |
-| `/atc status` | Everyone | Current gameplay configuration summary. |
-| `/atc client particles ...` | Player with optional client install | Personal particle preference. |
-| `/atc debug ...` | Operator | Runtime diagnostics in the actionbar and server log. |
-| `/atc feature caps ...` | Operator | CAPS behavior controls. |
-| `/atc feature fatigue ...` | Operator | Vocal Fatigue controls. |
-| `/atc feature antispam ...` | Operator | Scan-rate controls. |
-| `/atc entity ...` | Operator | Vanilla and modded entity management. |
-| `/atc ignore ...` | Operator | Player or global immunity rules. |
-| `/atc trollmode ...` | Operator | Player-specific chaos profile. |
-| `/atc preset ...` | Operator | Built-in presets, custom presets, undo, and reset. |
-| `/atc config ...` | Operator | Live gameplay configuration. |
-
-Use `/atc help` for the full command tree supported by the installed build.
-
----
-
-## ◈ Development Status
-
-The repository remains structured as a multi-loader Architectury project.
-
-- `1.20.1` — stable source line used by the current Forge 1.20.1 release.
-- `dev/fabric-1.20.1` — ongoing Fabric 1.20.1 networking and chat compatibility work.
-- `1.19.2` — ongoing Forge and Fabric 1.19.2 compatibility work.
-
-The presence of a loader module or development branch does not mean a supported binary is currently available. Public support is determined by the files attached to an official release.
-
----
+***
 
 ## ◈ Support the Project
 
@@ -318,8 +107,6 @@ The presence of a loader module or development branch does not mean a supported 
 
 <p align="center">
   <a href="https://github.com/bielzinrx/Attract-To-Chat/issues"><img src="https://img.shields.io/badge/GitHub-Report_a_Bug-181717?style=flat-square&logo=github&logoColor=white" alt="Report a Bug"></a>
-  <a href="https://github.com/bielzinrx/Attract-To-Chat/tree/1.20.1"><img src="https://img.shields.io/badge/GitHub-Stable_Source-181717?style=flat-square&logo=github&logoColor=white" alt="Stable Source"></a>
-  <a href="https://github.com/bielzinrx/Attract-To-Chat/tree/dev/fabric-1.20.1"><img src="https://img.shields.io/badge/GitHub-Fabric_Development-181717?style=flat-square&logo=github&logoColor=white" alt="Fabric Development"></a>
   <a href="https://modrinth.com/mod/attract-to-chat"><img src="https://img.shields.io/badge/Modrinth-Project_Page-1bd96a?style=flat-square&logo=modrinth&logoColor=white" alt="Modrinth"></a>
   <a href="https://www.curseforge.com/minecraft/mc-mods/attract-to-chat"><img src="https://img.shields.io/badge/CurseForge-Project_Page-f16436?style=flat-square&logo=curseforge&logoColor=white" alt="CurseForge"></a>
   <a href="https://www.planetminecraft.com/mod/attract-to-chat-mob-attraction-by-chat-messages/"><img src="https://img.shields.io/badge/Planet_Minecraft-Project_Page-6ca740?style=flat-square&logo=minecraft&logoColor=white" alt="Planet Minecraft"></a>
