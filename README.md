@@ -3,15 +3,31 @@
   <img src="https://i.imgur.com/3U9J050.png" alt="Attract to Chat" width="100%">
 </p>
 
-<p align="center"> <a href="https://modrinth.com/mod/attract-to-chat"><img src="https://img.shields.io/modrinth/dt/attract-to-chat?style=flat-square&logo=modrinth&logoColor=white&label=Modrinth&color=1bd96a" alt="Modrinth Downloads"></a> <a href="https://www.curseforge.com/minecraft/mc-mods/attract-to-chat"><img src="https://img.shields.io/curseforge/dt/1327186?style=flat-square&logo=curseforge&logoColor=white&label=CurseForge&color=f16436" alt="CurseForge Downloads"></a> <a href="https://github.com/bielzinrx/Attract-To-Chat/releases"><img src="https://img.shields.io/github/v/release/bielzinrx/Attract-To-Chat?style=flat-square&label=Latest&color=blue" alt="Latest Release"></a> <a href="https://github.com/bielzinrx/Attract-To-Chat/blob/1.20.1/LICENSE"><img src="https://img.shields.io/github/license/bielzinrx/Attract-To-Chat?style=flat-square&color=lightgrey" alt="License"></a> </p>
+<p align="center">
+  <a href="https://modrinth.com/mod/attract-to-chat"><img src="https://img.shields.io/modrinth/dt/attract-to-chat?style=flat-square&logo=modrinth&logoColor=white&label=Modrinth&color=1bd96a" alt="Modrinth Downloads"></a>
+  <a href="https://www.curseforge.com/minecraft/mc-mods/attract-to-chat"><img src="https://img.shields.io/curseforge/dt/1327186?style=flat-square&logo=curseforge&logoColor=white&label=CurseForge&color=f16436" alt="CurseForge Downloads"></a>
+  <a href="https://github.com/bielzinrx/Attract-To-Chat/releases"><img src="https://img.shields.io/github/v/release/bielzinrx/Attract-To-Chat?style=flat-square&label=Latest&color=blue" alt="Latest Release"></a>
+  <a href="https://github.com/bielzinrx/Attract-To-Chat/blob/1.20.1/LICENSE"><img src="https://img.shields.io/github/license/bielzinrx/Attract-To-Chat?style=flat-square&color=lightgrey" alt="License"></a>
+</p>
 
-<p align="center"> <img src="https://img.shields.io/badge/Forge-1.20.1-b07219?style=flat-square&logo=curseforge&logoColor=white" alt="Forge 1.20.1"> <img src="https://img.shields.io/badge/Side-Server--First-1a6b8a?style=flat-square" alt="Server First"> <img src="https://img.shields.io/badge/Client-Optional-5965d9?style=flat-square" alt="Optional Client"> <img src="https://img.shields.io/badge/Java-17-orange?style=flat-square" alt="Java 17"> </p>
+<p align="center">
+  <img src="https://img.shields.io/badge/Stable-Forge%201.20.1-b07219?style=flat-square&logo=curseforge&logoColor=white" alt="Stable Forge 1.20.1">
+  <img src="https://img.shields.io/badge/Fabric%201.20.1-In%20Development-d6a85f?style=flat-square" alt="Fabric 1.20.1 In Development">
+  <img src="https://img.shields.io/badge/Side-Server--First-1a6b8a?style=flat-square" alt="Server First">
+  <img src="https://img.shields.io/badge/Client-Optional-5965d9?style=flat-square" alt="Optional Client">
+  <img src="https://img.shields.io/badge/Java-17-orange?style=flat-square" alt="Java 17">
+</p>
+
+<p align="center">
+  <strong>Current stable release: Minecraft 1.20.1 · Forge</strong><br>
+  Fabric and Minecraft 1.19.2 builds are undergoing final compatibility testing.
+</p>
 
 ---
 
 **Attract to Chat** turns Minecraft chat into a gameplay mechanic.
 
-When a player sends a message, configured mobs can go to the exact location where the message was sent. Uppercase letters and exclamation marks make the message louder
+When a player sends a message, configured mobs can go to the exact location where the message was sent. Uppercase letters and exclamation marks make the message louder.
 
 <p align="center">
   <img src="https://res.cloudinary.com/diexbbgwe/image/upload/v1785719396/chat_attraction_bri8qk.gif" alt="Chat attraction demonstration" width="80%">
@@ -78,14 +94,20 @@ An exclusion-style entity list is also supported: when every configured entry be
 
 ## ◈ Path Feedback
 
-When enabled, vanilla particles can display the path a mob is following toward the message source — handy for testing or playing with visible feedback.
+Optional vanilla particles can display the path a mob is following toward the message source — useful for testing or playing with visible feedback.
 
-The server controls whether path particles are available. Players with the optional client install can disable those particles for themselves only.
+Particles are disabled by default. They only become available to a player when:
+
+1. Attract to Chat is installed on the server;
+2. the matching Forge 1.20.1 JAR is also installed on that player's client;
+3. the player enables particles manually.
 
 ```text
 /atc client particles enable
 /atc client particles disable
 ```
+
+Clients without Attract to Chat can join normally and never receive these particles. The `/atc client` command only appears after the server confirms that the player has the optional client installation.
 
 <p align="center">
   <img src="https://res.cloudinary.com/diexbbgwe/image/upload/v1785719397/particles_zml8qn.gif" alt="Mob investigation path particles" width="80%">
@@ -207,23 +229,28 @@ Apply a custom preset the same way as a built-in one: `/atc preset set <name>`.
 
 Attract to Chat is **server-first**.
 
-- Install the matching Forge or Fabric build on the server.
-- The attraction engine, AI behavior, configuration, fatigue, anti-spam, presets, and integrations all run server-side.
+- The current stable release supports **Minecraft 1.20.1 with Forge**.
+- Install the Forge 1.20.1 build on the server.
+- The attraction engine, AI behavior, configuration, fatigue, anti-spam and presets run server-side.
 - Clients do not need the mod for core gameplay.
-- Installing it on the client is optional and enables personal particle preference detection.
+- Installing the same JAR on the client is optional and enables personal particle controls.
 - Java 17 is required.
 
-| Loader | 1.19.2 | 1.20.1 |
+| Loader | Minecraft version | Status |
 | --- | :---: | :---: |
-| Forge | ✔ | ✔ |
-| Fabric | ✔ | ✔ |
+| Forge | 1.20.1 | **Stable** |
+| Fabric | 1.20.1 | Development and compatibility testing |
+| Forge | 1.19.2 | Development and compatibility testing |
+| Fabric | 1.19.2 | Development and compatibility testing |
+
+Development source may be visible in the repository before a public build is released. Only files attached to the latest GitHub release, CurseForge project or Modrinth project should be treated as supported downloads.
 
 ---
 
 ## ◈ Installation
 
-1. Download the build matching your loader and Minecraft version.
-2. Drop the `.jar` into your server's `mods` folder.
+1. Download `Attract-To-Chat-1.20.1-Forge-2.1.0.jar`.
+2. Drop the `.jar` into your Forge 1.20.1 server's `mods` folder.
 3. Start the server once to generate the configuration.
 4. Use `/atc help` in-game, or edit the generated config file directly.
 
@@ -235,6 +262,12 @@ config/attracttochat-common.json
 
 Command changes are saved atomically. Valid manual edits are detected and applied live while the server is running; invalid edits are rejected without replacing the last valid runtime configuration.
 
+### Optional client installation
+
+Players may install the same Forge 1.20.1 JAR on their clients to unlock personal particle controls.
+
+Core gameplay does not require a client installation.
+
 ---
 
 ## ◈ Command Overview
@@ -245,7 +278,7 @@ All features are organized under `/atc`.
 | --- | --- | --- |
 | `/atc help [category]` | Everyone | Contextual in-game command reference. |
 | `/atc status` | Everyone | Current gameplay configuration summary. |
-| `/atc client particles ...` | Player | Personal particle preference (optional client install). |
+| `/atc client particles ...` | Player with optional client install | Personal particle preference. |
 | `/atc debug ...` | Operator | Runtime diagnostics in the actionbar and server log. |
 | `/atc feature caps ...` | Operator | CAPS behavior controls. |
 | `/atc feature fatigue ...` | Operator | Vocal Fatigue controls. |
@@ -260,6 +293,18 @@ Use `/atc help` for the full command tree supported by the installed build.
 
 ---
 
+## ◈ Development Status
+
+The repository remains structured as a multi-loader Architectury project.
+
+- `1.20.1` — stable source line used by the current Forge 1.20.1 release.
+- `dev/fabric-1.20.1` — ongoing Fabric 1.20.1 networking and chat compatibility work.
+- `1.19.2` — ongoing Forge and Fabric 1.19.2 compatibility work.
+
+The presence of a loader module or development branch does not mean a supported binary is currently available. Public support is determined by the files attached to an official release.
+
+---
+
 ## ◈ Support the Project
 
 <p align="center">
@@ -269,7 +314,8 @@ Use `/atc help` for the full command tree supported by the installed build.
 
 <p align="center">
   <a href="https://github.com/bielzinrx/Attract-To-Chat/issues"><img src="https://img.shields.io/badge/GitHub-Report_a_Bug-181717?style=flat-square&logo=github&logoColor=white" alt="Report a Bug"></a>
-  <a href="https://github.com/bielzinrx/Attract-To-Chat"><img src="https://img.shields.io/badge/GitHub-Source_Code-181717?style=flat-square&logo=github&logoColor=white" alt="Source Code"></a>
+  <a href="https://github.com/bielzinrx/Attract-To-Chat/tree/1.20.1"><img src="https://img.shields.io/badge/GitHub-Stable_Source-181717?style=flat-square&logo=github&logoColor=white" alt="Stable Source"></a>
+  <a href="https://github.com/bielzinrx/Attract-To-Chat/tree/dev/fabric-1.20.1"><img src="https://img.shields.io/badge/GitHub-Fabric_Development-181717?style=flat-square&logo=github&logoColor=white" alt="Fabric Development"></a>
   <a href="https://modrinth.com/mod/attract-to-chat"><img src="https://img.shields.io/badge/Modrinth-Project_Page-1bd96a?style=flat-square&logo=modrinth&logoColor=white" alt="Modrinth"></a>
   <a href="https://www.curseforge.com/minecraft/mc-mods/attract-to-chat"><img src="https://img.shields.io/badge/CurseForge-Project_Page-f16436?style=flat-square&logo=curseforge&logoColor=white" alt="CurseForge"></a>
   <a href="https://www.planetminecraft.com/mod/attract-to-chat-mob-attraction-by-chat-messages/"><img src="https://img.shields.io/badge/Planet_Minecraft-Project_Page-6ca740?style=flat-square&logo=minecraft&logoColor=white" alt="Planet Minecraft"></a>
