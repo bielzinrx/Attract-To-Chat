@@ -10,8 +10,13 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Stable-Forge%201.20.1-b07219?style=flat-square&logo=curseforge&logoColor=white" alt="Stable Forge 1.20.1">
+  <img src="https://img.shields.io/badge/Forge%201.20.1-Stable-b07219?style=flat-square&logo=curseforge&logoColor=white" alt="Forge 1.20.1 Stable">
   <img src="https://img.shields.io/badge/Fabric%201.20.1-In%20Development-d6a85f?style=flat-square" alt="Fabric 1.20.1 In Development">
+  <img src="https://img.shields.io/badge/Forge%201.19.2-In%20Testing-8a6d4b?style=flat-square&logo=curseforge&logoColor=white" alt="Forge 1.19.2 In Testing">
+  <img src="https://img.shields.io/badge/Fabric%201.19.2-In%20Testing-6f7f5d?style=flat-square" alt="Fabric 1.19.2 In Testing">
+</p>
+
+<p align="center">
   <img src="https://img.shields.io/badge/Side-Server--First-1a6b8a?style=flat-square" alt="Server First">
   <img src="https://img.shields.io/badge/Client-Optional-5965d9?style=flat-square" alt="Optional Client">
   <img src="https://img.shields.io/badge/Java-17-orange?style=flat-square" alt="Java 17">
@@ -19,7 +24,7 @@
 
 <p align="center">
   <strong>Current stable release: Minecraft 1.20.1 · Forge</strong><br>
-  Fabric and Minecraft 1.19.2 builds are undergoing final compatibility testing.
+  Fabric 1.20.1 and both Minecraft 1.19.2 builds are undergoing final compatibility testing.
 </p>
 
 ---
