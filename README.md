@@ -7,35 +7,17 @@
 </p>
 
 <p align="center">
-  <a href="https://modrinth.com/mod/attract-to-chat">
-    <img src="https://img.shields.io/modrinth/dt/attract-to-chat?style=flat-square&logo=modrinth&logoColor=white&label=Modrinth&color=1bd96a" alt="Modrinth Downloads">
+  <a href="https://modrinth.com/mod/attract-to-chat/versions">
+    <img src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/supported/forge_46h.png" alt="Supports Forge">
   </a>
-  <a href="https://www.curseforge.com/minecraft/mc-mods/attract-to-chat">
-    <img src="https://img.shields.io/curseforge/dt/1327186?style=flat-square&logo=curseforge&logoColor=white&label=CurseForge&color=f16436" alt="CurseForge Downloads">
-  </a>
-  <a href="https://github.com/bielzinrx/Attract-To-Chat/releases">
-    <img src="https://img.shields.io/github/v/release/bielzinrx/Attract-To-Chat?style=flat-square&logo=github&logoColor=white&label=Latest&color=2f81f7" alt="Latest Release">
+  <a href="https://modrinth.com/mod/attract-to-chat/versions">
+    <img src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/supported/fabric_46h.png" alt="Supports Fabric">
   </a>
 </p>
 
 <p align="center">
-  <a href="https://modrinth.com/mod/attract-to-chat/versions?l=forge">
-    <img src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/supported/forge_46h.png" height="28" alt="Supports Forge">
-  </a>
-  <a href="https://modrinth.com/mod/attract-to-chat/versions?l=fabric">
-    <img src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/supported/fabric_46h.png" height="28" alt="Supports Fabric">
-  </a>
-  <img src="https://img.shields.io/badge/Minecraft-1.20.1-3c8527?style=flat-square" height="28" alt="Minecraft 1.20.1">
-  <img src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/built-with/java17_46h.png" height="28" alt="Built with Java 17">
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Server--Side-Client%20Optional-1a6b8a?style=flat-square" height="28" alt="Server Side · Client Optional">
-  <img src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/requires/fabric-api_46h.png" height="28" alt="Fabric build requires Fabric API">
-</p>
-
-<p align="center">
-  <sub>Fabric API is required only when using the Fabric build.</sub>
+  <strong>Minecraft 1.20.1 · Java 17 · Server-side with optional client installation</strong><br>
+  <em>The Fabric version requires Fabric API 0.92.7 or newer.</em>
 </p>
 
 ***
