@@ -3,6 +3,10 @@
 </p>
 
 <p align="center">
+  <strong>Turn player messages into sounds that Minecraft mobs can hear and investigate.</strong>
+</p>
+
+<p align="center">
   <a href="https://modrinth.com/mod/attract-to-chat">
     <img src="https://img.shields.io/modrinth/dt/attract-to-chat?style=flat-square&logo=modrinth&logoColor=white&label=Modrinth&color=1bd96a" alt="Modrinth Downloads">
   </a>
@@ -10,18 +14,33 @@
     <img src="https://img.shields.io/curseforge/dt/1327186?style=flat-square&logo=curseforge&logoColor=white&label=CurseForge&color=f16436" alt="CurseForge Downloads">
   </a>
   <a href="https://github.com/bielzinrx/Attract-To-Chat/releases">
-    <img src="https://img.shields.io/github/v/release/bielzinrx/Attract-To-Chat?style=flat-square&label=Latest&color=blue" alt="Latest Release">
+    <img src="https://img.shields.io/github/v/release/bielzinrx/Attract-To-Chat?style=flat-square&logo=github&logoColor=white&label=Latest&color=2f81f7" alt="Latest Release">
   </a>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Forge-1.20.1-b07219?style=flat-square&logo=curseforge&logoColor=white" alt="Forge 1.20.1">
-  <img src="https://img.shields.io/badge/Fabric-1.20.1-dbd0b4?style=flat-square" alt="Fabric 1.20.1">
-  <img src="https://img.shields.io/badge/Server--Side-Client%20Optional-1a6b8a?style=flat-square" alt="Server Side · Client Optional">
-  <img src="https://img.shields.io/badge/Java-17-orange?style=flat-square" alt="Java 17">
+  <a href="https://modrinth.com/mod/attract-to-chat/versions?l=forge">
+    <img src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/supported/forge_46h.png" height="28" alt="Supports Forge">
+  </a>
+  <a href="https://modrinth.com/mod/attract-to-chat/versions?l=fabric">
+    <img src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/supported/fabric_46h.png" height="28" alt="Supports Fabric">
+  </a>
+  <img src="https://img.shields.io/badge/Minecraft-1.20.1-3c8527?style=flat-square" height="28" alt="Minecraft 1.20.1">
+  <img src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/built-with/java17_46h.png" height="28" alt="Built with Java 17">
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Server--Side-Client%20Optional-1a6b8a?style=flat-square" height="28" alt="Server Side · Client Optional">
+  <img src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/requires/fabric-api_46h.png" height="28" alt="Fabric build requires Fabric API">
+</p>
+
+<p align="center">
+  <sub>Fabric API is required only when using the Fabric build.</sub>
 </p>
 
 ***
+
+## ◈ Messages Become Sound
 
 **Attract to Chat** makes Minecraft mobs react to player messages.
 
@@ -107,12 +126,25 @@ Particles are disabled by default.
 
 ## ◈ Installation
 
-1.  Download the Forge or Fabric 1.20.1 build that matches the server loader. Fabric requires Fabric API.
-2.  Place the mod inside the server's `mods` folder.
-3.  Start the server.
-4.  Use `/atc help` to explore the available commands.
+### Requirements
 
-Java 17 is required.
+- Minecraft Java Edition **1.20.1**
+- **Java 17**
+- A Forge or Fabric server matching the downloaded build
+
+| Loader | Attract to Chat | Additional dependency |
+|:--|:--|:--|
+| **Forge 1.20.1** | **2.1.0-r1** | None |
+| **Fabric 1.20.1** | **2.1.0** | [Fabric API 0.92.7 or newer](https://modrinth.com/mod/fabric-api/versions?g=1.20.1) |
+
+1. **Choose the correct build.** Download the version matching the loader used by your server from [Modrinth](https://modrinth.com/mod/attract-to-chat/versions), [CurseForge](https://www.curseforge.com/minecraft/mc-mods/attract-to-chat/files) or [GitHub Releases](https://github.com/bielzinrx/Attract-To-Chat/releases).
+2. **Install the required files.** Place the Attract to Chat JAR inside the server's `mods` folder. Fabric installations must also include Fabric API.
+3. **Start or restart the server.** The mod creates its configuration automatically during startup.
+4. **Confirm the installation.** Use `/atc help` in game to view the available commands.
+
+### Optional Client Installation
+
+Players can join a modded server without installing Attract to Chat themselves. Client installation is only needed for personal investigation-path particle controls. The client and server must use the same loader; Fabric clients also require Fabric API.
 
 ***
 
@@ -127,7 +159,7 @@ Java 17 is required.
   <a href="https://github.com/bielzinrx/Attract-To-Chat/issues"><img src="https://img.shields.io/badge/GitHub-Report_a_Bug-181717?style=flat-square&logo=github&logoColor=white" alt="Report a Bug"></a>
   <a href="https://modrinth.com/mod/attract-to-chat"><img src="https://img.shields.io/badge/Modrinth-Project_Page-1bd96a?style=flat-square&logo=modrinth&logoColor=white" alt="Modrinth"></a>
   <a href="https://www.curseforge.com/minecraft/mc-mods/attract-to-chat"><img src="https://img.shields.io/badge/CurseForge-Project_Page-f16436?style=flat-square&logo=curseforge&logoColor=white" alt="CurseForge"></a>
-  <a href="https://www.planetminecraft.com/mod/attract-to-chat-mob-attraction-by-chat-messages/"><img src="https://img.shields.io/badge/Planet_Minecraft-Project_Page-6ca740?style=flat-square&logo=minecraft&logoColor=white" alt="Planet Minecraft"></a>
+  <a href="https://www.planetminecraft.com/mod/attract-to-chat-mob-attraction-by-chat-messages/"><img src="https://raw.githubusercontent.com/VoxelForge-oss/voxicons/main/badges-248/badges/planet-minecraft.png" width="78" height="20" alt="Planet Minecraft"></a>
 </p>
 
 <p align="center">
