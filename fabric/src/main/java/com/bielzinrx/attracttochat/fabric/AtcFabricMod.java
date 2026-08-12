@@ -20,10 +20,6 @@ public final class AtcFabricMod implements ModInitializer {
 
     private static final int CLIENT_PROTOCOL = 1;
 
-    /*
-     * ALLOW_CHAT_MESSAGE is also fired after messages originating from /say
-     * and /me. This marker keeps commands out of the normal ATC chat path.
-     */
     private static final ThreadLocal<PlayerChatMessage> COMMAND_MESSAGE =
         new ThreadLocal<>();
 
