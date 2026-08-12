@@ -1,5 +1,17 @@
 # Attract to Chat 2.1.0
 
+Publication versions for Minecraft 1.20.1: Fabric `2.1.0`; corrected Forge revision `2.1.0-r1`.
+
+## QA fixes included before release
+
+- Ground mobs now resolve airborne chat sources to a standable destination below the source across the effective hearing depth, fixing the reproduced three-air pass/four-air fail boundary.
+- Debug output now distinguishes mobs that heard a message from investigations that actually started, reports per-mob destination/path failures, and formats coordinates without intermediary class names.
+- Fabric now declares Fabric API as a required dependency so Fabric Loader reports a clean dependency error before ATC initializes.
+- Fabric chat handling now uses Fabric API message events instead of a loader-specific chat mixin, excludes command-generated `/say` and `/me` messages, and uses a validated client-presence handshake for optional client commands and particles.
+- Removed the duplicate public `/atc config particles enable|disable` path; `/atc client particles enable|disable` remains the personal preference, while server availability remains a separate configuration value.
+- Explicit debug, particle, CAPS, vocal-fatigue, and anti-spam toggles now report when the requested state is already active without saving, resyncing, or clearing runtime state again.
+- Added regression tests for ground-target depth, debug coordinate formatting, and the particle command tree.
+
 ## Overview
 
 Attract to Chat 2.1.0 expands the original Forge-only implementation into a shared Forge/Fabric codebase for Minecraft 1.19.2 and 1.20.1. The update replaces permanent target assignment with a temporary sound-investigation system designed to cooperate with existing mob AI.

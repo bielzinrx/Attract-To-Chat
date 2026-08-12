@@ -512,9 +512,9 @@ public final class AtcEngine {
 
         mobs.sort(Comparator.comparingDouble(mob -> mob.blockPosition().distSqr(target)));
 
-        int processed = 0;
+        int attempted = 0;
         for (Mob mob : mobs) {
-            if (processed >= Math.max(1, maxTargets)) break;
+            if (attempted >= Math.max(1, maxTargets)) break;
 
             if (MoveToSoundGoal.shouldVillagerPrioritizeSafety(mob)) continue;
 
@@ -540,16 +540,32 @@ public final class AtcEngine {
 
                 double dynamicSpeed = computeAttractNavSpeed(score, trollTarget, blockTarget);
 
-                data.goal().setTarget(target, score, capped, score.playerUUID,
+                attempted++;
+                MoveToSoundGoal.InvestigationStartResult result = data.goal().setTarget(
+                    target, score, capped, score.playerUUID,
                     dynamicSpeed, trollTarget, blockTarget);
 
-                ids.add(mob.getId());
-                processed++;
+                if (result.started()) {
+                    ids.add(mob.getId());
+                }
+
+                if (isDebugMode()) {
+                    String entityId = Platform.getHelper().getEntityTypeId(mob.getType());
+                    BlockPos destination = data.goal().getInvestigationTarget();
+                    if (result.started() && destination != null) {
+                        LOGGER.info("[ATC-Debug] {} -> investigation started at {}",
+                            entityId, formatCoordinates(destination));
+                    } else {
+                        LOGGER.info("[ATC-Debug] {} -> investigation failed: {}",
+                            entityId, result.debugReason());
+                    }
+                }
             }
         }
 
         if (isDebugMode()) {
-            LOGGER.info("[ATC-Debug] Attracted {} mobs at {}", ids.size(), target);
+            LOGGER.info("[ATC-Debug] Heard by {} mobs; attempted: {}; investigations started: {}; sound source: {}",
+                mobs.size(), attempted, ids.size(), formatCoordinates(target));
         }
 
         return ids.stream().mapToInt(i -> i).toArray();
@@ -765,6 +781,7 @@ public final class AtcEngine {
     private static boolean setUuidPreference(UUID id, boolean enabled, Set<UUID> liveSet,
             AttractToChatConfig.ConfigValue<List<String>> configList) {
         if (id == null) return false;
+        if (liveSet.contains(id) == enabled) return true;
         if (enabled) {
             liveSet.add(id);
         } else {
@@ -796,7 +813,7 @@ public final class AtcEngine {
         BlockPos center = blockTarget ? target.above() : target;
         BlockPos safe = findSafeTeleportNear(level, center, 4);
         if (safe == null) {
-            LOGGER.debug("Skipped enderman teleport: no safe landing near {}", center);
+            LOGGER.debug("Skipped enderman teleport: no safe landing near {}", formatCoordinates(center));
             return;
         }
         enderman.teleportTo(safe.getX() + 0.5, safe.getY(), safe.getZ() + 0.5);
@@ -831,6 +848,11 @@ public final class AtcEngine {
             && head.getCollisionShape(level, pos.above()).isEmpty()
             && !ground.getCollisionShape(level, pos.below()).isEmpty()
             && !ground.isAir();
+    }
+
+    public static String formatCoordinates(BlockPos pos) {
+        if (pos == null) return "(unknown)";
+        return "(" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + ")";
     }
 
     private static void reconcileLoadedMobs() {

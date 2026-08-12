@@ -16,6 +16,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Forge-1.20.1-b07219?style=flat-square&logo=curseforge&logoColor=white" alt="Forge 1.20.1">
+  <img src="https://img.shields.io/badge/Fabric-1.20.1-dbd0b4?style=flat-square" alt="Fabric 1.20.1">
   <img src="https://img.shields.io/badge/Server--Side-Client%20Optional-1a6b8a?style=flat-square" alt="Server Side · Client Optional">
   <img src="https://img.shields.io/badge/Java-17-orange?style=flat-square" alt="Java 17">
 </p>
@@ -91,7 +92,7 @@ Affected players can be heard from farther away, trigger faster reactions and fa
 
 ## ◈ Server-Side Friendly
 
-Install Attract to Chat on a **Forge 1.20.1 server** and players can join without installing the mod themselves.
+Install Attract to Chat on a **Forge or Fabric 1.20.1 server** and players can join without installing the mod themselves.
 
 Installing it on the client is optional and unlocks personal investigation-path particle controls.
 
@@ -106,9 +107,10 @@ Particles are disabled by default.
 
 ## ◈ Installation
 
-1.  Place the mod inside the Forge 1.20.1 server's `mods` folder.
-2.  Start the server.
-3.  Use `/atc help` to explore the available commands.
+1.  Download the Forge or Fabric 1.20.1 build that matches the server loader. Fabric requires Fabric API.
+2.  Place the mod inside the server's `mods` folder.
+3.  Start the server.
+4.  Use `/atc help` to explore the available commands.
 
 Java 17 is required.
 

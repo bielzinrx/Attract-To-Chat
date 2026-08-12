@@ -5,6 +5,24 @@ architectury {
     fabric()
 }
 
+def atcHotSwapEnabled = rootProject.findProperty("atcHotSwap")?.toString()?.toBoolean() ?: false
+
+if (atcHotSwapEnabled) {
+    loom {
+        runs {
+            client {
+                vmArg "-XX:+AllowEnhancedClassRedefinition"
+                property "mixin.hotSwap", "true"
+            }
+
+            server {
+                vmArg "-XX:+AllowEnhancedClassRedefinition"
+                property "mixin.hotSwap", "true"
+            }
+        }
+    }
+}
+
 configurations {
     common       { canBeResolved = true; canBeConsumed = false }
     shadowBundle { canBeResolved = true; canBeConsumed = false }

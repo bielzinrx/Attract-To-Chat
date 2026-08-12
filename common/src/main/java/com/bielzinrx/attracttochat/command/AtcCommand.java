@@ -58,6 +58,12 @@ public final class AtcCommand {
                             return 0;
                         }
                         boolean v = s.equalsIgnoreCase("on");
+                        if (AtcEngine.isDebugMode() == v) {
+                            feedback(ctx.getSource(), v
+                                ? "message.attracttochat.command.debug_already_on"
+                                : "message.attracttochat.command.debug_already_off");
+                            return 1;
+                        }
                         AtcEngine.setDebugModeOverride(v);
                         feedback(ctx.getSource(), v ? "message.attracttochat.command.debug_on" : "message.attracttochat.command.debug_off");
                         return 1;
@@ -201,6 +207,11 @@ public final class AtcCommand {
                 .then(Commands.literal("particles")
                     .then(Commands.literal("enable").executes(ctx -> {
                         ServerPlayer sp = ctx.getSource().getPlayerOrException();
+                        if (AtcEngine.isParticlesEnabled(sp.getUUID())) {
+                            sp.displayClientMessage(ServerTranslations.component(
+                                sp, "message.attracttochat.command.client_particles_already_enabled"), true);
+                            return 1;
+                        }
                         if (!AtcEngine.setParticlesEnabled(sp.getUUID(), true)) {
                             sp.displayClientMessage(ServerTranslations.component(
                                 sp, "message.attracttochat.command.config_save_failed"), true);
@@ -208,15 +219,8 @@ public final class AtcCommand {
                         }
 
                         if (!AttractToChatConfig.COMMON.showParticles.get()) {
-                            if (ctx.getSource().hasPermission(2)) {
-                                AttractToChatConfig.COMMON.showParticles.set(true);
-                                if (!saveConfig(ctx.getSource(), null)) return 0;
-                                sp.displayClientMessage(ServerTranslations.component(
-                                    sp, "message.attracttochat.command.client_particles_enabled_and_server"), true);
-                            } else {
-                                sp.displayClientMessage(ServerTranslations.component(
-                                    sp, "message.attracttochat.command.client_particles_enabled_server_off"), true);
-                            }
+                            sp.displayClientMessage(ServerTranslations.component(
+                                sp, "message.attracttochat.command.client_particles_enabled_server_off"), true);
                             return 1;
                         }
                         sp.displayClientMessage(ServerTranslations.component(
@@ -225,6 +229,11 @@ public final class AtcCommand {
                     }))
                     .then(Commands.literal("disable").executes(ctx -> {
                         ServerPlayer sp = ctx.getSource().getPlayerOrException();
+                        if (!AtcEngine.isParticlesEnabled(sp.getUUID())) {
+                            sp.displayClientMessage(ServerTranslations.component(
+                                sp, "message.attracttochat.command.client_particles_already_disabled"), true);
+                            return 1;
+                        }
                         if (!AtcEngine.setParticlesEnabled(sp.getUUID(), false)) {
                             sp.displayClientMessage(ServerTranslations.component(
                                 sp, "message.attracttochat.command.config_save_failed"), true);
@@ -346,13 +355,6 @@ public final class AtcCommand {
                             return 1;
                         })))
 
-                .then(Commands.literal("particles")
-                    .then(Commands.literal("enable").executes(ctx -> setBooleanConfig(
-                        ctx.getSource(), AttractToChatConfig.COMMON.showParticles, true,
-                        "message.attracttochat.command.particles_enabled")))
-                    .then(Commands.literal("disable").executes(ctx -> setBooleanConfig(
-                        ctx.getSource(), AttractToChatConfig.COMMON.showParticles, false,
-                        "message.attracttochat.command.particles_disabled"))))
                 .then(Commands.literal("fatigue")
                     .then(Commands.literal("threshold")
                         .then(Commands.argument("value", IntegerArgumentType.integer(1, 100000))
@@ -415,6 +417,10 @@ public final class AtcCommand {
                 return 1;
             })
             .then(Commands.literal("enable").executes(ctx -> {
+                if (AttractToChatConfig.COMMON.enableCapsFeature.get()) {
+                    feedback(ctx.getSource(), "message.attracttochat.command.caps_already_enabled");
+                    return 1;
+                }
                 AttractToChatConfig.COMMON.enableCapsFeature.set(true);
                 int cleared = saveAndApplyRuntime(ctx.getSource(), true, false);
                 if (cleared < 0) return 0;
@@ -422,6 +428,10 @@ public final class AtcCommand {
                 return 1;
             }))
             .then(Commands.literal("disable").executes(ctx -> {
+                if (!AttractToChatConfig.COMMON.enableCapsFeature.get()) {
+                    feedback(ctx.getSource(), "message.attracttochat.command.caps_already_disabled");
+                    return 1;
+                }
                 AttractToChatConfig.COMMON.enableCapsFeature.set(false);
                 int cleared = saveAndApplyRuntime(ctx.getSource(), true, false);
                 if (cleared < 0) return 0;
@@ -438,12 +448,20 @@ public final class AtcCommand {
     private static LiteralArgumentBuilder<CommandSourceStack> buildFatigueBranch() {
         return Commands.literal("fatigue")
             .then(Commands.literal("enable").executes(ctx -> {
+                if (AttractToChatConfig.COMMON.enableVocalFatigue.get()) {
+                    feedback(ctx.getSource(), "message.attracttochat.command.fatigue_already_enabled");
+                    return 1;
+                }
                 AttractToChatConfig.COMMON.enableVocalFatigue.set(true);
                 if (saveAndApplyRuntime(ctx.getSource(), false, false) < 0) return 0;
                 feedback(ctx.getSource(), "message.attracttochat.command.fatigue_enabled");
                 return 1;
             }))
             .then(Commands.literal("disable").executes(ctx -> {
+                if (!AttractToChatConfig.COMMON.enableVocalFatigue.get()) {
+                    feedback(ctx.getSource(), "message.attracttochat.command.fatigue_already_disabled");
+                    return 1;
+                }
                 AttractToChatConfig.COMMON.enableVocalFatigue.set(false);
                 if (saveAndApplyRuntime(ctx.getSource(), false, false) < 0) return 0;
                 AtcEngine.clearVocalFatigueState();
@@ -455,6 +473,10 @@ public final class AtcCommand {
     private static LiteralArgumentBuilder<CommandSourceStack> buildAntispamBranch() {
         return Commands.literal("antispam")
             .then(Commands.literal("enable").executes(ctx -> {
+                if (AttractToChatConfig.COMMON.enableAntiSpam.get()) {
+                    feedback(ctx.getSource(), "message.attracttochat.command.antispam_already_enabled");
+                    return 1;
+                }
                 AttractToChatConfig.COMMON.enableAntiSpam.set(true);
                 if (saveAndApplyRuntime(ctx.getSource(), false, true) < 0) return 0;
                 feedback(ctx.getSource(), "message.attracttochat.command.antispam_enabled_detailed",
@@ -463,6 +485,10 @@ public final class AtcCommand {
                 return 1;
             }))
             .then(Commands.literal("disable").executes(ctx -> {
+                if (!AttractToChatConfig.COMMON.enableAntiSpam.get()) {
+                    feedback(ctx.getSource(), "message.attracttochat.command.antispam_already_disabled");
+                    return 1;
+                }
                 AttractToChatConfig.COMMON.enableAntiSpam.set(false);
                 if (saveAndApplyRuntime(ctx.getSource(), false, true) < 0) return 0;
                 feedback(ctx.getSource(), "message.attracttochat.command.antispam_disabled");
@@ -760,14 +786,6 @@ public final class AtcCommand {
             AtcEngine.clearAntiSpamState();
         }
         return cleared;
-    }
-
-    private static int setBooleanConfig(CommandSourceStack src,
-            AttractToChatConfig.ConfigValue<Boolean> config, boolean value, String feedbackKey) {
-        config.set(value);
-        if (saveAndApplyRuntime(src, false, false) < 0) return 0;
-        feedback(src, feedbackKey);
-        return 1;
     }
 
     private static boolean saveConfig(CommandSourceStack src, Runnable runtimeUpdate) {
