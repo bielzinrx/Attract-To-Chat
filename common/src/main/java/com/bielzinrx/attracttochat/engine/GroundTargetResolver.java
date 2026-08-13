@@ -2,13 +2,6 @@ package com.bielzinrx.attracttochat.engine;
 
 import java.util.function.IntPredicate;
 
-/**
- * Small, Minecraft-independent part of ground destination resolution.
- *
- * <p>The chat position is an acoustic source and may be in mid-air. Ground
- * mobs need the feet position immediately above the first standable floor in
- * that column.</p>
- */
 final class GroundTargetResolver {
     static final int NO_TARGET = Integer.MIN_VALUE;
 
