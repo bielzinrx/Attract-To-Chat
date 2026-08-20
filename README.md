@@ -1,25 +1,16 @@
----
 <p align="center">
-  <img src="https://i.imgur.com/3bd8h6a.png" alt="Attract to Chat" width="100%">
+  <img src="https://i.imgur.com/3U9J050.png" alt="Attract to Chat" width="100%">
 </p>
 
-<p align="center">
-  <a href="https://modrinth.com/mod/attract-to-chat"><img src="https://img.shields.io/modrinth/dt/o7LRRWJo?style=flat-square&logo=modrinth&logoColor=white&label=Modrinth&color=1bd96a" alt="Modrinth Downloads"></a>
-  <a href="https://www.curseforge.com/minecraft/mc-mods/attract-to-chat"><img src="https://img.shields.io/curseforge/dt/1327186?style=flat-square&logo=curseforge&logoColor=white&label=CurseForge&color=f16436" alt="CurseForge Downloads"></a>
-  <a href="https://github.com/bielzinrx/Attract-To-Chat/releases"><img src="https://img.shields.io/github/v/release/bielzinrx/Attract-To-Chat?style=flat-square&label=Latest&color=blue" alt="Latest Release"></a>
-  <a href="https://github.com/bielzinrx/Attract-To-Chat/blob/main/LICENSE"><img src="https://img.shields.io/github/license/bielzinrx/Attract-To-Chat?style=flat-square&color=lightgrey" alt="License"></a>
-</p>
+<p align="center"> <a href="https://modrinth.com/mod/attract-to-chat"><img src="https://img.shields.io/modrinth/dt/attract-to-chat?style=flat-square&logo=modrinth&logoColor=white&label=Modrinth&color=1bd96a" alt="Modrinth Downloads"></a> <a href="https://www.curseforge.com/minecraft/mc-mods/attract-to-chat"><img src="https://img.shields.io/curseforge/dt/1327186?style=flat-square&logo=curseforge&logoColor=white&label=CurseForge&color=f16436" alt="CurseForge Downloads"></a> <a href="https://github.com/bielzinrx/Attract-To-Chat/releases"><img src="https://img.shields.io/github/v/release/bielzinrx/Attract-To-Chat?style=flat-square&label=Latest&color=blue" alt="Latest Release"></a> <a href="https://github.com/bielzinrx/Attract-To-Chat/blob/1.19.2/LICENSE"><img src="https://img.shields.io/github/license/bielzinrx/Attract-To-Chat?style=flat-square&color=lightgrey" alt="License"></a> </p>
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Forge-1.19.2%20%7C%201.20.1-b07219?style=flat-square&logo=curseforge&logoColor=white" alt="Forge">
-  <img src="https://img.shields.io/badge/Fabric-1.19.2%20%7C%201.20.1-5c7a4e?style=flat-square" alt="Fabric">
-  <img src="https://img.shields.io/badge/Side-Server--First-1a6b8a?style=flat-square" alt="Server First">
-  <img src="https://img.shields.io/badge/Java-17-orange?style=flat-square" alt="Java 17">
-</p>
+<p align="center"> <img src="https://img.shields.io/badge/Forge-1.19.2-b07219?style=flat-square&logo=curseforge&logoColor=white" alt="Forge 1.19.2"> <img src="https://img.shields.io/badge/Fabric-1.19.2-dbd0b4?style=flat-square" alt="Fabric 1.19.2"> <img src="https://img.shields.io/badge/Server--Side-Client%20Optional-1a6b8a?style=flat-square" alt="Server Side, Client Optional"> <img src="https://img.shields.io/badge/Java-17-orange?style=flat-square" alt="Java 17"> </p>
 
 ---
 
-**Attract to Chat** turns Minecraft chat into a gameplay mechanic — mobs hear what you type, investigate the sender's position, and react to CAPS loudness.
+**Attract to Chat** turns Minecraft chat into a gameplay mechanic.
+
+When a player sends a message, configured mobs can go to the exact location where the message was sent. Uppercase letters and exclamation marks make the message louder.
 
 <p align="center">
   <img src="https://res.cloudinary.com/diexbbgwe/image/upload/v1785719396/chat_attraction_bri8qk.gif" alt="Chat attraction demonstration" width="80%">
@@ -88,7 +79,7 @@ An exclusion-style entity list is also supported: when every configured entry be
 
 When enabled, vanilla particles can display the path a mob is following toward the message source — handy for testing or playing with visible feedback.
 
-The server controls whether path particles are available. Players with the optional client install can disable those particles for themselves only.
+The server controls whether path particles are available. Players with the optional client install can opt in or out for themselves; personal particles are disabled by default.
 
 ```text
 /atc client particles enable
@@ -202,8 +193,8 @@ Apply a custom preset the same way as a built-in one: `/atc preset set <name>`.
 **Undo and reset**
 
 ```text
-/atc preset undo    # restores the state recorded before the latest preset application
-/atc preset reset   # restores only preset-managed gameplay values
+/atc preset undo
+/atc preset reset
 /atc preset status
 ```
 
@@ -216,7 +207,7 @@ Apply a custom preset the same way as a built-in one: `/atc preset set <name>`.
 Attract to Chat is **server-first**.
 
 - Install the matching Forge or Fabric build on the server.
-- The attraction engine, AI behavior, configuration, fatigue, anti-spam, presets, and integrations all run server-side.
+- The attraction engine, AI behavior, configuration, fatigue, anti-spam, and presets all run server-side.
 - Clients do not need the mod for core gameplay.
 - Installing it on the client is optional and enables personal particle preference detection.
 - Java 17 is required.
@@ -230,10 +221,11 @@ Attract to Chat is **server-first**.
 
 ## ◈ Installation
 
-1. Download the build matching your loader and Minecraft version.
-2. Drop the `.jar` into your server's `mods` folder.
-3. Start the server once to generate the configuration.
-4. Use `/atc help` in-game, or edit the generated config file directly.
+1. Install Forge 43.4.0 or newer, or Fabric Loader with Fabric API 0.76.0 or newer, for Minecraft 1.19.2.
+2. Download the Attract to Chat 2.1.0 JAR matching that loader.
+3. Place the required JARs in the server's `mods` folder and start the server.
+4. Optionally install the same build on a client to unlock personal path-particle controls. Fabric clients also require Fabric API.
+5. Use `/atc help` in-game, or edit the generated config file directly.
 
 The shared configuration lives at:
 

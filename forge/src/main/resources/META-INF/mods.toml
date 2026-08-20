@@ -8,6 +8,7 @@ version="${version}"
 displayName="Attract-To-Chat"
 authors="bielzinrx"
 logoFile="icon.png"
+displayTest="IGNORE_SERVER_VERSION"
 description='''
 Mobs hear chat messages and investigate the source. Includes CAPS loudness, presets, vocal fatigue, anti-spam, and Troll Mode.
 '''

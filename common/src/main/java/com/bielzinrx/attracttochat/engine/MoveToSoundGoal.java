@@ -18,6 +18,31 @@ import java.util.EnumSet;
 import java.util.UUID;
 
 public class MoveToSoundGoal extends Goal {
+    public enum InvestigationStartResult {
+        STARTED(true, "investigation started"),
+        VILLAGER_SAFETY(false, "villager safety has priority"),
+        TROLL_TARGET_LOCKED(false, "higher-priority Troll Mode target is active"),
+        COMBAT_PRIORITY(false, "combat target has priority"),
+        NO_REACHABLE_DESTINATION(false, "no standable destination below the sound source"),
+        PATH_NOT_CREATED(false, "navigation could not create a path");
+
+        private final boolean started;
+        private final String debugReason;
+
+        InvestigationStartResult(boolean started, String debugReason) {
+            this.started = started;
+            this.debugReason = debugReason;
+        }
+
+        public boolean started() {
+            return started;
+        }
+
+        public String debugReason() {
+            return debugReason;
+        }
+    }
+
     private final Mob mob;
     private int baseTicks;
     private BlockPos targetPos;
@@ -47,7 +72,7 @@ public class MoveToSoundGoal extends Goal {
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
     }
 
-    public void setTarget(BlockPos pos, MessageScore score, double range, UUID playerUUID,
+    public InvestigationStartResult setTarget(BlockPos pos, MessageScore score, double range, UUID playerUUID,
             double speed, boolean trollTarget, boolean blockTarget) {
 
         if (mob instanceof EnderMan) {
@@ -56,13 +81,17 @@ public class MoveToSoundGoal extends Goal {
 
         if (shouldVillagerPrioritizeSafety(mob)) {
             yieldToVillagerSafety();
-            return;
+            return InvestigationStartResult.VILLAGER_SAFETY;
         }
         preserveVillagerSafetyState = false;
 
-        if (lockedToTrollTarget && !trollTarget && resolveTargetPlayer() != null) return;
+        if (lockedToTrollTarget && !trollTarget && resolveTargetPlayer() != null) {
+            return InvestigationStartResult.TROLL_TARGET_LOCKED;
+        }
 
-        if (!trollTarget && hasCombatTarget()) return;
+        if (!trollTarget && hasCombatTarget()) {
+            return InvestigationStartResult.COMBAT_PRIORITY;
+        }
 
         this.blockTarget = blockTarget;
         this.playerUUID = playerUUID;
@@ -71,10 +100,10 @@ public class MoveToSoundGoal extends Goal {
         this.lockedToTrollTarget = trollTarget && !blockTarget;
 
         this.followLivePlayer = false;
-        BlockPos safeTarget = sanitizeTarget(pos);
+        BlockPos safeTarget = sanitizeTarget(pos, range);
         if (safeTarget == null) {
             clearSoundInvestigation();
-            return;
+            return InvestigationStartResult.NO_REACHABLE_DESTINATION;
         }
         this.targetPos = safeTarget;
 
@@ -89,21 +118,32 @@ public class MoveToSoundGoal extends Goal {
 
         this.particleCooldown = 0;
 
+        boolean started;
         if (mob instanceof Villager villager) {
-            setVillagerWalkTarget(villager);
+            started = setVillagerWalkTarget(villager);
         } else if (mob instanceof Slime) {
-            directSlime();
+            started = directSlime();
         } else {
-            safeNavigateToTarget();
+            started = safeNavigateToTarget();
+        }
+
+        if (!started) {
+            clearSoundInvestigation();
+            return InvestigationStartResult.PATH_NOT_CREATED;
         }
 
         if (!this.lockedToTrollTarget && this.targetPos != null) {
             AtcEngine.trySpawnPathParticles(mob, this.targetPos, true);
         }
+        return InvestigationStartResult.STARTED;
     }
 
     public UUID getTrackedPlayerId() {
         return playerUUID;
+    }
+
+    public BlockPos getInvestigationTarget() {
+        return targetPos;
     }
 
     public void updateBaseTicks(int baseTicks) {
@@ -125,7 +165,7 @@ public class MoveToSoundGoal extends Goal {
                 clearSoundInvestigation();
                 return false;
             }
-            BlockPos safeTarget = sanitizeTarget(player.blockPosition());
+            BlockPos safeTarget = sanitizeTarget(player.blockPosition(), Math.sqrt(currentRangeSq));
             if (safeTarget == null) {
                 clearSoundInvestigation();
                 return false;
@@ -227,7 +267,7 @@ public class MoveToSoundGoal extends Goal {
 
             AttractToChat.LOGGER.warn(
                 "MoveToSoundGoal tick failed for {} at {}: {}",
-                mob.getType(), targetPos, t.toString());
+                mob.getType(), AtcEngine.formatCoordinates(targetPos), t.toString());
             clearSoundInvestigation();
         }
     }
@@ -252,7 +292,7 @@ public class MoveToSoundGoal extends Goal {
                 clearSoundInvestigation();
                 return;
             }
-            BlockPos safeTarget = sanitizeTarget(player.blockPosition());
+            BlockPos safeTarget = sanitizeTarget(player.blockPosition(), Math.sqrt(currentRangeSq));
             if (safeTarget == null) {
                 clearSoundInvestigation();
                 return;
@@ -301,7 +341,7 @@ public class MoveToSoundGoal extends Goal {
         particleCooldown = urgentShout ? 6 : 8;
     }
 
-    private BlockPos sanitizeTarget(BlockPos pos) {
+    private BlockPos sanitizeTarget(BlockPos pos, double range) {
         if (pos == null || !(mob.level instanceof ServerLevel level)) return null;
         int minY = level.getMinBuildHeight();
         int maxY = level.getMaxBuildHeight() - 1;
@@ -314,26 +354,40 @@ public class MoveToSoundGoal extends Goal {
         }
 
         if (!blockTarget) {
-            BlockPos ground = findStandableNear(level, clamped);
+            BlockPos ground = findStandableBelow(level, clamped, groundSearchDepth(range));
             if (ground == null) return null;
             clamped = ground;
         }
         return clamped;
     }
 
-    private BlockPos findStandableNear(ServerLevel level, BlockPos origin) {
+    private static int groundSearchDepth(double hearingRange) {
+        if (!Double.isFinite(hearingRange)) return 8;
+        return Math.max(8, (int) Math.ceil(Math.max(0.0, hearingRange) + 5.0));
+    }
 
-        for (int dy = 0; dy <= 4; dy++) {
-            BlockPos p = origin.below(dy);
-            if (!level.isLoaded(p)) continue;
-            if (p.getY() < level.getMinBuildHeight() || p.getY() >= level.getMaxBuildHeight()) continue;
-            BlockPos above = p.above();
-            if (!level.getBlockState(p).isAir()
-                    && level.getBlockState(above).getCollisionShape(level, above).isEmpty()) {
-                return above.immutable();
-            }
+    private BlockPos findStandableBelow(ServerLevel level, BlockPos origin, int maxSearchDepth) {
+        int feetY = GroundTargetResolver.findFeetY(
+            origin.getY(), level.getMinBuildHeight(), maxSearchDepth,
+            floorY -> isStandableFloor(level, new BlockPos(origin.getX(), floorY, origin.getZ())));
+        return feetY == GroundTargetResolver.NO_TARGET
+            ? null
+            : new BlockPos(origin.getX(), feetY, origin.getZ()).immutable();
+    }
+
+    private static boolean isStandableFloor(ServerLevel level, BlockPos floorPos) {
+        BlockPos feetPos = floorPos.above();
+        BlockPos headPos = feetPos.above();
+        if (floorPos.getY() < level.getMinBuildHeight()
+                || headPos.getY() >= level.getMaxBuildHeight()
+                || !level.isLoaded(floorPos)
+                || !level.isLoaded(headPos)) {
+            return false;
         }
-        return null;
+        return !level.getBlockState(floorPos).isAir()
+            && !level.getBlockState(floorPos).getCollisionShape(level, floorPos).isEmpty()
+            && level.getBlockState(feetPos).getCollisionShape(level, feetPos).isEmpty()
+            && level.getBlockState(headPos).getCollisionShape(level, headPos).isEmpty();
     }
 
     private boolean isTargetLoadedAndValid() {
@@ -352,36 +406,33 @@ public class MoveToSoundGoal extends Goal {
             pos.getX() + radius, pos.getY() + radius, pos.getZ() + radius);
     }
 
-    private void safeNavigateToTarget() {
+    private boolean safeNavigateToTarget() {
         if (!isTargetLoadedAndValid()) {
             clearSoundInvestigation();
-            return;
+            return false;
         }
 
         if (shouldYieldToCombat()) {
             clearSoundInvestigation();
-            return;
+            return false;
         }
         double x = targetPos.getX() + 0.5D;
         double y = AtcEngine.usesAirNavigation(mob)
             ? targetPos.getY() + 0.5D
             : targetPos.getY();
         double z = targetPos.getZ() + 0.5D;
+        if (mob.blockPosition().distSqr(targetPos) <= ARRIVAL_DIST_SQ) {
+            return true;
+        }
         try {
             if (mob.getNavigation().moveTo(x, y, z, currentSpeed)) {
-                return;
+                return true;
             }
         } catch (Throwable ex) {
             AttractToChat.LOGGER.warn("Skipped unsafe path calculation for sound investigation: mob={}, target={}, reason={}",
-                mob.getType(), targetPos, ex.toString());
-
+                mob.getType(), AtcEngine.formatCoordinates(targetPos), ex.toString());
         }
-        try {
-            mob.getMoveControl().setWantedPosition(x, y, z, currentSpeed);
-        } catch (Throwable ex) {
-            AttractToChat.LOGGER.debug("Skipped move-control update for sound investigation: {}", ex.toString());
-            clearSoundInvestigation();
-        }
+        return false;
     }
 
     private void safeStopNavigation() {
@@ -462,28 +513,31 @@ public class MoveToSoundGoal extends Goal {
 
     }
 
-    private void directSlime() {
-        if (targetPos == null) return;
+    private boolean directSlime() {
+        if (targetPos == null) return false;
         double dx = targetPos.getX() + 0.5 - mob.getX();
         double dz = targetPos.getZ() + 0.5 - mob.getZ();
         float yRot = (float) (Math.toDegrees(Math.atan2(dz, dx)) - 90.0);
         if (mob.getMoveControl() instanceof SlimeMoveControlAccessorMixin control) {
             control.atc_setDirection(yRot, true);
             control.atc_setWantedMovement(currentSpeed);
+            return true;
         } else {
             try {
                 mob.getMoveControl().setWantedPosition(
                     targetPos.getX() + 0.5, targetPos.getY(), targetPos.getZ() + 0.5, currentSpeed);
+                return true;
             } catch (Throwable ignored) {
+                return false;
             }
         }
     }
 
-    private void setVillagerWalkTarget(Villager villager) {
-        if (targetPos == null) return;
+    private boolean setVillagerWalkTarget(Villager villager) {
+        if (targetPos == null) return false;
         if (shouldVillagerPrioritizeSafety(villager)) {
             yieldToVillagerSafety();
-            return;
+            return false;
         }
         float minSpeed = urgentShout ? 0.60f : 0.35f;
         float maxSpeed = urgentShout ? 0.75f : 0.60f;
@@ -491,6 +545,7 @@ public class MoveToSoundGoal extends Goal {
             Math.min(maxSpeed, currentSpeed * (urgentShout ? 0.50 : 0.42)));
         villager.getBrain().setMemory(MemoryModuleType.WALK_TARGET,
             new WalkTarget(targetPos, brainSpeed, 2));
+        return true;
     }
 
     @Override
