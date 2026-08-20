@@ -20,17 +20,27 @@
   <em>The Fabric version requires Fabric API 0.92.7 or newer.</em>
 </p>
 
-***
+---
 
 ## ◈ Messages Become Sound
 
 **Attract to Chat** makes Minecraft mobs react to player messages.
 
-Send a message and nearby mobs may hear it, travel toward the place where it was sent and investigate the area. Writing in CAPS or using exclamation marks makes the message louder, reaching mobs from farther away and making them react faster.
+Send a message and nearby mobs may hear it, travel toward the location where it was sent and investigate the area. Writing in CAPS or using exclamation marks makes the message louder, allowing it to reach mobs from farther away and making them react faster.
 
 ![Chat attraction demonstration](https://res.cloudinary.com/diexbbgwe/image/upload/v1785719396/chat_attraction_bri8qk.gif)
 
-***
+---
+
+## ◈ Terrain Muffling
+
+**Walls can muffle chat.**
+
+Solid terrain can reduce how far a message can be heard. Thin barriers may only soften the effect, while thicker structures can make communication much harder for nearby mobs to detect.
+
+This makes caves, houses and other enclosed spaces safer places to talk than open terrain.
+
+---
 
 ## ◈ More Than Just Danger
 
@@ -40,71 +50,95 @@ Use chat to call them toward farms, bases, villages or trading halls.
 
 You can also use messages to:
 
-*   lure hostile mobs away from another player;
-*   create distractions while escaping;
-*   turn multiplayer chat into a stealth mechanic;
-*   make survival and horror servers more intense;
-*   attract supported creatures from other mods;
-*   punish players who cannot stop shouting.
+* lure hostile mobs away from another player;
+* create distractions while escaping;
+* turn multiplayer chat into a stealth mechanic;
+* make survival and horror servers more intense;
+* create "Don't Scream" style challenges;
+* attract compatible creatures added by other mods;
+* punish players who cannot stop shouting.
 
 ![CAPS loudness demonstration](https://res.cloudinary.com/diexbbgwe/image/upload/v1785719396/caps_dnnpi4.gif)
 
-***
+---
 
 ## ◈ Mobs Still Act Like Mobs
 
 Attract to Chat works alongside Minecraft's existing AI instead of replacing it.
 
-*   Fighting mobs keep their real targets.
-*   Villagers prioritize escaping zombies.
-*   Sleeping villagers can wake after hearing loud messages.
-*   Flying, aquatic and jumping mobs use compatible movement.
-*   Invalid or unreachable destinations are ignored.
-*   Investigations end when a more important behavior takes priority.
+* Fighting mobs keep their real targets.
+* Villagers prioritize escaping zombies and other dangers.
+* Sleeping villagers can wake after hearing loud messages.
+* Flying, aquatic and jumping mobs use compatible movement.
+* Invalid or unreachable destinations are ignored.
+* Investigations end when a more important behavior takes priority.
 
-***
+Mobs investigate the sound without abandoning their normal behavior.
+
+---
 
 ## ◈ Features
 
-*   Configurable hearing range
-*   Louder CAPS and exclamation marks
-*   Vanilla and modded mob support
-*   Villager attraction
-*   Player ignore rules
-*   Troll Mode
-*   Optional Vocal Fatigue
-*   Optional Anti-Spam
-*   Built-in and custom presets
-*   Live in-game configuration
-*   Command autocomplete
-*   Optional investigation-path particles
+* Configurable hearing range
+* Louder CAPS and exclamation marks
+* Terrain Muffling
+* Vanilla and compatible modded mob support
+* Villager attraction
+* Player ignore rules
+* Troll Mode
+* Optional Vocal Fatigue
+* Optional Anti-Spam
+* Built-in and custom presets
+* Live in-game configuration
+* Command autocomplete
+* Optional investigation-path particles
 
-***
+---
 
 ## ◈ Troll Mode
 
 Troll Mode allows admins to secretly make selected players much more attractive to mobs.
 
-Affected players can be heard from farther away, trigger faster reactions and face more aggressive pursuit — without changing the experience for everyone else on the server.
+Affected players can be heard from farther away and trigger faster, more aggressive reactions without changing the experience for everyone else on the server.
 
 ![Troll Mode demonstration](https://res.cloudinary.com/diexbbgwe/image/upload/v1785719396/troll_opvctf.gif)
 
-***
+---
+
+## ◈ Gameplay Customization
+
+Server owners can adjust how intense Attract to Chat feels without changing the core mechanic.
+
+**Presets**  
+Choose from built-in presets such as **Safe**, **Casual**, **Chaos** and **Silent**, or save your own custom configurations.
+
+**Vocal Fatigue**  
+Optional Vocal Fatigue can discourage players from constantly shouting.
+
+**Anti-Spam**  
+Optional Anti-Spam helps control repeated attraction triggers from excessive chat activity.
+
+**In-Game Configuration**  
+Hearing, presets, ignored players, supported entities and other settings can be managed directly in-game.
+
+Use `/atc help` to view the available commands.
+
+---
 
 ## ◈ Server-Side Friendly
 
 Install Attract to Chat on a **Forge or Fabric 1.20.1 server** and players can join without installing the mod themselves.
 
-Installing it on the client is optional and unlocks personal investigation-path particle controls.
+Installing it on the client is optional and unlocks personal investigation-path particle controls:
 
-```
+```text
 /atc client particles enable
 /atc client particles disable
 ```
 
 Particles are disabled by default.
 
-***
+---
 
 ## ◈ Installation
 
@@ -128,7 +162,35 @@ Particles are disabled by default.
 
 Players can join a modded server without installing Attract to Chat themselves. Client installation is only needed for personal investigation-path particle controls. The client and server must use the same loader; Fabric clients also require Fabric API.
 
-***
+---
+
+## ◈ FAQ
+
+### Do players need Attract to Chat installed?
+
+No. The core gameplay mechanics run on the server.
+
+### What does the optional client installation add?
+
+Personal investigation-path particle controls.
+
+### Does Attract to Chat replace Minecraft's mob AI?
+
+No. Normal behaviors can still take priority over an investigation.
+
+### Do walls affect hearing?
+
+Yes. Solid terrain can muffle messages and reduce how far mobs can hear them.
+
+### Does it support modded mobs?
+
+Compatible creatures added by other mods can be used with the attraction system.
+
+### Can I use Attract to Chat in a modpack?
+
+Yes. Attract to Chat is released under the **MIT License**.
+
+---
 
 ## ◈ Support the Project
 
