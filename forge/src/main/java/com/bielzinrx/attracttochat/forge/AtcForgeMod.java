@@ -6,9 +6,11 @@ import com.bielzinrx.attracttochat.engine.AtcEngine;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -25,7 +27,8 @@ public final class AtcForgeMod {
         MinecraftForge.EVENT_BUS.addListener(this::onPlayerLeave);
         MinecraftForge.EVENT_BUS.addListener(this::onServerStarting);
         MinecraftForge.EVENT_BUS.addListener(this::onServerStopping);
-        MinecraftForge.EVENT_BUS.addListener(this::onServerChat);
+        MinecraftForge.EVENT_BUS.addListener(
+            EventPriority.LOWEST, true, ServerChatEvent.Submitted.class, this::onServerChat);
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
@@ -41,16 +44,19 @@ public final class AtcForgeMod {
         AtcEngine.refreshCaches();
     }
 
-    private void onServerChat(net.minecraftforge.event.ServerChatEvent event) {
+    private void onServerChat(ServerChatEvent.Submitted event) {
+        if (event.isCanceled()) return;
+
         ServerPlayer player = event.getPlayer();
         String message = event.getRawText();
 
-        if (AtcEngine.handleChatCancellable(player, message)) {
+        if (AtcEngine.isVocallyMuted(player.getUUID())) {
             event.setCanceled(true);
+            player.server.execute(() -> AtcEngine.handleChatCancellable(player, message));
             return;
         }
-        if (event.isCanceled()) return;
-        AtcEngine.handleChatAfter(player, message);
+
+        player.server.execute(() -> AtcEngine.handleChatAfter(player, message));
     }
 
     private void onServerTick(TickEvent.ServerTickEvent event) {

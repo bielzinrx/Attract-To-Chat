@@ -8,11 +8,15 @@ Run this checklist once on Fabric and once on Forge. Use Java 17, a clean test w
 - [x] Common automated tests passed.
 - [x] Fabric dedicated server reached `Done`, created schema 15 config, registered commands, and stopped cleanly.
 - [x] Forge dedicated server reached `Done`, created schema 15 config, registered commands, and stopped cleanly.
+- [x] Forge Prism client test confirmed that typing, editing with Backspace, and canceling chat produce zero attraction scans.
+- [x] Forge Prism client test confirmed that pressing Enter once produces exactly one attraction scan on the server thread.
 - [x] `/atc config particles enable` was rejected on both dedicated servers.
 - [x] No Walkie-Chat reference was found in source or final JARs.
 
 ## Chat
 
+- [x] Open chat and type several characters without pressing Enter. No mob may react and no attraction/debug scan may be logged while the text is only in the input box.
+- [x] Press Enter once after typing. The submitted message must produce exactly one attraction scan.
 - [ ] Send `hello`. A nearby enabled mob investigates the position where the message was sent.
 - [ ] Send `HELLO`. It reaches farther and produces a stronger/faster reaction than lowercase text.
 - [ ] Send `hello!!`. Exclamation marks increase the reaction even when CAPS is disabled.

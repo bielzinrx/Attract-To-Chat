@@ -1,6 +1,6 @@
 # Attract to Chat 2.1.0 — Auditoria de paridade 1.19.2
 
-Data da validação: 20 de agosto de 2026.
+Data da validação: 21 de agosto de 2026.
 
 ## Resultado
 
@@ -13,6 +13,7 @@ A linha Minecraft 1.19.2 foi portada e validada localmente contra o source exato
 - Schema mantido em `CONFIG_VERSION = 15`.
 - Nenhuma integração Walkie-Chat foi incorporada.
 - O cliente continua opcional; a lógica principal permanece server-side.
+- O teste interativo Forge confirmou que texto ainda não enviado não atrai mobs e que cada envio gera somente um scan.
 
 **Build + automated/runtime smoke validation passed; manual in-game behavior checklist remains.**
 
@@ -67,6 +68,9 @@ Diretórios gerados, IDE, `.gradle`, `build`, `run` e artefatos compilados foram
 - Alinhados os três arquivos de idioma com a baseline da release; todas as 116 chaves referenciadas pelo Java existem nos três idiomas.
 - Removido o mixin Fabric redundante de chat.
 - O Fabric usa o evento de mensagem apropriado e transforma `ChatMessageContent` em texto com `plain()`, evitando processamento duplicado.
+- Corrigido o listener Forge que recebia tanto `ServerChatEvent.Preview` quanto `ServerChatEvent.Submitted`, atraindo mobs a cada alteração no campo de chat antes do Enter.
+- O Forge agora escuta exclusivamente mensagens `Submitted`, respeita cancelamentos de outros mods e agenda a atração na thread principal do servidor.
+- Confirmado em uma instância Prism real que digitar, usar Backspace e cancelar o chat produzem zero scans; um Enter produz exatamente um scan.
 - O Forge mantém um único fluxo de processamento e não exige o mod no cliente.
 
 ### Build e apresentação
@@ -171,6 +175,8 @@ O ambiente de desenvolvimento Forge corrigiu automaticamente uma entrada duplica
 Os dois clientes de desenvolvimento carregaram o ATC, inicializaram áudio/atlases e chegaram à tela inicial. O primeiro download de asset Fabric precisou de uma repetição por falha transitória de rede. Erros de autenticação/Realms são esperados no perfil de desenvolvimento offline.
 
 Os clientes foram encerrados manualmente após a tela inicial; isso valida carregamento e mixins, mas não substitui um teste multiplayer interativo.
+
+Depois da descoberta da regressão de preview no Forge, foi executado um segundo teste na instância Prism Forge 1.19.2 com Forge 43.5.0 e o JAR final corrigido. Com debug habilitado, a frase `typing without enter test` foi digitada lentamente sem Enter e produziu zero scans. Uma segunda edição com Backspace e cancelamento por Esc também produziu zero scans. O envio da primeira frase com um único Enter produziu exatamente uma entrada `Chat from` e ela foi executada na `Server thread`. O mundo foi fechado com salvamento limpo.
 
 ## Limitações restantes
 

@@ -70,6 +70,8 @@ Attract to Chat 2.1.0 expands the original Forge-only implementation into a shar
 
 ## Removed or corrected
 
+- Corrected Forge 1.19.2 chat handling so typing and chat previews do not attract mobs before a message is submitted.
+- Moved Forge chat attraction processing onto the main server thread.
 - Removed the old registered Vocal Fatigue effect and its registry synchronization requirements.
 - Removed the obsolete generic feedback toggle and messages.
 - Debug output no longer depends on ordinary player feedback settings.
