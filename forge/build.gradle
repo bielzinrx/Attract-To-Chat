@@ -1,8 +1,5 @@
 plugins { id 'com.gradleup.shadow' }
 
-// Forge 1.20.1 is the corrected revision of the previously published 2.1.0.
-version = "${rootProject.mod_version}-r1"
-
 architectury {
     platformSetupLoomIde()
     forge()

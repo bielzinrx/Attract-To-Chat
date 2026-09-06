@@ -113,15 +113,50 @@ Server owners can adjust how intense Attract to Chat feels without changing the 
 Choose from built-in presets such as **Safe**, **Casual**, **Chaos** and **Silent**, or save your own custom configurations.
 
 **Vocal Fatigue**  
-Optional Vocal Fatigue can discourage players from constantly shouting.
+Optional Vocal Fatigue discourages players from constantly shouting. Too many CAPS or `!!!` messages make the player hoarse; crossing the threshold mutes them for 30 seconds and nearby mobs come to investigate. Milk clears it instantly, honey helps and death resets it. OFF by default.
 
 **Anti-Spam**  
-Optional Anti-Spam helps control repeated attraction triggers from excessive chat activity.
+Optional Anti-Spam helps control repeated attraction triggers from excessive chat activity. It never cancels or hides chat messages — it only ignores them for attraction. Players in Troll Mode have a bypass.
 
 **In-Game Configuration**  
 Hearing, presets, ignored players, supported entities and other settings can be managed directly in-game.
 
 Use `/atc help` to view the available commands.
+
+---
+
+## ◈ Configuration
+
+Every option lives in `config/attracttochat-common.json` and applies live — edit the file or use commands, no restart needed. The file comes commented line by line: a `#` note above each option explains what it does, its unit, default, valid range and a practical example.
+
+**Options at a glance**
+
+* `hearingRange` — 30 blocks (0–500): how far mobs hear normal chat
+* `capsRangeBonus` — +5 blocks per CAPS word (0–100)
+* `mobSpeedBase` / `mobSpeedMax` — 1.2 / 2.0 investigation speed multipliers
+* `trollSpeedMultiplier` — 2.5 for Troll Mode targets
+* `forgetTargetAfterSeconds` — 20s (1–300) until a mob gives up searching
+* `scanCooldownTicks` — 40 ticks = 2s between attraction scans per player
+* `antiSpamMaxMessages` / `antiSpamWindowSeconds` — 3 messages / 8s window
+* `traumaThreshold` — 1000 shout trauma before vocal fatigue
+* `muteDurationTicks` — 600 ticks = 30s hoarse mute
+* `enableVocalFatigue` / `enableAntiSpam` — OFF by default
+* `enableCapsFeature` / `showParticles` — ON by default
+
+**Command reference**
+
+```text
+/atc status
+/atc config list
+/atc config info <option>
+/atc config hearingrange <value>
+/atc feature caps|fatigue|antispam
+/atc entity add|remove
+/atc ignore add
+/atc preset set <name>
+```
+
+**Presets** — `safe` 24/4/20t · `casual` 32/6/15t · `chaos` 60/14/5t · `silent` 30/5/20t (no particles)
 
 ---
 
@@ -150,10 +185,10 @@ Particles are disabled by default.
 
 | Minecraft | Loader | Attract to Chat | Additional dependency |
 |:--|:--|:--|:--|
-| **1.20.1** | Forge | **2.1.0-r1** | None |
-| **1.20.1** | Fabric | **2.1.0** | [Fabric API 0.92.7 or newer](https://modrinth.com/mod/fabric-api/versions?g=1.20.1) |
-| **1.19.2** | Forge | **2.1.0** | None |
-| **1.19.2** | Fabric | **2.1.0** | [Fabric API 0.76.0 or newer](https://modrinth.com/mod/fabric-api/versions?g=1.19.2) |
+| **1.20.1** | Forge | **2.1.1** | None |
+| **1.20.1** | Fabric | **2.1.1** | [Fabric API 0.92.7 or newer](https://modrinth.com/mod/fabric-api/versions?g=1.20.1) |
+| **1.19.2** | Forge | **2.1.1** | None |
+| **1.19.2** | Fabric | **2.1.1** | [Fabric API 0.76.0 or newer](https://modrinth.com/mod/fabric-api/versions?g=1.19.2) |
 
 1. **Choose the correct build.** Download the version matching your **Minecraft version and mod loader** from [Modrinth](https://modrinth.com/mod/attract-to-chat/versions), [CurseForge](https://www.curseforge.com/minecraft/mc-mods/attract-to-chat/files) or [GitHub Releases](https://github.com/bielzinrx/Attract-To-Chat/releases).
 2. **Install the required files.** Place the Attract to Chat JAR inside the server's `mods` folder. Fabric installations must also include Fabric API.
@@ -187,6 +222,18 @@ Yes. Solid terrain can muffle messages and reduce how far mobs can hear them.
 ### Does it support modded mobs?
 
 Compatible creatures added by other mods can be used with the attraction system.
+
+### Does it work with voice-chat mods like Voiceless Survival?
+
+Attract to Chat reacts to text chat, not voice. The hooks are distinct, so both mods can run on the same server without conflict.
+
+### Does it work with AI mods like Enhanced AI?
+
+Yes. Attract to Chat adds an investigation goal without replacing vanilla mob AI. Mobs already in combat keep their real target.
+
+### Do commands and team chat attract mobs?
+
+No. Messages starting with `!`, `@`, `#` or `/` never attract anything.
 
 ### Can I use Attract to Chat in a modpack?
 

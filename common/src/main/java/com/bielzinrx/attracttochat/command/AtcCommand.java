@@ -2,6 +2,7 @@ package com.bielzinrx.attracttochat.command;
 
 import com.bielzinrx.attracttochat.AttractToChat;
 import com.bielzinrx.attracttochat.config.AttractToChatConfig;
+import com.bielzinrx.attracttochat.config.OptionCatalog;
 import com.bielzinrx.attracttochat.engine.AtcEngine;
 import com.bielzinrx.attracttochat.i18n.ServerTranslations;
 import com.bielzinrx.attracttochat.platform.Platform;
@@ -205,6 +206,13 @@ public final class AtcCommand {
                 .requires(src -> src.getEntity() instanceof ServerPlayer player
                     && Platform.getHelper().hasClientMod(player))
                 .then(Commands.literal("particles")
+                    .executes(ctx -> {
+                        ServerPlayer sp = ctx.getSource().getPlayerOrException();
+                        sp.displayClientMessage(ServerTranslations.component(
+                            sp, "message.attracttochat.command.client_particles_status",
+                            AtcEngine.isParticlesEnabled(sp.getUUID())), true);
+                        return 1;
+                    })
                     .then(Commands.literal("enable").executes(ctx -> {
                         ServerPlayer sp = ctx.getSource().getPlayerOrException();
                         if (AtcEngine.isParticlesEnabled(sp.getUUID())) {
@@ -324,6 +332,13 @@ public final class AtcCommand {
                 .then(Commands.literal("status").executes(ctx -> showPresetStatus(ctx.getSource()))))
             .then(Commands.literal("config")
                 .requires(src -> src.hasPermission(2))
+                .then(Commands.literal("list").executes(ctx -> showConfigList(ctx.getSource())))
+                .then(Commands.literal("info")
+                    .then(Commands.argument("option", StringArgumentType.word())
+                        .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
+                            OptionCatalog.ids(), builder))
+                        .executes(ctx -> showConfigInfo(ctx.getSource(),
+                            StringArgumentType.getString(ctx, "option")))))
                 .then(buildHearingRangeBranch())
                 .then(buildCapsRangeBonusBranch())
                 .then(Commands.literal("mobspeed")
@@ -397,7 +412,7 @@ public final class AtcCommand {
                 .then(Commands.argument("category", StringArgumentType.word())
                     .suggests((ctx, builder) -> {
                         List<String> categories = new ArrayList<>(Arrays.asList(
-                            "overview", "gameplay", "mobs", "admin", "feature"));
+                            "overview", "gameplay", "mobs", "admin", "feature", "config"));
                         if (ctx.getSource().getEntity() instanceof ServerPlayer player
                                 && Platform.getHelper().hasClientMod(player)) {
                             categories.add("client");
@@ -565,6 +580,49 @@ public final class AtcCommand {
                     feedback(ctx.getSource(), "message.attracttochat.command.capsbonus_set_live", v, cleared);
                     return 1;
                 }));
+    }
+
+    private static int showConfigList(CommandSourceStack src) {
+        src.sendSuccess(() -> ServerTranslations.component(src, "message.attracttochat.command.config_list_header"), false);
+        for (OptionCatalog.Option option : OptionCatalog.OPTIONS) {
+            String current = option.currentValueText();
+            boolean isDefault = current.equalsIgnoreCase(option.defaultValue());
+            src.sendSuccess(() -> ServerTranslations.component(src,
+                isDefault
+                    ? "message.attracttochat.command.config_list_entry"
+                    : "message.attracttochat.command.config_list_entry_changed",
+                option.id(), current, option.defaultValue()), false);
+        }
+        src.sendSuccess(() -> ServerTranslations.component(src, "message.attracttochat.command.config_list_footer"), false);
+        return 1;
+    }
+
+    private static int showConfigInfo(CommandSourceStack src, String optionId) {
+        OptionCatalog.Option option = OptionCatalog.byId(optionId);
+        if (option == null) {
+            feedback(src, "message.attracttochat.command.config_info_unknown", optionId);
+            return 0;
+        }
+        String current = option.currentValueText();
+        if (option.numeric()) {
+            src.sendSuccess(() -> ServerTranslations.component(src,
+                "message.attracttochat.command.config_info_numeric",
+                option.id(), current, option.defaultValue(),
+                trim(option.min()), trim(option.max())), false);
+        } else {
+            src.sendSuccess(() -> ServerTranslations.component(src,
+                "message.attracttochat.command.config_info_toggle",
+                option.id(), current, option.defaultValue()), false);
+        }
+        src.sendSuccess(() -> ServerTranslations.component(src, option.langKey()), false);
+        return 1;
+    }
+
+    private static String trim(double value) {
+        if (value == Math.floor(value) && !Double.isInfinite(value)) {
+            return String.valueOf((long) value);
+        }
+        return String.valueOf(value);
     }
 
     private static int showTrollStatus(CommandSourceStack src) {

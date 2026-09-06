@@ -115,10 +115,11 @@ public final class AtcEngine {
 
     public static void refreshClientPreferences() {
         ENABLE_PARTICLES.clear();
-        List<String> particlesOptIn = AttractToChatConfig.COMMON.clientParticlesOptIn.get();
-        if (particlesOptIn != null) {
-            for (String raw : particlesOptIn) {
-                try { ENABLE_PARTICLES.add(UUID.fromString(raw)); }
+        Map<String, Boolean> preferences = AttractToChatConfig.COMMON.clientParticles.get();
+        if (preferences != null) {
+            for (Map.Entry<String, Boolean> entry : preferences.entrySet()) {
+                if (entry == null || entry.getKey() == null || !Boolean.TRUE.equals(entry.getValue())) continue;
+                try { ENABLE_PARTICLES.add(UUID.fromString(entry.getKey())); }
                 catch (IllegalArgumentException ignored) {}
             }
         }
@@ -639,8 +640,7 @@ public final class AtcEngine {
                 continue;
             }
 
-            int step = burst ? 1 : 1;
-            for (int i = 0; i < count; i += step) {
+            for (int i = 0; i < count; i++) {
                 level.sendParticles(viewer, ParticleTypes.END_ROD,
                     true, xs[i], ys[i], zs[i], 1, 0.02, 0.03, 0.02, 0.0);
 
@@ -725,21 +725,6 @@ public final class AtcEngine {
         return steps;
     }
 
-    @Deprecated
-    public static void trySpawnHeardBurst(Mob mob) {
-
-        if (mob != null) {
-            trySpawnPathParticles(mob, mob.blockPosition(), true);
-        }
-    }
-
-    @Deprecated
-    public static void trySpawnInvestigationTrail(Mob mob) {
-        if (mob != null) {
-            trySpawnPathParticles(mob, mob.blockPosition(), false);
-        }
-    }
-
     private static class PlayerStats {
         int totalMessages, totalMobs, totalCaps;
         void record(int mobs, int caps) {
@@ -767,8 +752,19 @@ public final class AtcEngine {
     }
 
     public static boolean setParticlesEnabled(UUID id, boolean enabled) {
-        return setUuidPreference(id, enabled, ENABLE_PARTICLES,
-            AttractToChatConfig.COMMON.clientParticlesOptIn);
+        if (id == null) return false;
+        Map<String, Boolean> preferences = new LinkedHashMap<>(AttractToChatConfig.COMMON.clientParticles.get());
+        preferences.put(id.toString(), enabled);
+        AttractToChatConfig.COMMON.clientParticles.set(preferences);
+        boolean saved = AttractToChatConfig.save();
+        if (!saved) {
+            refreshClientPreferences();
+        } else if (enabled) {
+            ENABLE_PARTICLES.add(id);
+        } else {
+            ENABLE_PARTICLES.remove(id);
+        }
+        return saved;
     }
 
     public static void clearMute(UUID id) {
@@ -776,28 +772,6 @@ public final class AtcEngine {
             MUTED_UNTIL.remove(id);
             MUTED_UNTIL_WALL.remove(id);
         }
-    }
-
-    private static boolean setUuidPreference(UUID id, boolean enabled, Set<UUID> liveSet,
-            AttractToChatConfig.ConfigValue<List<String>> configList) {
-        if (id == null) return false;
-        if (liveSet.contains(id) == enabled) return true;
-        if (enabled) {
-            liveSet.add(id);
-        } else {
-            liveSet.remove(id);
-        }
-        List<String> values = new ArrayList<>(configList.get());
-        String raw = id.toString();
-        if (enabled && !values.contains(raw)) {
-            values.add(raw);
-        } else if (!enabled) {
-            values.removeIf(raw::equalsIgnoreCase);
-        }
-        configList.set(values);
-        boolean saved = AttractToChatConfig.save();
-        if (!saved) refreshClientPreferences();
-        return saved;
     }
 
 

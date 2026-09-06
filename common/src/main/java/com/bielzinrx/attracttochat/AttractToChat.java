@@ -91,6 +91,11 @@ public final class AttractToChat {
                 sendHelpLine(player, "message.attracttochat.command.help.mobspeed");
                 sendHelpLine(player, "message.attracttochat.command.help.forgettime");
             }
+            case "config" -> {
+                sendHelpLine(player, "message.attracttochat.command.help.config");
+                sendHelpLine(player, "message.attracttochat.command.help.config_list");
+                sendHelpLine(player, "message.attracttochat.command.help.config_info");
+            }
             default -> player.sendSystemMessage(ServerTranslations.component(
                 player, "message.attracttochat.command.help.unknown_category", safeCategory));
         }
