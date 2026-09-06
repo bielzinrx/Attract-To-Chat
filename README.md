@@ -16,8 +16,8 @@
 </p>
 
 <p align="center">
-  <strong>Minecraft 1.20.1 · Java 17 · Server-side with optional client installation</strong><br>
-  <em>The Fabric version requires Fabric API 0.92.7 or newer.</em>
+  <strong>Minecraft 1.19.2 &amp; 1.20.1 · Java 17 · Server-side with optional client installation</strong><br>
+  <em>Fabric API is required: 0.76.0+ for Minecraft 1.19.2 and 0.92.7+ for Minecraft 1.20.1.</em>
 </p>
 
 ---
@@ -127,7 +127,7 @@ Use `/atc help` to view the available commands.
 
 ## ◈ Server-Side Friendly
 
-Install Attract to Chat on a **Forge or Fabric 1.20.1 server** and players can join without installing the mod themselves.
+Install Attract to Chat on a **Forge or Fabric server running Minecraft 1.19.2 or 1.20.1** and players can join without installing the mod themselves.
 
 Installing it on the client is optional and unlocks personal investigation-path particle controls:
 
@@ -144,16 +144,18 @@ Particles are disabled by default.
 
 ### Requirements
 
-- Minecraft Java Edition **1.20.1**
+- Minecraft Java Edition **1.19.2 or 1.20.1**
 - **Java 17**
 - A Forge or Fabric server matching the downloaded build
 
-| Loader | Attract to Chat | Additional dependency |
-|:--|:--|:--|
-| **Forge 1.20.1** | **2.1.0-r1** | None |
-| **Fabric 1.20.1** | **2.1.0** | [Fabric API 0.92.7 or newer](https://modrinth.com/mod/fabric-api/versions?g=1.20.1) |
+| Minecraft | Loader | Attract to Chat | Additional dependency |
+|:--|:--|:--|:--|
+| **1.20.1** | Forge | **2.1.0-r1** | None |
+| **1.20.1** | Fabric | **2.1.0** | [Fabric API 0.92.7 or newer](https://modrinth.com/mod/fabric-api/versions?g=1.20.1) |
+| **1.19.2** | Forge | **2.1.0** | None |
+| **1.19.2** | Fabric | **2.1.0** | [Fabric API 0.76.0 or newer](https://modrinth.com/mod/fabric-api/versions?g=1.19.2) |
 
-1. **Choose the correct build.** Download the version matching the loader used by your server from [Modrinth](https://modrinth.com/mod/attract-to-chat/versions), [CurseForge](https://www.curseforge.com/minecraft/mc-mods/attract-to-chat/files) or [GitHub Releases](https://github.com/bielzinrx/Attract-To-Chat/releases).
+1. **Choose the correct build.** Download the version matching your **Minecraft version and mod loader** from [Modrinth](https://modrinth.com/mod/attract-to-chat/versions), [CurseForge](https://www.curseforge.com/minecraft/mc-mods/attract-to-chat/files) or [GitHub Releases](https://github.com/bielzinrx/Attract-To-Chat/releases).
 2. **Install the required files.** Place the Attract to Chat JAR inside the server's `mods` folder. Fabric installations must also include Fabric API.
 3. **Start or restart the server.** The mod creates its configuration automatically during startup.
 4. **Confirm the installation.** Use `/atc help` in game to view the available commands.
