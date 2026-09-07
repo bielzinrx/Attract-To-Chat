@@ -28,7 +28,7 @@ import java.util.zip.CRC32;
 public final class AttractToChatConfig {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("AttractToChat-Config");
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     private static final int CONFIG_VERSION = 16;
     private static final int SAFE_DEFAULTS_VERSION = 4;
     private static final int EXPLICIT_ENTITY_LIST_VERSION = 7;
