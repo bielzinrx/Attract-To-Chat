@@ -51,7 +51,7 @@ class AttractToChatConfigTest {
     void keepsReleaseSchemaAtFifteen() throws ReflectiveOperationException {
         Field field = AttractToChatConfig.class.getDeclaredField("CONFIG_VERSION");
         field.setAccessible(true);
-        assertEquals(15, field.getInt(null));
+        assertEquals(16, field.getInt(null));
     }
 
     @Test

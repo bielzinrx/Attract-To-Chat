@@ -3,6 +3,7 @@ package com.bielzinrx.attracttochat.config;
 import com.bielzinrx.attracttochat.platform.Platform;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -28,10 +29,11 @@ public final class AttractToChatConfig {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("AttractToChat-Config");
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final int CONFIG_VERSION = 15;
+    private static final int CONFIG_VERSION = 16;
     private static final int SAFE_DEFAULTS_VERSION = 4;
     private static final int EXPLICIT_ENTITY_LIST_VERSION = 7;
     private static final int HOSTILE_DEFAULTS_VERSION = 8;
+    private static final int PARTICLES_PREFERENCE_VERSION = 16;
 
     public static final List<String> DEFAULT_ENTITIES = List.of(
         "minecraft:zombie", "minecraft:zombie_villager", "minecraft:husk",
@@ -74,7 +76,7 @@ public final class AttractToChatConfig {
         public final ConfigValue<List<String>> enabledEntities = new ConfigValue<>(new ArrayList<>(DEFAULT_ENTITIES));
         public final ConfigValue<List<String>> ignoredPlayers = new ConfigValue<>(new ArrayList<>());
         public final ConfigValue<List<String>> trollPlayers = new ConfigValue<>(new ArrayList<>());
-        public final ConfigValue<List<String>> clientParticlesOptIn = new ConfigValue<>(new ArrayList<>());
+        public final ConfigValue<Map<String, Boolean>> clientParticles = new ConfigValue<>(new LinkedHashMap<>());
 
         public final ConfigValue<Boolean> enableVocalFatigue = new ConfigValue<>(false);
 
@@ -338,8 +340,8 @@ public final class AttractToChatConfig {
         List<String> enabledEntities = COMMON.enabledEntities.get();
         List<String> ignoredPlayers = COMMON.ignoredPlayers.get();
         List<String> trollPlayers = COMMON.trollPlayers.get();
-        List<String> clientParticlesOptIn = COMMON.clientParticlesOptIn.get();
-        List<String> clientParticlesOptOut;
+        Map<String, Boolean> clientParticles = COMMON.clientParticles.get();
+        List<String> clientParticlesOptIn;
         boolean enableVocalFatigue = COMMON.enableVocalFatigue.get();
         boolean enableAntiSpam = COMMON.enableAntiSpam.get();
         boolean enableCapsFeature = COMMON.enableCapsFeature.get();
@@ -452,10 +454,14 @@ public final class AttractToChatConfig {
 
         if (data.ignoredPlayers != null) COMMON.ignoredPlayers.set(sanitizeNames(data.ignoredPlayers));
         if (data.trollPlayers != null) COMMON.trollPlayers.set(sanitizeNames(data.trollPlayers));
-        if (root.has("clientParticlesOptIn") && data.clientParticlesOptIn != null) {
-            COMMON.clientParticlesOptIn.set(sanitizeUuids(data.clientParticlesOptIn));
+        if (loadedVersion < PARTICLES_PREFERENCE_VERSION) {
+            COMMON.clientParticles.set(migrateLegacyParticlesPreference(root));
+            needsRewrite = true;
+            LOGGER.info("Migrated AttractToChat particle preferences to the per-player on/off model.");
+        } else if (root.has("clientParticles") && data.clientParticles != null) {
+            COMMON.clientParticles.set(sanitizeParticlesPreference(data.clientParticles));
         } else {
-            COMMON.clientParticlesOptIn.set(new ArrayList<>());
+            COMMON.clientParticles.set(new LinkedHashMap<>());
             needsRewrite = true;
         }
         COMMON.enableVocalFatigue.set(migratedLegacyDefaults ? false : data.enableVocalFatigue);
@@ -499,8 +505,18 @@ public final class AttractToChatConfig {
         Path tempPath = configPath.resolveSibling(configPath.getFileName() + ".tmp");
         try {
             Files.createDirectories(configPath.getParent());
+            JsonObject tree = GSON.toJsonTree(pendingData, ConfigData.class).getAsJsonObject();
+            JsonObject commented = new JsonObject();
+            commented.addProperty(ConfigComments.HEADER_KEY, ConfigComments.header());
+            for (Map.Entry<String, JsonElement> entry : tree.entrySet()) {
+                String comment = ConfigComments.forField(entry.getKey());
+                if (comment != null) {
+                    commented.addProperty("# " + entry.getKey(), comment);
+                }
+                commented.add(entry.getKey(), entry.getValue());
+            }
             try (BufferedWriter writer = Files.newBufferedWriter(tempPath, StandardCharsets.UTF_8)) {
-                GSON.toJson(pendingData, writer);
+                GSON.toJson(commented, writer);
             }
             try {
                 Files.move(tempPath, configPath, StandardCopyOption.ATOMIC_MOVE,
@@ -528,7 +544,7 @@ public final class AttractToChatConfig {
         snapshot.enabledEntities = new ArrayList<>(COMMON.enabledEntities.get());
         snapshot.ignoredPlayers = new ArrayList<>(COMMON.ignoredPlayers.get());
         snapshot.trollPlayers = new ArrayList<>(COMMON.trollPlayers.get());
-        snapshot.clientParticlesOptIn = new ArrayList<>(COMMON.clientParticlesOptIn.get());
+        snapshot.clientParticles = new LinkedHashMap<>(COMMON.clientParticles.get());
         snapshot.customPresets = copyCustomPresets(customPresets);
         snapshot.presetRestorePoint = copyPresetRestorePoint(presetRestorePoint);
         return snapshot;
@@ -539,7 +555,7 @@ public final class AttractToChatConfig {
         COMMON.enabledEntities.set(new ArrayList<>(snapshot.enabledEntities));
         COMMON.ignoredPlayers.set(new ArrayList<>(snapshot.ignoredPlayers));
         COMMON.trollPlayers.set(new ArrayList<>(snapshot.trollPlayers));
-        COMMON.clientParticlesOptIn.set(new ArrayList<>(snapshot.clientParticlesOptIn));
+        COMMON.clientParticles.set(new LinkedHashMap<>(snapshot.clientParticles));
         COMMON.enableVocalFatigue.set(snapshot.enableVocalFatigue);
         COMMON.enableAntiSpam.set(snapshot.enableAntiSpam);
         COMMON.enableCapsFeature.set(snapshot.enableCapsFeature);
@@ -833,13 +849,28 @@ public final class AttractToChatConfig {
         return result;
     }
 
-    private static List<String> sanitizeUuids(List<String> values) {
-        List<String> result = new ArrayList<>();
-        for (String value : values) {
-            if (value == null || value.isBlank()) continue;
+    private static Map<String, Boolean> migrateLegacyParticlesPreference(JsonObject root) {
+        Map<String, Boolean> migrated = new LinkedHashMap<>();
+        if (root.has("clientParticlesOptIn") && root.get("clientParticlesOptIn").isJsonArray()) {
+            for (var element : root.getAsJsonArray("clientParticlesOptIn")) {
+                if (!element.isJsonPrimitive()) continue;
+                try {
+                    String normalized = java.util.UUID.fromString(element.getAsString().trim()).toString();
+                    migrated.put(normalized, Boolean.TRUE);
+                } catch (IllegalArgumentException ignored) {}
+            }
+        }
+        return migrated;
+    }
+
+    private static Map<String, Boolean> sanitizeParticlesPreference(Map<String, Boolean> values) {
+        Map<String, Boolean> result = new LinkedHashMap<>();
+        if (values == null) return result;
+        for (Map.Entry<String, Boolean> entry : values.entrySet()) {
+            if (entry == null || entry.getKey() == null || entry.getValue() == null) continue;
             try {
-                String normalized = java.util.UUID.fromString(value.trim()).toString();
-                if (!result.contains(normalized)) result.add(normalized);
+                String normalized = java.util.UUID.fromString(entry.getKey().trim()).toString();
+                result.put(normalized, entry.getValue());
             } catch (IllegalArgumentException ignored) {}
         }
         return result;

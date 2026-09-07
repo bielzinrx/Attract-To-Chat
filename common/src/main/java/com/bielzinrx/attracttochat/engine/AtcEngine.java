@@ -38,6 +38,7 @@ public final class AtcEngine {
 
     private static final Map<UUID, Deque<Long>>  PLAYER_MESSAGE_WINDOW = new ConcurrentHashMap<>();
     private static final Map<UUID, Long>         MUTED_UNTIL      = new ConcurrentHashMap<>();
+
     private static final Map<UUID, Long>         MUTED_UNTIL_WALL = new ConcurrentHashMap<>();
     private static final String                  MUTE_NBT_KEY     = "AttractToChatMuteEnd";
     private static final Map<UUID, PlayerStats>  PLAYER_STATS     = new ConcurrentHashMap<>();
@@ -114,10 +115,11 @@ public final class AtcEngine {
 
     public static void refreshClientPreferences() {
         ENABLE_PARTICLES.clear();
-        List<String> particlesOptIn = AttractToChatConfig.COMMON.clientParticlesOptIn.get();
-        if (particlesOptIn != null) {
-            for (String raw : particlesOptIn) {
-                try { ENABLE_PARTICLES.add(UUID.fromString(raw)); }
+        Map<String, Boolean> preferences = AttractToChatConfig.COMMON.clientParticles.get();
+        if (preferences != null) {
+            for (Map.Entry<String, Boolean> entry : preferences.entrySet()) {
+                if (entry == null || entry.getKey() == null || !Boolean.TRUE.equals(entry.getValue())) continue;
+                try { ENABLE_PARTICLES.add(UUID.fromString(entry.getKey())); }
                 catch (IllegalArgumentException ignored) {}
             }
         }
@@ -231,6 +233,7 @@ public final class AtcEngine {
     public static boolean isAttractableMob(Mob mob) {
         if (mob == null || mob.isRemoved() || !mob.isAlive()) return false;
         if (mob.isNoAi()) return false;
+
         if (!mob.isEffectiveAi()) return false;
         return true;
     }
@@ -376,6 +379,7 @@ public final class AtcEngine {
         if (playerId == null || tag == null || !tag.contains(MUTE_NBT_KEY)) return;
         long end = tag.getLong(MUTE_NBT_KEY);
         long now = System.currentTimeMillis();
+
         long maxMs = 60L * 60L * 1000L;
         if (end > now && end <= now + maxMs) {
             MUTED_UNTIL_WALL.put(playerId, end);
@@ -534,6 +538,7 @@ public final class AtcEngine {
             }
 
             if (data != null && data.goal() != null) {
+
                 if (data.goal().isLockedToTrollTarget() && !trollTarget) continue;
 
                 if (!trollTarget && mob.getTarget() != null && mob.getTarget().isAlive()) continue;
@@ -605,10 +610,7 @@ public final class AtcEngine {
         BlockPos last = null;
         for (int i = 1; i < steps; i++) {
             double t = i * inv;
-            BlockPos pos = new BlockPos(
-                net.minecraft.util.Mth.floor(from.x + dx * t),
-                net.minecraft.util.Mth.floor(from.y + dy * t),
-                net.minecraft.util.Mth.floor(from.z + dz * t));
+            BlockPos pos = new BlockPos(net.minecraft.util.Mth.floor(from.x + dx * t), net.minecraft.util.Mth.floor(from.y + dy * t), net.minecraft.util.Mth.floor(from.z + dz * t));
             if (pos.equals(last) || !level.isLoaded(pos)) continue;
             last = pos;
             BlockState state = level.getBlockState(pos);
@@ -645,14 +647,17 @@ public final class AtcEngine {
                     || !isParticlesEnabled(viewer.getUUID())) {
                 continue;
             }
+
             for (int i = 0; i < count; i++) {
                 level.sendParticles(viewer, ParticleTypes.END_ROD,
                     true, xs[i], ys[i], zs[i], 1, 0.02, 0.03, 0.02, 0.0);
+
                 if (burst || (i % 2) == 0) {
                     level.sendParticles(viewer, ParticleTypes.SOUL_FIRE_FLAME,
                         true, xs[i], ys[i] - 0.05, zs[i], 1, 0.04, 0.02, 0.04, 0.0);
                 }
             }
+
             double tx = targetPos.getX() + 0.5;
             double ty = targetPos.getY() + 0.35;
             double tz = targetPos.getZ() + 0.5;
@@ -665,6 +670,7 @@ public final class AtcEngine {
 
     private static int sampleInvestigationPath(Mob mob, BlockPos targetPos,
             double[] xs, double[] ys, double[] zs) {
+
         try {
             var path = mob.getNavigation().getPath();
             if (path != null && path.getNodeCount() > 0) {
@@ -677,10 +683,12 @@ public final class AtcEngine {
                     for (int i = start; i < nodeCount && written < PATH_PARTICLE_MAX_POINTS; i += stride) {
                         var node = path.getNode(i);
                         xs[written] = node.x + 0.5;
+
                         ys[written] = node.y + 0.25;
                         zs[written] = node.z + 0.5;
                         written++;
                     }
+
                     if (written > 0 && written < PATH_PARTICLE_MAX_POINTS) {
                         var last = path.getNode(nodeCount - 1);
                         if (xs[written - 1] != last.x + 0.5 || zs[written - 1] != last.z + 0.5) {
@@ -708,6 +716,7 @@ public final class AtcEngine {
         double dz = z1 - z0;
         double dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
         if (dist < 0.4) {
+
             xs[0] = x0;
             ys[0] = y0;
             zs[0] = z0;
@@ -722,20 +731,6 @@ public final class AtcEngine {
             zs[i] = z0 + dz * t;
         }
         return steps;
-    }
-
-    @Deprecated
-    public static void trySpawnHeardBurst(Mob mob) {
-        if (mob != null) {
-            trySpawnPathParticles(mob, mob.blockPosition(), true);
-        }
-    }
-
-    @Deprecated
-    public static void trySpawnInvestigationTrail(Mob mob) {
-        if (mob != null) {
-            trySpawnPathParticles(mob, mob.blockPosition(), false);
-        }
     }
 
     private static class PlayerStats {
@@ -765,8 +760,19 @@ public final class AtcEngine {
     }
 
     public static boolean setParticlesEnabled(UUID id, boolean enabled) {
-        return setUuidPreference(id, enabled, ENABLE_PARTICLES,
-            AttractToChatConfig.COMMON.clientParticlesOptIn);
+        if (id == null) return false;
+        Map<String, Boolean> preferences = new LinkedHashMap<>(AttractToChatConfig.COMMON.clientParticles.get());
+        preferences.put(id.toString(), enabled);
+        AttractToChatConfig.COMMON.clientParticles.set(preferences);
+        boolean saved = AttractToChatConfig.save();
+        if (!saved) {
+            refreshClientPreferences();
+        } else if (enabled) {
+            ENABLE_PARTICLES.add(id);
+        } else {
+            ENABLE_PARTICLES.remove(id);
+        }
+        return saved;
     }
 
     public static void clearMute(UUID id) {
@@ -774,28 +780,6 @@ public final class AtcEngine {
             MUTED_UNTIL.remove(id);
             MUTED_UNTIL_WALL.remove(id);
         }
-    }
-
-    private static boolean setUuidPreference(UUID id, boolean enabled, Set<UUID> liveSet,
-            AttractToChatConfig.ConfigValue<List<String>> configList) {
-        if (id == null) return false;
-        if (liveSet.contains(id) == enabled) return true;
-        if (enabled) {
-            liveSet.add(id);
-        } else {
-            liveSet.remove(id);
-        }
-        List<String> values = new ArrayList<>(configList.get());
-        String raw = id.toString();
-        if (enabled && !values.contains(raw)) {
-            values.add(raw);
-        } else if (!enabled) {
-            values.removeIf(raw::equalsIgnoreCase);
-        }
-        configList.set(values);
-        boolean saved = AttractToChatConfig.save();
-        if (!saved) refreshClientPreferences();
-        return saved;
     }
 
 

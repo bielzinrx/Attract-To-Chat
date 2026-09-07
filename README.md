@@ -150,8 +150,8 @@ Particles are disabled by default.
 
 | Loader | Attract to Chat | Additional dependency |
 |:--|:--|:--|
-| **Forge 1.19.2** | **2.1.0** | None |
-| **Fabric 1.19.2** | **2.1.0** | [Fabric API 0.76.0 or newer](https://modrinth.com/mod/fabric-api/versions?g=1.19.2) |
+| **Forge 1.19.2** | **2.1.1** | None |
+| **Fabric 1.19.2** | **2.1.1** | [Fabric API 0.76.0 or newer](https://modrinth.com/mod/fabric-api/versions?g=1.19.2) |
 
 1. **Choose the correct build.** Download the version matching the loader used by your server from [Modrinth](https://modrinth.com/mod/attract-to-chat/versions), [CurseForge](https://www.curseforge.com/minecraft/mc-mods/attract-to-chat/files) or [GitHub Releases](https://github.com/bielzinrx/Attract-To-Chat/releases).
 2. **Install the required files.** Place the Attract to Chat JAR inside the server's `mods` folder. Fabric installations must also include Fabric API.
