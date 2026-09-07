@@ -16,6 +16,7 @@ Focus: configuration transparency — every option explained in-game and in the 
 - Vocal fatigue alert text now describes hoarseness instead of trauma.
 - Anti-spam status now reports the cooldown in seconds instead of ticks.
 - Removed unused legacy translation keys and dead code paths (deprecated particle helpers, unused opt-out list, no-op loop step).
+- Config comments are now written without Unicode escapes (`\u0027`-style sequences), keeping the file human-readable in any text editor.
 
 Both Minecraft 1.19.2 and 1.20.1, Forge and Fabric, receive the same changes.
 
