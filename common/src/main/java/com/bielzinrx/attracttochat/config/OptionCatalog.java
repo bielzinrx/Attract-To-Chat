@@ -48,7 +48,10 @@ public final class OptionCatalog {
         new Option("enableAntiSpam", () -> AttractToChatConfig.COMMON.enableAntiSpam.get(), "OFF", 0.0, 0.0, false),
         new Option("enableCapsFeature", () -> AttractToChatConfig.COMMON.enableCapsFeature.get(), "ON", 0.0, 0.0, false),
         new Option("showParticles", () -> AttractToChatConfig.COMMON.showParticles.get(), "ON", 0.0, 0.0, false),
-        new Option("debugMode", () -> AttractToChatConfig.COMMON.debugMode.get(), "OFF", 0.0, 0.0, false)
+        new Option("debugMode", () -> AttractToChatConfig.COMMON.debugMode.get(), "OFF", 0.0, 0.0, false),
+        new Option("walkieChatCompat", () -> AttractToChatConfig.COMMON.walkieChatCompat.get(), "ON", 0.0, 0.0, false),
+        new Option("walkieChatProximityRange", () -> AttractToChatConfig.COMMON.walkieChatProximityRange.get(), "15", 0.0, 500.0, true),
+        new Option("walkieChatProximityCapsBonus", () -> AttractToChatConfig.COMMON.walkieChatProximityCapsBonus.get(), "10", 0.0, 100.0, true)
     );
 
     private OptionCatalog() {}

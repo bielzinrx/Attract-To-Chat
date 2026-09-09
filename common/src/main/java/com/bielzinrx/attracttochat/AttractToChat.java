@@ -1,6 +1,7 @@
 package com.bielzinrx.attracttochat;
 
 import com.bielzinrx.attracttochat.config.AttractToChatConfig;
+import com.bielzinrx.attracttochat.compat.WalkieChatCompat;
 import com.bielzinrx.attracttochat.engine.AtcEngine;
 import com.bielzinrx.attracttochat.i18n.ServerTranslations;
 import com.bielzinrx.attracttochat.platform.Platform;
@@ -37,6 +38,22 @@ public final class AttractToChat {
         AttractToChatConfig.load();
         AtcEngine.refreshCaches();
 
+        WalkieChatCompat.init();
+    }
+
+    /**
+     * Resolves the effective range of Walkie-Chat's proximity chat for a
+     * given message. Walkie-Chat reflects on this method before broadcasting
+     * proximity chat, so CAPS-heavy messages reach farther. Returns the
+     * fallback range when the integration is disabled.
+     */
+    public static double getEffectiveWalkieProximityRange(String message, double fallbackRange) {
+        if (!AttractToChatConfig.COMMON.walkieChatCompat.get()) return fallbackRange;
+        com.bielzinrx.attracttochat.engine.MessageScore score =
+            new com.bielzinrx.attracttochat.engine.MessageScore(message, null);
+        return Math.max(fallbackRange,
+            AttractToChatConfig.COMMON.walkieChatProximityRange.get()
+                + AttractToChatConfig.COMMON.walkieChatProximityCapsBonus.get() * score.saturation);
     }
 
     public void sendHelp(ServerPlayer player) {
@@ -55,6 +72,9 @@ public final class AttractToChat {
                     sendHelpLine(player, "message.attracttochat.command.help.overview.client");
                 }
                 sendHelpLine(player, "message.attracttochat.command.help.overview.admin");
+                if (Platform.getHelper().isModLoaded("walkietalkie")) {
+                    sendHelpLine(player, "message.attracttochat.command.help.overview.walkiechat");
+                }
             }
             case "gameplay" -> {
                 sendHelpLine(player, "message.attracttochat.command.help.radius");
@@ -90,6 +110,14 @@ public final class AttractToChat {
                 sendHelpLine(player, "message.attracttochat.command.help.config");
                 sendHelpLine(player, "message.attracttochat.command.help.mobspeed");
                 sendHelpLine(player, "message.attracttochat.command.help.forgettime");
+            }
+            case "walkiechat" -> {
+                if (Platform.getHelper().isModLoaded("walkietalkie")) {
+                    sendHelpLine(player, "message.attracttochat.command.help.walkiechat");
+                } else {
+                    player.sendSystemMessage(ServerTranslations.component(
+                        player, "message.attracttochat.command.help.unknown_category", safeCategory));
+                }
             }
             case "config" -> {
                 sendHelpLine(player, "message.attracttochat.command.help.config");

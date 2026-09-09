@@ -404,15 +404,56 @@ public final class AtcCommand {
                 src.sendSuccess(() -> ServerTranslations.component(src, "message.attracttochat.command.status_mobspeed_base", AttractToChatConfig.COMMON.mobSpeedBase.get()), false);
                 src.sendSuccess(() -> ServerTranslations.component(src, "message.attracttochat.command.status_mobspeed_max", AttractToChatConfig.COMMON.mobSpeedMax.get()), false);
                 src.sendSuccess(() -> ServerTranslations.component(src, "message.attracttochat.command.status_particles", AttractToChatConfig.COMMON.showParticles.get()), false);
+                if (Platform.getHelper().isModLoaded("walkietalkie")) {
+                    src.sendSuccess(() -> ServerTranslations.component(src, "message.attracttochat.command.status_walkiechat_compat", AttractToChatConfig.COMMON.walkieChatCompat.get()), false);
+                }
                 src.sendSuccess(() -> ServerTranslations.component(src, "message.attracttochat.command.status_footer"), false);
                 return 1;
             }))
+            .then(Commands.literal("walkiechat")
+                .requires(src -> src.hasPermission(2) && Platform.getHelper().isModLoaded("walkietalkie"))
+                .then(Commands.literal("compat")
+                    .then(Commands.literal("enable").executes(ctx -> {
+                        AttractToChatConfig.COMMON.walkieChatCompat.set(true);
+                        if (!saveConfig(ctx.getSource(), null)) return 0;
+                        feedback(ctx.getSource(), "message.attracttochat.command.walkiechat.compat_enabled");
+                        return 1;
+                    }))
+                    .then(Commands.literal("disable").executes(ctx -> {
+                        AttractToChatConfig.COMMON.walkieChatCompat.set(false);
+                        if (!saveConfig(ctx.getSource(), null)) return 0;
+                        feedback(ctx.getSource(), "message.attracttochat.command.walkiechat.compat_disabled");
+                        return 1;
+                    })))
+                .then(Commands.literal("proximity")
+                    .then(Commands.literal("range")
+                        .then(Commands.argument("value", DoubleArgumentType.doubleArg(0.0, 500.0))
+                            .executes(ctx -> {
+                                double v = DoubleArgumentType.getDouble(ctx, "value");
+                                AttractToChatConfig.COMMON.walkieChatProximityRange.set(v);
+                                if (!saveConfig(ctx.getSource(), null)) return 0;
+                                feedback(ctx.getSource(), "message.attracttochat.command.walkiechat.proximity_range_set",
+                                    AttractToChatConfig.COMMON.walkieChatProximityRange.get());
+                                return 1;
+                            })))
+                    .then(Commands.literal("capsbonus")
+                        .then(Commands.argument("value", DoubleArgumentType.doubleArg(0.0, 100.0))
+                            .executes(ctx -> {
+                                double value = DoubleArgumentType.getDouble(ctx, "value");
+                                AttractToChatConfig.COMMON.walkieChatProximityCapsBonus.set(value);
+                                if (!saveConfig(ctx.getSource(), null)) return 0;
+                                feedback(ctx.getSource(), "message.attracttochat.command.walkiechat.proximity_capsbonus_set", value);
+                                return 1;
+                            })))))
             .then(Commands.literal("help")
                 .executes(ctx -> sendHelp(ctx.getSource(), "overview"))
                 .then(Commands.argument("category", StringArgumentType.word())
                     .suggests((ctx, builder) -> {
                         List<String> categories = new ArrayList<>(Arrays.asList(
                             "overview", "gameplay", "mobs", "admin", "feature", "config"));
+                        if (Platform.getHelper().isModLoaded("walkietalkie")) {
+                            categories.add("walkiechat");
+                        }
                         if (ctx.getSource().getEntity() instanceof ServerPlayer player
                                 && Platform.getHelper().hasClientMod(player)) {
                             categories.add("client");

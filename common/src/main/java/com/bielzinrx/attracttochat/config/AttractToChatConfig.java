@@ -105,6 +105,10 @@ public final class AttractToChatConfig {
         public final ConfigValue<Integer> traumaThreshold = new ConfigValue<>(1000);
         public final ConfigValue<Long> muteDurationTicks = new ConfigValue<>(600L);
 
+        public final ConfigValue<Boolean> walkieChatCompat = new ConfigValue<>(true);
+        public final ConfigValue<Double> walkieChatProximityRange = new ConfigValue<>(15.0);
+        public final ConfigValue<Double> walkieChatProximityCapsBonus = new ConfigValue<>(10.0);
+
     }
 
     private static final class PresetManagedState {
@@ -358,6 +362,9 @@ public final class AttractToChatConfig {
         int antiSpamWindowSeconds = COMMON.antiSpamWindowSeconds.get();
         int traumaThreshold = COMMON.traumaThreshold.get();
         long muteDurationTicks = COMMON.muteDurationTicks.get();
+        boolean walkieChatCompat = COMMON.walkieChatCompat.get();
+        double walkieChatProximityRange = COMMON.walkieChatProximityRange.get();
+        double walkieChatProximityCapsBonus = COMMON.walkieChatProximityCapsBonus.get();
         Map<String, PresetManagedState> customPresets;
         PresetRestorePoint presetRestorePoint;
     }
@@ -486,6 +493,24 @@ public final class AttractToChatConfig {
         if (root.has("antiSpamWindowSeconds")) COMMON.antiSpamWindowSeconds.set(data.antiSpamWindowSeconds);
         COMMON.traumaThreshold.set(data.traumaThreshold);
         COMMON.muteDurationTicks.set(data.muteDurationTicks);
+        if (root.has("walkieChatCompat")) {
+            COMMON.walkieChatCompat.set(data.walkieChatCompat);
+        } else {
+            COMMON.walkieChatCompat.set(true);
+            needsRewrite = true;
+        }
+        if (root.has("walkieChatProximityRange")) {
+            COMMON.walkieChatProximityRange.set(data.walkieChatProximityRange);
+        } else {
+            COMMON.walkieChatProximityRange.set(15.0);
+            needsRewrite = true;
+        }
+        if (root.has("walkieChatProximityCapsBonus")) {
+            COMMON.walkieChatProximityCapsBonus.set(data.walkieChatProximityCapsBonus);
+        } else {
+            COMMON.walkieChatProximityCapsBonus.set(10.0);
+            needsRewrite = true;
+        }
         customPresets.clear();
         customPresets.putAll(sanitizeCustomPresets(data.customPresets));
         presetRestorePoint = sanitizePresetRestorePoint(data.presetRestorePoint);
@@ -752,6 +777,8 @@ public final class AttractToChatConfig {
         COMMON.mobSpeedBase.set(clamp(COMMON.mobSpeedBase.get(), 0.1, 3.0));
         COMMON.mobSpeedMax.set(clamp(COMMON.mobSpeedMax.get(), COMMON.mobSpeedBase.get(), 4.0));
         COMMON.trollSpeedMultiplier.set(clamp(COMMON.trollSpeedMultiplier.get(), 1.0, 8.0));
+        COMMON.walkieChatProximityRange.set(clamp(COMMON.walkieChatProximityRange.get(), 0.0, 500.0));
+        COMMON.walkieChatProximityCapsBonus.set(clamp(COMMON.walkieChatProximityCapsBonus.get(), 0.0, 100.0));
         COMMON.forgetTargetAfterSeconds.set(Math.max(1, Math.min(300, COMMON.forgetTargetAfterSeconds.get())));
         COMMON.scanCooldownTicks.set(Math.max(1, Math.min(1200, COMMON.scanCooldownTicks.get())));
         COMMON.antiSpamMaxMessages.set(Math.max(0, Math.min(50, COMMON.antiSpamMaxMessages.get())));
