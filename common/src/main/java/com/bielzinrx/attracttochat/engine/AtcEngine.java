@@ -2,6 +2,7 @@ package com.bielzinrx.attracttochat.engine;
 
 import com.bielzinrx.attracttochat.config.AttractToChatConfig;
 import com.bielzinrx.attracttochat.client.ClientPresence;
+import com.bielzinrx.attracttochat.compat.WalkieChatCompat;
 import com.bielzinrx.attracttochat.i18n.ServerTranslations;
 import com.bielzinrx.attracttochat.fatigue.FatigueTracker;
 import com.bielzinrx.attracttochat.platform.Platform;
@@ -45,6 +46,8 @@ public final class AtcEngine {
     private static final Set<String>             ENABLED_ENTITIES = Collections.newSetFromMap(new ConcurrentHashMap<>());
     private static final Set<String>             IGNORED_PLAYERS  = Collections.newSetFromMap(new ConcurrentHashMap<>());
     private static final Set<String>             TROLL_PLAYERS    = Collections.newSetFromMap(new ConcurrentHashMap<>());
+    private static final ResourceLocation        WALKIE_BLOCK_ID  =
+        new ResourceLocation("walkietalkie", "walkie_talkie_block");
 
     private static final Set<UUID> ENABLE_PARTICLES = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
@@ -138,6 +141,23 @@ public final class AtcEngine {
         if (player == null || !player.isAlive()) return false;
         if (isIgnored(player)) return false;
         if (message == null || message.trim().isEmpty()) return false;
+        if (WalkieChatCompat.isActiveHandheldWalkie(player)) return false;
+        char first = message.trim().charAt(0);
+        return first != '!' && first != '@' && first != '#' && first != '/';
+    }
+
+    /**
+     * Gate for chat that arrives through Walkie-Chat's own pipeline (proximity
+     * callback or block-station attraction). Unlike {@link #shouldProcessChat},
+     * this must not reject handheld-walkie messages — Walkie-Chat already
+     * routed them — but still honors ignore lists, mute state and command
+     * prefixes.
+     */
+    public static boolean shouldProcessWalkieSound(ServerPlayer player, String message) {
+        if (player == null || !player.isAlive()) return false;
+        if (isIgnored(player)) return false;
+        if (message == null || message.trim().isEmpty()) return false;
+        if (isVocallyMuted(player.getUUID())) return false;
         char first = message.trim().charAt(0);
         return first != '!' && first != '@' && first != '#' && first != '/';
     }
@@ -754,6 +774,32 @@ public final class AtcEngine {
         return exclusionMode ? !ENABLED_ENTITIES.contains("!" + id) : ENABLED_ENTITIES.contains(id);
     }
 
+
+    public static boolean isWalkieBlock(ServerLevel level, BlockPos pos) {
+        if (level == null || pos == null || !level.isLoaded(pos)) return false;
+        ResourceLocation id = Registry.BLOCK.getKey(level.getBlockState(pos).getBlock());
+        return WALKIE_BLOCK_ID.equals(id);
+    }
+
+    /**
+     * Destroys a placed Walkie Block reached by a hostile mob and notifies
+     * every player tuned to that station (handheld radio or connected block)
+     * through Walkie-Chat's push pipeline. Returns false when the position is
+     * not a Walkie Block or the break failed.
+     */
+    public static boolean destroyWalkieBlock(Mob mob, BlockPos pos) {
+        if (mob == null || !(mob.level instanceof ServerLevel level)
+                || !isEntityEnabled(mob) || !isWalkieBlock(level, pos)) {
+            return false;
+        }
+        String destroyedFrequency = WalkieChatCompat.getFrequencyIfWalkie(level.getBlockEntity(pos));
+        boolean destroyed = level.destroyBlock(pos, false, mob);
+        if (destroyed && destroyedFrequency != null && !destroyedFrequency.isBlank()) {
+            WalkieChatCompat.notifyWalkieBlockDestroyed(level, destroyedFrequency,
+                "message.attracttochat.walkie_block_destroyed");
+        }
+        return destroyed;
+    }
 
     public static boolean isParticlesEnabled(UUID id) {
         return id != null && ENABLE_PARTICLES.contains(id);

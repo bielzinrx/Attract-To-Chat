@@ -200,5 +200,17 @@
   "option.attracttochat.enableAntiSpam": "Anti-spam: rapid messages stop attracting mobs (chat itself is untouched). OFF by default.",
   "option.attracttochat.enableCapsFeature": "CAPS loudness: TYPING IN CAPS is heard from farther away. ON by default.",
   "option.attracttochat.showParticles": "Master switch for investigation particles shown to client-mod users.",
-  "option.attracttochat.debugMode": "Verbose console logging of every attraction scan."
+  "option.attracttochat.debugMode": "Verbose console logging of every attraction scan.",
+  "message.attracttochat.command.help.overview.walkiechat": "§e/atc help walkiechat §7- Walkie-Chat integration",
+  "message.attracttochat.command.help.walkiechat": "§e/atc walkiechat compat|proximity … §8(OP)",
+  "message.attracttochat.command.status_walkiechat_compat": " §9[WalkieChat compat: §f%s§9]",
+  "message.attracttochat.command.walkiechat.compat_disabled": "§cWalkieChat compat: DISABLED",
+  "message.attracttochat.command.walkiechat.compat_enabled": "§aWalkieChat compat: ENABLED",
+  "message.attracttochat.command.walkiechat.proximity_capsbonus_set": "§aWC proximity CAPS bonus: §f%s",
+  "message.attracttochat.command.walkiechat.proximity_range_set": "§aWC proximity range: §f%s",
+  "message.attracttochat.walkie_block_destroyed": "§cWalkie Block signal lost. The station was destroyed.",
+  "message.attracttochat.walkie_block_name": "Walkie Block",
+  "option.attracttochat.walkieChatCompat": "§7Walkie-Chat integration. §fWhen Walkie-Chat is installed, ATC attracts mobs to its proximity chat and hostile mobs can destroy Walkie Blocks. §8Default: ON",
+  "option.attracttochat.walkieChatProximityCapsBonus": "§7Extra range per point of CAPS saturation in Walkie-Chat proximity chat. §8Default: 10",
+  "option.attracttochat.walkieChatProximityRange": "§7Base range (blocks) for mob attraction to Walkie-Chat proximity chat. §8Default: 15"
 }

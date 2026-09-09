@@ -200,5 +200,17 @@
   "option.attracttochat.enableAntiSpam": "Anti-spam: mensajes demasiado rápidos dejan de atraer mobs (el chat en sí no se toca). DESACTIVADO por defecto.",
   "option.attracttochat.enableCapsFeature": "Grito en MAYÚSCULAS: ESCRIBIR ASÍ se oye desde más lejos. ACTIVADO por defecto.",
   "option.attracttochat.showParticles": "Interruptor principal de las partículas de investigación mostradas a usuarios del mod cliente.",
-  "option.attracttochat.debugMode": "Log detallado en consola de cada escaneo de atracción."
+  "option.attracttochat.debugMode": "Log detallado en consola de cada escaneo de atracción.",
+  "message.attracttochat.command.help.overview.walkiechat": "§e/atc help walkiechat §7- integración Walkie-Chat",
+  "message.attracttochat.command.help.walkiechat": "§e/atc walkiechat compat|proximity … §8(OP)",
+  "message.attracttochat.command.status_walkiechat_compat": " §9[Compat. WalkieChat: §f%s§9]",
+  "message.attracttochat.command.walkiechat.compat_disabled": "§cCompatibilidad con WalkieChat: DESACTIVADA",
+  "message.attracttochat.command.walkiechat.compat_enabled": "§aCompatibilidad con WalkieChat: ACTIVADA",
+  "message.attracttochat.command.walkiechat.proximity_capsbonus_set": "§aBonificación de MAYÚSCULAS por proximidad WC: §f%s",
+  "message.attracttochat.command.walkiechat.proximity_range_set": "§aAlcance de proximidad WC: §f%s",
+  "message.attracttochat.walkie_block_destroyed": "§cSeñal del Walkie Block perdida. La estación fue destruida.",
+  "message.attracttochat.walkie_block_name": "Bloque Walkie",
+  "option.attracttochat.walkieChatCompat": "§7Integración con Walkie-Chat. §fCon Walkie-Chat instalado, ATC atrae mobs a su chat de proximidad y los mobs hostiles pueden destruir Walkie Blocks. §8Predeterminado: ON",
+  "option.attracttochat.walkieChatProximityCapsBonus": "§7Alcance extra por punto de saturación de MAYÚSCULAS en el chat de proximidad Walkie-Chat. §8Predeterminado: 10",
+  "option.attracttochat.walkieChatProximityRange": "§7Alcance base (bloques) de atracción de mobs en el chat de proximidad Walkie-Chat. §8Predeterminado: 15"
 }

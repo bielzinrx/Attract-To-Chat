@@ -1,6 +1,7 @@
 package com.bielzinrx.attracttochat;
 
 import com.bielzinrx.attracttochat.config.AttractToChatConfig;
+import com.bielzinrx.attracttochat.compat.WalkieChatCompat;
 import com.bielzinrx.attracttochat.engine.AtcEngine;
 import com.bielzinrx.attracttochat.i18n.ServerTranslations;
 import com.bielzinrx.attracttochat.platform.Platform;
@@ -37,6 +38,22 @@ public final class AttractToChat {
         AttractToChatConfig.load();
         AtcEngine.refreshCaches();
 
+        WalkieChatCompat.init();
+    }
+
+    /**
+     * Resolves the effective range of Walkie-Chat's proximity chat for a
+     * given message. Walkie-Chat reflects on this method before broadcasting
+     * proximity chat, so CAPS-heavy messages reach farther. Returns the
+     * fallback range when the integration is disabled.
+     */
+    public static double getEffectiveWalkieProximityRange(String message, double fallbackRange) {
+        if (!AttractToChatConfig.COMMON.walkieChatCompat.get()) return fallbackRange;
+        com.bielzinrx.attracttochat.engine.MessageScore score =
+            new com.bielzinrx.attracttochat.engine.MessageScore(message, null);
+        return Math.max(fallbackRange,
+            AttractToChatConfig.COMMON.walkieChatProximityRange.get()
+                + AttractToChatConfig.COMMON.walkieChatProximityCapsBonus.get() * score.saturation);
     }
 
     public void sendHelp(ServerPlayer player) {

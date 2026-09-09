@@ -9,7 +9,9 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.WalkTarget;
+import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.EnderMan;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.npc.Villager;
@@ -239,6 +241,11 @@ public class MoveToSoundGoal extends Goal {
 
         double distSq = mob.blockPosition().distSqr(targetPos);
 
+        if (blockTarget && mob instanceof Enemy) {
+            return isTargetLoadedAndValid()
+                && AtcEngine.isWalkieBlock((ServerLevel) mob.level, targetPos);
+        }
+
         if (lockedToTrollTarget) {
             return true;
         }
@@ -309,6 +316,20 @@ public class MoveToSoundGoal extends Goal {
         maybeSpawnPathParticles();
 
         final BlockPos lookAt = targetPos;
+
+        if (blockTarget && mob instanceof Creeper creeper
+                && mob.blockPosition().distSqr(lookAt) <= 2.25) {
+            creeper.ignite();
+            return;
+        }
+
+        if (blockTarget && mob instanceof Enemy && !(mob instanceof Creeper)
+                && mob.blockPosition().distSqr(lookAt) <= 4.0) {
+            if (AtcEngine.destroyWalkieBlock(mob, lookAt)) {
+                timeout = 0;
+            }
+            return;
+        }
 
         mob.getLookControl().setLookAt(
             lookAt.getX() + 0.5, lookAt.getY(), lookAt.getZ() + 0.5);
@@ -431,6 +452,18 @@ public class MoveToSoundGoal extends Goal {
         } catch (Throwable ex) {
             AttractToChat.LOGGER.warn("Skipped unsafe path calculation for sound investigation: mob={}, target={}, reason={}",
                 mob.getType(), AtcEngine.formatCoordinates(targetPos), ex.toString());
+        }
+
+        // A block is not a standable destination. Preserve the direct
+        // approach fallback only for placed Walkie receivers.
+        if (blockTarget) {
+            try {
+                mob.getMoveControl().setWantedPosition(x, y, z, currentSpeed);
+                return true;
+            } catch (Throwable ex) {
+                AttractToChat.LOGGER.debug(
+                    "Skipped move-control update for Walkie investigation: {}", ex.toString());
+            }
         }
         return false;
     }

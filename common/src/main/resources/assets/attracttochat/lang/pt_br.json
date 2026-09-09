@@ -200,5 +200,17 @@
   "option.attracttochat.enableAntiSpam": "Anti-spam: mensagens rápidas demais param de atrair mobs (o chat em si não é tocado). DESLIGADO por padrão.",
   "option.attracttochat.enableCapsFeature": "Grito em CAIXA ALTA: DIGITAR ASSIM é ouvido de mais longe. LIGADO por padrão.",
   "option.attracttochat.showParticles": "Interruptor principal das partículas de investigação mostradas a usuários do mod cliente.",
-  "option.attracttochat.debugMode": "Log detalhado no console de cada escaneamento de atração."
+  "option.attracttochat.debugMode": "Log detalhado no console de cada escaneamento de atração.",
+  "message.attracttochat.command.help.overview.walkiechat": "§e/atc help walkiechat §7- integração Walkie-Chat",
+  "message.attracttochat.command.help.walkiechat": "§e/atc walkiechat compat|proximity … §8(OP)",
+  "message.attracttochat.command.status_walkiechat_compat": " §9[Compat. WalkieChat: §f%s§9]",
+  "message.attracttochat.command.walkiechat.compat_disabled": "§cCompatibilidade WalkieChat: DESATIVADA",
+  "message.attracttochat.command.walkiechat.compat_enabled": "§aCompatibilidade WalkieChat: ATIVADA",
+  "message.attracttochat.command.walkiechat.proximity_capsbonus_set": "§aBônus de CAPS da proximidade WC: §f%s",
+  "message.attracttochat.command.walkiechat.proximity_range_set": "§aAlcance de proximidade WC: §f%s",
+  "message.attracttochat.walkie_block_destroyed": "§cSinal do Walkie Block perdido. A estação foi destruída.",
+  "message.attracttochat.walkie_block_name": "Bloco Walkie",
+  "option.attracttochat.walkieChatCompat": "§7Integração com Walkie-Chat. §fCom o Walkie-Chat instalado, o ATC atrai mobs para o chat de proximidade dele e mobs hostis podem destruir Walkie Blocks. §8Padrão: ON",
+  "option.attracttochat.walkieChatProximityCapsBonus": "§7Alcance extra por ponto de saturação de CAPS no chat de proximidade Walkie-Chat. §8Padrão: 10",
+  "option.attracttochat.walkieChatProximityRange": "§7Alcance base (blocos) de atração de mobs no chat de proximidade Walkie-Chat. §8Padrão: 15"
 }
