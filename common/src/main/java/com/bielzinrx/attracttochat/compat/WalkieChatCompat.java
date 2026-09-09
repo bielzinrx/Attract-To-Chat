@@ -5,6 +5,7 @@ import com.bielzinrx.attracttochat.engine.AtcEngine;
 import com.bielzinrx.attracttochat.engine.MessageScore;
 import com.bielzinrx.attracttochat.i18n.ServerTranslations;
 import com.bielzinrx.attracttochat.platform.Platform;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -19,8 +20,9 @@ import java.util.function.Consumer;
 /**
  * Optional, reflection-only integration with Walkie-Chat (mod id "walkietalkie").
  *
- * Walkie-Chat replaces vanilla chat with its own mixin and cancels the vanilla
- * path, so ATC's normal chat pipeline never sees those messages. This layer:
+ * Walkie-Chat re-implements chat delivery (through a mixin on 1.20.1 and
+ * platform chat events on 1.19.2), so ATC's own chat pipeline must not
+ * double-process the messages Walkie-Chat already routed. This layer:
  *   1. registers a PROXIMITY_CHAT callback so ATC can still attract mobs to
  *      proximity chat spoken through Walkie-Chat (the callback receives the
  *      effective range, which Walkie-Chat already resolved through
@@ -51,8 +53,13 @@ public final class WalkieChatCompat {
             Method register = event.getClass().getMethod("register", Object.class);
             register.invoke(event, (Consumer<Object>) WalkieChatCompat::onProximityChat);
             LOGGER.info("[ATC] Walkie-Chat proximity chat callback registered.");
+        } catch (ClassNotFoundException noCallbackApi) {
+            // Walkie-Chat 1.19.2 builds ship no callback API: chat keeps
+            // flowing through their platform events and the block relay, which
+            // covers the integration on its own. Not an error.
+            LOGGER.info("[ATC] Walkie-Chat has no callback API on this version; "
+                + "integration continues through chat events and the block relay.");
         } catch (ReflectiveOperationException exception) {
-            initialized = false;
             LOGGER.error("[ATC] Walkie-Chat is loaded, but its callback API could not be registered.", exception);
         }
     }
@@ -140,10 +147,29 @@ public final class WalkieChatCompat {
     }
 
     /**
-     * Delivers a "signal lost" push notification to every player tuned to the
-     * given frequency (handheld radio or connected block), using Walkie-Chat's
-     * own push-message pipeline. Used when a mob destroys a placed Walkie
-     * Block. The message is resolved per player in their own language.
+     * True when the player stands next to an active Walkie Block station.
+     * Walkie-Chat routes chat spoken near one of its blocks through the
+     * station's frequency, and its relay already attracts mobs there, so
+     * ATC's own chat pipeline must not double-process the message.
+     */
+    public static boolean isNearActiveWalkieBlock(ServerPlayer player) {
+        if (player == null || !Platform.getHelper().isModLoaded(WALKIE_MOD_ID)) return false;
+        try {
+            Class<?> helperClass = Class.forName("com.Theus452.walkietalkie.util.WalkieMessageHelper");
+            Method findNearby = helperClass.getMethod("findNearbyActiveBlock", ServerPlayer.class);
+            return findNearby.invoke(null, player) != null;
+        } catch (Exception ignored) {
+            return false;
+        }
+    }
+
+    /**
+     * Delivers a "signal lost" notification to every player tuned to the given
+     * frequency (handheld radio or connected block). Prefers Walkie-Chat's own
+     * push-message pipeline (1.20.1); on 1.19.2 builds, which ship no push
+     * pipeline, falls back to the connection manager and plain system
+     * messages. Used when a mob destroys a placed Walkie Block. The message
+     * is resolved per player in their own language.
      */
     public static void notifyWalkieBlockDestroyed(ServerLevel level, String frequency, String langKey) {
         if (level == null || frequency == null || frequency.isBlank()
@@ -154,19 +180,45 @@ public final class WalkieChatCompat {
             Class<?> helperClass = Class.forName("com.Theus452.walkietalkie.util.WalkieMessageHelper");
             Method hasRadio = helperClass.getMethod("hasWalkieTalkieWithFrequency",
                 ServerPlayer.class, String.class);
-            Class<?> registryClass = Class.forName("com.Theus452.walkietalkie.networking.WalkieBlockRegistry");
-            Method isConnected = registryClass.getMethod("isPlayerConnectedToAnyBlock",
-                java.util.UUID.class, String.class);
-            Class<?> networkClass = Class.forName("com.Theus452.walkietalkie.networking.WalkieNetworkHandler");
-            Method sendPush = networkClass.getMethod("sendPushMessage",
-                ServerPlayer.class, String.class, String.class, String.class);
+
+            Method sendPush = null;
+            Method isConnected = null;
+            try {
+                Class<?> networkClass = Class.forName("com.Theus452.walkietalkie.networking.WalkieNetworkHandler");
+                sendPush = networkClass.getMethod("sendPushMessage",
+                    ServerPlayer.class, String.class, String.class, String.class);
+                Class<?> registryClass = Class.forName("com.Theus452.walkietalkie.networking.WalkieBlockRegistry");
+                isConnected = registryClass.getMethod("isPlayerConnectedToAnyBlock",
+                    java.util.UUID.class, String.class);
+            } catch (ReflectiveOperationException oldWalkieBuild) {
+                // Walkie-Chat 1.19.2 ships no push pipeline or block-registry
+                // listener lookup; fall back to the connection manager and
+                // plain system messages below.
+            }
+
+            Method hasConnection = null;
+            try {
+                Class<?> connectionClass = Class.forName("com.Theus452.walkietalkie.util.ConnectionManager");
+                hasConnection = connectionClass.getMethod("hasConnectionWithFrequency",
+                    ServerPlayer.class, String.class);
+            } catch (ReflectiveOperationException noConnectionLookup) {
+                // Walkie-Chat 1.20.1 tracks block listeners in the registry
+                // instead (isConnected above).
+            }
 
             for (ServerPlayer player : level.getServer().getPlayerList().getPlayers()) {
                 boolean tuned = Boolean.TRUE.equals(hasRadio.invoke(null, player, frequency))
-                    || Boolean.TRUE.equals(isConnected.invoke(null, player.getUUID(), frequency));
+                    || (isConnected != null
+                        && Boolean.TRUE.equals(isConnected.invoke(null, player.getUUID(), frequency)))
+                    || (hasConnection != null
+                        && Boolean.TRUE.equals(hasConnection.invoke(null, player, frequency)));
                 if (tuned) {
-                    String text = ServerTranslations.component(player, langKey).getString();
-                    sendPush.invoke(null, player, frequency, "ATC", text);
+                    Component text = ServerTranslations.component(player, langKey);
+                    if (sendPush != null) {
+                        sendPush.invoke(null, player, frequency, "ATC", text.getString());
+                    } else {
+                        player.sendSystemMessage(text);
+                    }
                 }
             }
         } catch (ReflectiveOperationException | RuntimeException exception) {
