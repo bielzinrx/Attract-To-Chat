@@ -90,8 +90,8 @@ That's it — players join without installing anything. The mod runs entirely on
 
 | Loader | Attract to Chat | Additional dependency |
 |:--|:--|:--|
-| **Forge 1.19.2** | **2.1.1** | None |
-| **Fabric 1.19.2** | **2.1.1** | [Fabric API 0.76.0 or newer](https://modrinth.com/mod/fabric-api/versions?g=1.19.2) |
+| **Forge 1.19.2** | **2.1.2** | None |
+| **Fabric 1.19.2** | **2.1.2** | [Fabric API 0.76.0 or newer](https://modrinth.com/mod/fabric-api/versions?g=1.19.2) |
 
 Do not mix Forge and Fabric files.
 
