@@ -1,3 +1,24 @@
+# Attract to Chat 2.1.2
+
+Focus: optional Walkie-Chat integration — proximity chat, walkie block stations and hostile mob attacks.
+
+## New in 2.1.2
+
+- Optional Walkie-Chat compatibility (mod id `walkietalkie`), enabled by default and toggleable in-game with `/atc walkiechat on|off` or through the `walkieChatCompat` config option.
+- Mobs are attracted to proximity chat spoken through Walkie-Chat, using the effective range Walkie-Chat already resolved; `walkieChatProximityRange` (default 15) and `walkieChatProximityCapsBonus` (default 10) shape the result.
+- Hostile mobs that reach an active Walkie Block station destroy it, and every player tuned to its frequency receives a "signal lost" notification in their own language.
+- Chat spoken through a handheld walkie or next to an active Walkie Block is routed by Walkie-Chat and is no longer double-processed by the ATC engine.
+- `/atc status` reports the Walkie-Chat compatibility state when the mod is present.
+
+## Changes and fixes
+
+- Walkie-Chat 1.19.2 ships no callback API: the integration detects this at startup and logs it as information (not an error), continuing through chat events and the block relay.
+- "Signal lost" notifications on 1.19.2 fall back to the connection manager and plain system messages when Walkie-Chat's push pipeline is absent.
+- Forge chat handling (1.19.2 and 1.20.1) now listens at the lowest priority and receives canceled events: Walkie-Chat cancels every chat event while re-implementing delivery, so ATC's own guards — not the cancellation — decide what gets processed. Attraction keeps working on Forge with Walkie-Chat installed.
+- Fabric chat handling relies on registration order (mods initialize alphabetically by mod id), which places ATC's listener before Walkie-Chat's chat veto.
+
+Both Minecraft 1.19.2 and 1.20.1, Forge and Fabric, receive the same changes.
+
 # Attract to Chat 2.1.1
 
 Focus: configuration transparency — every option explained in-game and in the config file itself.

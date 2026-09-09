@@ -142,6 +142,7 @@ public final class AtcEngine {
         if (isIgnored(player)) return false;
         if (message == null || message.trim().isEmpty()) return false;
         if (WalkieChatCompat.isActiveHandheldWalkie(player)) return false;
+        if (WalkieChatCompat.isNearActiveWalkieBlock(player)) return false;
         char first = message.trim().charAt(0);
         return first != '!' && first != '@' && first != '#' && first != '/';
     }

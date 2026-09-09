@@ -9,6 +9,7 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -25,7 +26,8 @@ public final class AtcForgeMod {
         MinecraftForge.EVENT_BUS.addListener(this::onPlayerLeave);
         MinecraftForge.EVENT_BUS.addListener(this::onServerStarting);
         MinecraftForge.EVENT_BUS.addListener(this::onServerStopping);
-        MinecraftForge.EVENT_BUS.addListener(this::onServerChat);
+        MinecraftForge.EVENT_BUS.addListener(
+            EventPriority.LOWEST, true, net.minecraftforge.event.ServerChatEvent.class, this::onServerChat);
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
@@ -43,16 +45,20 @@ public final class AtcForgeMod {
     }
 
     private void onServerChat(net.minecraftforge.event.ServerChatEvent event) {
+        // Walkie-Chat 1.20.1 cancels every chat event while re-implementing
+        // delivery (radio, block station or proximity chat), so a canceled
+        // event must still reach the engine; WalkieChatCompat's guards skip
+        // the messages Walkie-Chat already routed elsewhere.
         ServerPlayer player = event.getPlayer();
         String message = event.getRawText();
 
-        if (AtcEngine.handleChatCancellable(player, message)) {
+        if (AtcEngine.isVocallyMuted(player.getUUID())) {
             event.setCanceled(true);
+            player.getServer().execute(() -> AtcEngine.handleChatCancellable(player, message));
             return;
         }
 
-        if (event.isCanceled()) return;
-        AtcEngine.handleChatAfter(player, message);
+        player.getServer().execute(() -> AtcEngine.handleChatAfter(player, message));
     }
 
     private void onServerTick(TickEvent.ServerTickEvent event) {
