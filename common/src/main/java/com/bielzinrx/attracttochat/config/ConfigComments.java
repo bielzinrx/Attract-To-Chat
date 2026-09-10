@@ -50,7 +50,7 @@ public final class ConfigComments {
         comments.put("clientParticles",
             "Per-player particle preference set by /atc client particles enable|disable. "
             + "Keys are player UUIDs, value true = that player sees investigation particles "
-            + "(requires the client mod). The server master switch is showParticles below.");
+            + "(requires the client mod). This is the only particle switch: each player decides.");
         comments.put("enableVocalFatigue",
             "Vocal fatigue (default OFF): shout too much (CAPS, !!!) and you go hoarse - "
             + "muted for muteDurationTicks while nearby mobs come to investigate. "
@@ -66,9 +66,6 @@ public final class ConfigComments {
         comments.put("debugMode",
             "Verbose console logging of every attraction scan: who said what, which mobs heard it "
             + "and at what range. Great for support tickets, noisy for production servers.");
-        comments.put("showParticles",
-            "Master switch for investigation particles (END_ROD trail + NOTE burst at the target). "
-            + "Players with the client mod can toggle their own view with /atc client particles.");
         comments.put("hearingRange",
             "How far mobs hear normal chat, in blocks (default 30, range 0-500). "
             + "Example: 30 means a zombie 30 blocks away turns and walks toward you. "

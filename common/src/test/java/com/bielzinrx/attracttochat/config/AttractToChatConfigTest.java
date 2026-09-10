@@ -18,7 +18,6 @@ class AttractToChatConfigTest {
     private boolean vocalFatigue;
     private boolean antiSpam;
     private int scanCooldown;
-    private boolean showParticles;
 
     @BeforeAll
     static void bootstrapMinecraftRegistries() {
@@ -33,7 +32,6 @@ class AttractToChatConfigTest {
         vocalFatigue = AttractToChatConfig.COMMON.enableVocalFatigue.get();
         antiSpam = AttractToChatConfig.COMMON.enableAntiSpam.get();
         scanCooldown = AttractToChatConfig.COMMON.scanCooldownTicks.get();
-        showParticles = AttractToChatConfig.COMMON.showParticles.get();
     }
 
     @AfterEach
@@ -43,15 +41,14 @@ class AttractToChatConfigTest {
         AttractToChatConfig.COMMON.enableVocalFatigue.set(vocalFatigue);
         AttractToChatConfig.COMMON.enableAntiSpam.set(antiSpam);
         AttractToChatConfig.COMMON.scanCooldownTicks.set(scanCooldown);
-        AttractToChatConfig.COMMON.showParticles.set(showParticles);
         AttractToChatConfig.undoLastPresetChanges();
     }
 
     @Test
-    void keepsReleaseSchemaAtFifteen() throws ReflectiveOperationException {
+    void keepsReleaseSchemaAtSeventeen() throws ReflectiveOperationException {
         Field field = AttractToChatConfig.class.getDeclaredField("CONFIG_VERSION");
         field.setAccessible(true);
-        assertEquals(16, field.getInt(null));
+        assertEquals(17, field.getInt(null));
     }
 
     @Test
@@ -61,7 +58,6 @@ class AttractToChatConfigTest {
         AttractToChatConfig.COMMON.enableVocalFatigue.set(true);
         AttractToChatConfig.COMMON.enableAntiSpam.set(true);
         AttractToChatConfig.COMMON.scanCooldownTicks.set(75);
-        AttractToChatConfig.COMMON.showParticles.set(false);
 
         assertTrue(AttractToChatConfig.applyPresetValues("safe"));
         assertEquals(24.0, AttractToChatConfig.COMMON.hearingRange.get());
@@ -69,7 +65,6 @@ class AttractToChatConfigTest {
         assertFalse(AttractToChatConfig.COMMON.enableVocalFatigue.get());
         assertFalse(AttractToChatConfig.COMMON.enableAntiSpam.get());
         assertEquals(20, AttractToChatConfig.COMMON.scanCooldownTicks.get());
-        assertFalse(AttractToChatConfig.COMMON.showParticles.get());
 
         AttractToChatConfig.PresetUndoResult undo = AttractToChatConfig.undoLastPresetChanges();
         assertTrue(undo.isAvailable());
@@ -79,6 +74,5 @@ class AttractToChatConfigTest {
         assertTrue(AttractToChatConfig.COMMON.enableVocalFatigue.get());
         assertTrue(AttractToChatConfig.COMMON.enableAntiSpam.get());
         assertEquals(75, AttractToChatConfig.COMMON.scanCooldownTicks.get());
-        assertFalse(AttractToChatConfig.COMMON.showParticles.get());
     }
 }

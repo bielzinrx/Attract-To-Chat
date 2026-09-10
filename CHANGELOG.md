@@ -12,6 +12,7 @@ Focus: optional Walkie-Chat integration — proximity chat, walkie block station
 
 ## Changes and fixes
 
+- Removed the server-side `showParticles` master switch: investigation particles are now purely a per-player choice made with `/atc client particles enable|disable` (stored in `clientParticles`). The `silent` preset no longer touches particles, `/atc status` no longer lists a particle line, and existing configs migrate automatically (schema 17) dropping the stale key.
 - Walkie-Chat 1.19.2 ships no callback API: the integration detects this at startup and logs it as information (not an error), continuing through chat events and the block relay.
 - "Signal lost" notifications on 1.19.2 fall back to the connection manager and plain system messages when Walkie-Chat's push pipeline is absent.
 - Forge chat handling (1.19.2 and 1.20.1) now listens at the lowest priority and receives canceled events: Walkie-Chat cancels every chat event while re-implementing delivery, so ATC's own guards — not the cancellation — decide what gets processed. Attraction keeps working on Forge with Walkie-Chat installed.
