@@ -642,7 +642,6 @@ public final class AtcEngine {
 
     public static void trySpawnPathParticles(Mob mob, BlockPos targetPos, boolean burst) {
         if (mob == null || targetPos == null || !(mob.level() instanceof ServerLevel level)) return;
-        if (!AttractToChatConfig.COMMON.showParticles.get()) return;
 
         double[] xs = new double[PATH_PARTICLE_MAX_POINTS];
         double[] ys = new double[PATH_PARTICLE_MAX_POINTS];

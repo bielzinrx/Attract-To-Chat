@@ -226,11 +226,6 @@ public final class AtcCommand {
                             return 0;
                         }
 
-                        if (!AttractToChatConfig.COMMON.showParticles.get()) {
-                            sp.displayClientMessage(ServerTranslations.component(
-                                sp, "message.attracttochat.command.client_particles_enabled_server_off"), true);
-                            return 1;
-                        }
                         sp.displayClientMessage(ServerTranslations.component(
                             sp, "message.attracttochat.command.client_particles_enabled"), true);
                         return 1;
@@ -403,7 +398,6 @@ public final class AtcCommand {
                     AttractToChatConfig.COMMON.antiSpamWindowSeconds.get()), false);
                 src.sendSuccess(() -> ServerTranslations.component(src, "message.attracttochat.command.status_mobspeed_base", AttractToChatConfig.COMMON.mobSpeedBase.get()), false);
                 src.sendSuccess(() -> ServerTranslations.component(src, "message.attracttochat.command.status_mobspeed_max", AttractToChatConfig.COMMON.mobSpeedMax.get()), false);
-                src.sendSuccess(() -> ServerTranslations.component(src, "message.attracttochat.command.status_particles", AttractToChatConfig.COMMON.showParticles.get()), false);
                 if (Platform.getHelper().isModLoaded("walkietalkie")) {
                     src.sendSuccess(() -> ServerTranslations.component(src, "message.attracttochat.command.status_walkiechat_compat", AttractToChatConfig.COMMON.walkieChatCompat.get()), false);
                 }

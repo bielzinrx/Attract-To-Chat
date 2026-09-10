@@ -29,7 +29,7 @@ public final class AttractToChatConfig {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("AttractToChat-Config");
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
-    private static final int CONFIG_VERSION = 16;
+    private static final int CONFIG_VERSION = 17;
     private static final int SAFE_DEFAULTS_VERSION = 4;
     private static final int EXPLICIT_ENTITY_LIST_VERSION = 7;
     private static final int HOSTILE_DEFAULTS_VERSION = 8;
@@ -85,8 +85,6 @@ public final class AttractToChatConfig {
         public final ConfigValue<Boolean> enableCapsFeature = new ConfigValue<>(true);
         public final ConfigValue<Boolean> debugMode = new ConfigValue<>(false);
 
-        public final ConfigValue<Boolean> showParticles = new ConfigValue<>(true);
-
         public final ConfigValue<Double> hearingRange = new ConfigValue<>(30.0);
         public final ConfigValue<Double> capsRangeBonus = new ConfigValue<>(5.0);
         public final ConfigValue<Double> mobSpeedBase = new ConfigValue<>(1.2);
@@ -117,7 +115,6 @@ public final class AttractToChatConfig {
         boolean enableVocalFatigue;
         boolean enableAntiSpam;
         int scanCooldownTicks;
-        boolean showParticles;
 
         List<String> enabledEntities;
     }
@@ -126,7 +123,6 @@ public final class AttractToChatConfig {
         String presetName;
         PresetManagedState before;
         PresetManagedState applied;
-        boolean touchesParticles;
         boolean touchesEntities;
     }
 
@@ -220,24 +216,22 @@ public final class AttractToChatConfig {
         PresetManagedState before = snapshotPresetManagedState();
         PresetManagedState target = presetTargetState(normalized, before);
         boolean customPreset = customPresets.containsKey(normalized);
-        boolean touchesParticles = customPreset || "silent".equals(normalized);
         boolean touchesEntities = customPreset;
         PresetRestorePoint existing = sanitizePresetRestorePoint(presetRestorePoint);
         if (existing == null || !existing.presetName.equals(normalized)
                 || !matchesAppliedPreset(existing)
-                || !samePresetManagedState(existing.applied, target, touchesParticles, touchesEntities)) {
+                || !samePresetManagedState(existing.applied, target, touchesEntities)) {
             PresetRestorePoint point = new PresetRestorePoint();
             point.presetName = normalized;
             point.before = before;
             point.applied = copyPresetManagedState(target);
-            point.touchesParticles = touchesParticles;
             point.touchesEntities = touchesEntities;
             presetRestorePoint = point;
         } else {
             presetRestorePoint = existing;
         }
 
-        applyPresetManagedState(target, touchesParticles, touchesEntities);
+        applyPresetManagedState(target, touchesEntities);
         validateValues();
         return true;
     }
@@ -287,15 +281,6 @@ public final class AttractToChatConfig {
             }
         } else preserved++;
 
-        if (point.touchesParticles) {
-            if (COMMON.showParticles.get() == point.applied.showParticles) {
-                if (COMMON.showParticles.get() != point.before.showParticles) {
-                    COMMON.showParticles.set(point.before.showParticles);
-                    restored++;
-                }
-            } else preserved++;
-        }
-
         if (point.touchesEntities) {
             List<String> currentEntities = COMMON.enabledEntities.get();
             if (sameEntityList(currentEntities, point.applied.enabledEntities)) {
@@ -318,7 +303,6 @@ public final class AttractToChatConfig {
         if (COMMON.enableVocalFatigue.get()) { COMMON.enableVocalFatigue.set(false); changed++; }
         if (COMMON.enableAntiSpam.get()) { COMMON.enableAntiSpam.set(false); changed++; }
         if (COMMON.scanCooldownTicks.get() != 40) { COMMON.scanCooldownTicks.set(40); changed++; }
-        if (!COMMON.showParticles.get()) { COMMON.showParticles.set(true); changed++; }
         presetRestorePoint = null;
         validateValues();
         return changed;
@@ -350,7 +334,6 @@ public final class AttractToChatConfig {
         boolean enableAntiSpam = COMMON.enableAntiSpam.get();
         boolean enableCapsFeature = COMMON.enableCapsFeature.get();
         boolean debugMode = COMMON.debugMode.get();
-        boolean showParticles = COMMON.showParticles.get();
         double hearingRange = COMMON.hearingRange.get();
         double capsRangeBonus = COMMON.capsRangeBonus.get();
         double mobSpeedBase = COMMON.mobSpeedBase.get();
@@ -481,7 +464,6 @@ public final class AttractToChatConfig {
             needsRewrite = true;
         }
         COMMON.debugMode.set(data.debugMode);
-        COMMON.showParticles.set(data.showParticles);
         COMMON.hearingRange.set(data.hearingRange);
         COMMON.capsRangeBonus.set(data.capsRangeBonus);
         COMMON.mobSpeedBase.set(data.mobSpeedBase);
@@ -585,7 +567,6 @@ public final class AttractToChatConfig {
         COMMON.enableAntiSpam.set(snapshot.enableAntiSpam);
         COMMON.enableCapsFeature.set(snapshot.enableCapsFeature);
         COMMON.debugMode.set(snapshot.debugMode);
-        COMMON.showParticles.set(snapshot.showParticles);
         COMMON.hearingRange.set(snapshot.hearingRange);
         COMMON.capsRangeBonus.set(snapshot.capsRangeBonus);
         COMMON.mobSpeedBase.set(snapshot.mobSpeedBase);
@@ -609,7 +590,6 @@ public final class AttractToChatConfig {
         state.enableVocalFatigue = COMMON.enableVocalFatigue.get();
         state.enableAntiSpam = COMMON.enableAntiSpam.get();
         state.scanCooldownTicks = COMMON.scanCooldownTicks.get();
-        state.showParticles = COMMON.showParticles.get();
         state.enabledEntities = new ArrayList<>(COMMON.enabledEntities.get());
         return state;
     }
@@ -647,7 +627,6 @@ public final class AttractToChatConfig {
                 target.enableVocalFatigue = false;
                 target.enableAntiSpam = false;
                 target.scanCooldownTicks = 20;
-                target.showParticles = false;
             }
             default -> throw new IllegalArgumentException("Unknown ATC preset: " + presetName);
         }
@@ -661,7 +640,6 @@ public final class AttractToChatConfig {
         clean.presetName = normalizePresetName(source.presetName);
         clean.before = sanitizePresetManagedState(source.before);
         clean.applied = sanitizePresetManagedState(source.applied);
-        clean.touchesParticles = source.touchesParticles;
         clean.touchesEntities = source.touchesEntities;
         return clean;
     }
@@ -708,7 +686,6 @@ public final class AttractToChatConfig {
         copy.presetName = source.presetName;
         copy.before = copyPresetManagedState(source.before);
         copy.applied = copyPresetManagedState(source.applied);
-        copy.touchesParticles = source.touchesParticles;
         copy.touchesEntities = source.touchesEntities;
         return copy;
     }
@@ -721,21 +698,18 @@ public final class AttractToChatConfig {
         copy.enableVocalFatigue = source.enableVocalFatigue;
         copy.enableAntiSpam = source.enableAntiSpam;
         copy.scanCooldownTicks = source.scanCooldownTicks;
-        copy.showParticles = source.showParticles;
         copy.enabledEntities = source.enabledEntities == null
             ? new ArrayList<>()
             : new ArrayList<>(source.enabledEntities);
         return copy;
     }
 
-    private static void applyPresetManagedState(PresetManagedState state, boolean includeParticles,
-            boolean includeEntities) {
+    private static void applyPresetManagedState(PresetManagedState state, boolean includeEntities) {
         COMMON.hearingRange.set(state.hearingRange);
         COMMON.capsRangeBonus.set(state.capsRangeBonus);
         COMMON.enableVocalFatigue.set(state.enableVocalFatigue);
         COMMON.enableAntiSpam.set(state.enableAntiSpam);
         COMMON.scanCooldownTicks.set(state.scanCooldownTicks);
-        if (includeParticles) COMMON.showParticles.set(state.showParticles);
         if (includeEntities) COMMON.enabledEntities.set(new ArrayList<>(state.enabledEntities));
     }
 
@@ -746,19 +720,17 @@ public final class AttractToChatConfig {
         if (COMMON.enableVocalFatigue.get() != point.applied.enableVocalFatigue) return false;
         if (COMMON.enableAntiSpam.get() != point.applied.enableAntiSpam) return false;
         if (COMMON.scanCooldownTicks.get() != point.applied.scanCooldownTicks) return false;
-        if (point.touchesParticles && COMMON.showParticles.get() != point.applied.showParticles) return false;
         return !point.touchesEntities || sameEntityList(COMMON.enabledEntities.get(), point.applied.enabledEntities);
     }
 
     private static boolean samePresetManagedState(PresetManagedState left, PresetManagedState right,
-            boolean includeParticles, boolean includeEntities) {
+            boolean includeEntities) {
         if (left == null || right == null) return false;
         if (!sameDouble(left.hearingRange, right.hearingRange)) return false;
         if (!sameDouble(left.capsRangeBonus, right.capsRangeBonus)) return false;
         if (left.enableVocalFatigue != right.enableVocalFatigue) return false;
         if (left.enableAntiSpam != right.enableAntiSpam) return false;
         if (left.scanCooldownTicks != right.scanCooldownTicks) return false;
-        if (includeParticles && left.showParticles != right.showParticles) return false;
         return !includeEntities || sameEntityList(left.enabledEntities, right.enabledEntities);
     }
 
