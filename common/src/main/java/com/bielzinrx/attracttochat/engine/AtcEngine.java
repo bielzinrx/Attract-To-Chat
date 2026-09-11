@@ -62,6 +62,11 @@ public final class AtcEngine {
 
     private static final int MAX_SOLID_MUFFLE_BLOCKS = 8;
 
+    /** Recent walkie-block attractions, used to deduplicate deliveries of the
+     *  same message (broadcast helper + block relay) within a short window. */
+    private static final Map<String, Long> RECENT_ATTRACTIONS = new ConcurrentHashMap<>();
+    private static final long ATTRACTION_DEDUPE_WINDOW_TICKS = 20L;
+
     private AtcEngine() {}
 
     public static void onServerTick() {
@@ -495,6 +500,27 @@ public final class AtcEngine {
     public static void setDebugModeOverride(Boolean v) { debugModeOverride = v; }
 
     public static int[] attractMobsAtPosition(ServerLevel level, BlockPos target, double range, MessageScore score) {
+        // Walkie-Chat 1.20.1 delivers the same message through both the
+        // broadcast helper and the block relay within a few ticks of each
+        // other; without this guard each delivery would re-run mob attraction
+        // for the same block (doubled pathfinding and per-call effects).
+        // One attraction per (dimension, block, player, message signature)
+        // inside a short window is enough. The vocal-trauma path bypasses
+        // this guard by calling the private overload directly.
+        if (score != null && score.playerUUID != null && level != null && target != null) {
+            String key = level.dimension().location() + "|" + target.asLong()
+                + "|" + score.playerUUID + "|" + score.factor
+                + "|" + score.caps + "|" + score.excl;
+            long now = serverTicks;
+            Long last = RECENT_ATTRACTIONS.get(key);
+            if (last != null && now - last < ATTRACTION_DEDUPE_WINDOW_TICKS) {
+                return new int[0];
+            }
+            RECENT_ATTRACTIONS.put(key, now);
+            if (RECENT_ATTRACTIONS.size() > 512) {
+                RECENT_ATTRACTIONS.values().removeIf(t -> now - t >= ATTRACTION_DEDUPE_WINDOW_TICKS);
+            }
+        }
         return attractMobsAtPosition(level, target, range, score, false, MAX_STANDARD_TARGETS);
     }
 
