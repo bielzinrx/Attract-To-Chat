@@ -207,6 +207,7 @@ public final class AtcEngine {
         PLAYER_STATS.clear();
         PLAYER_COOLDOWNS.clear();
         PLAYER_MESSAGE_WINDOW.clear();
+        RECENT_ATTRACTIONS.clear();
         ClientPresence.clear();
         ServerTranslations.clearPlayerLanguages();
 
@@ -518,7 +519,8 @@ public final class AtcEngine {
         if (score != null && score.playerUUID != null && level != null && target != null) {
             String key = level.dimension().location() + "|" + target.asLong()
                 + "|" + score.playerUUID + "|" + score.factor
-                + "|" + score.caps + "|" + score.excl;
+                + "|" + score.caps + "|" + score.excl
+                + "|" + score.messageHash;
             long now = serverTicks;
             Long last = RECENT_ATTRACTIONS.get(key);
             if (last != null && now - last < ATTRACTION_DEDUPE_WINDOW_TICKS) {
