@@ -80,6 +80,20 @@ Use `/atc help` to view the available commands.
 
 ---
 
+## ◈ Walkie-Chat Integration
+
+**Optional, on by default, zero setup.**
+
+With Walkie-Chat (mod id `walkietalkie`) installed, its radio layer joins the sound ecosystem:
+
+* **Proximity chat attracts mobs** — messages spoken through a handheld walkie or a Walkie Block station pull nearby mobs in, using the effective range Walkie-Chat already resolved. `walkieChatProximityRange` (default 15) and `walkieChatProximityCapsBonus` (default 10) shape the result.
+* **Walkie Blocks can be destroyed** — hostile mobs that reach an active station break it, and every player tuned to its frequency receives a "signal lost" notification in their own language.
+* **No double processing** — chat routed by Walkie-Chat is handled by Walkie-Chat; the ATC engine steps aside.
+
+Toggle it live with `/atc walkiechat on|off` — `/atc status` reports the integration state. Works on 1.19.2 and 1.20.1, Forge and Fabric. Older Walkie-Chat builds without the callback API are detected at startup and logged as information: the integration simply continues through chat events and the block relay.
+
+---
+
 ## ◈ Quick Start
 
 1. Drop the JAR in your server's `mods` folder — Fabric servers also need Fabric API.
@@ -90,10 +104,10 @@ That's it — players join without installing anything. The mod runs entirely on
 
 | Minecraft | Loader | Attract to Chat | Additional dependency |
 |:--|:--|:--|:--|
-| **1.20.1** | Forge | **2.1.1** | None |
-| **1.20.1** | Fabric | **2.1.1** | [Fabric API 0.92.7 or newer](https://modrinth.com/mod/fabric-api/versions?g=1.20.1) |
-| **1.19.2** | Forge | **2.1.1** | None |
-| **1.19.2** | Fabric | **2.1.1** | [Fabric API 0.76.0 or newer](https://modrinth.com/mod/fabric-api/versions?g=1.19.2) |
+| **1.20.1** | Forge | **2.1.2** | None |
+| **1.20.1** | Fabric | **2.1.2** | [Fabric API 0.92.7 or newer](https://modrinth.com/mod/fabric-api/versions?g=1.20.1) |
+| **1.19.2** | Forge | **2.1.2** | None |
+| **1.19.2** | Fabric | **2.1.2** | [Fabric API 0.76.0 or newer](https://modrinth.com/mod/fabric-api/versions?g=1.19.2) |
 
 Do not mix Forge and Fabric files.
 
@@ -125,12 +139,15 @@ Every option lives in `config/attracttochat-common.json` and applies live — ed
 * `muteDurationTicks` — 600 ticks = 30s hoarse mute
 * `enableVocalFatigue` / `enableAntiSpam` — OFF by default
 * `enableCapsFeature` — ON by default
-* `showParticles` — ON by default (server master switch; each player opts in individually)
+* `enableCapsFeature` — ON by default
+* `walkieChatCompat` — ON by default: optional Walkie-Chat integration (proximity chat, block stations)
+* `walkieChatProximityRange` / `walkieChatProximityCapsBonus` — 15 / 10 blocks: attraction range for Walkie-Chat proximity chat
 
 **Command reference**
 
 ```text
 /atc status
+/atc walkiechat on|off
 /atc config list
 /atc config info <option>
 /atc config hearingrange <value>
@@ -140,7 +157,7 @@ Every option lives in `config/attracttochat-common.json` and applies live — ed
 /atc preset set <name>
 ```
 
-**Presets** — `safe` 24/4/20t · `casual` 32/6/15t · `chaos` 60/14/5t · `silent` 30/5/20t (no particles)
+**Presets** — `safe` 24/4/20t · `casual` 32/6/15t · `chaos` 60/14/5t · `silent` 30/5/20t
 
 ---
 
@@ -173,6 +190,10 @@ Attract to Chat reacts to text chat, not voice. The hooks are distinct, so both 
 ### Does it work with AI mods like Enhanced AI?
 
 Yes. Attract to Chat adds an investigation goal without replacing vanilla mob AI. Mobs already in combat keep their real target.
+
+### Does it work with Walkie-Chat?
+
+Yes — the optional integration is on by default. Proximity chat attracts mobs, hostile mobs can destroy Walkie Block stations, and chat routed by Walkie-Chat is never double-processed. Toggle it with `/atc walkiechat on|off`.
 
 ### Do commands and team chat attract mobs?
 
