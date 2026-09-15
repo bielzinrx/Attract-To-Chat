@@ -179,6 +179,7 @@ Do not mix Forge and Fabric files.
   <a href="https://github.com/bielzinrx/Attract-To-Chat/issues"><img src="https://img.shields.io/badge/GitHub-Report_a_Bug-181717?style=flat-square&amp;logo=github&amp;logoColor=white" alt="Report a Bug"></a>
   <a href="https://github.com/bielzinrx/Attract-To-Chat"><img src="https://img.shields.io/badge/GitHub-Source_Code-181717?style=flat-square&amp;logo=github&amp;logoColor=white" alt="Source Code"></a>
   <a href="https://www.curseforge.com/minecraft/mc-mods/attract-to-chat"><img src="https://img.shields.io/badge/CurseForge-Project_Page-f16436?style=flat-square&amp;logo=curseforge&amp;logoColor=white" alt="CurseForge"></a>
+  <a href="https://modrinth.com/mod/attract-to-chat"><img src="https://img.shields.io/badge/Modrinth-Project_Page-1bd96a?style=flat-square&amp;logo=modrinth&amp;logoColor=white" alt="Modrinth"></a>
   <a href="https://www.planetminecraft.com/mod/attract-to-chat-mob-attraction-by-chat-messages/"><img src="https://cdn.jsdelivr.net/gh/VoxelForge-oss/voxicons@main/badges-248/badges/planet-minecraft.png" width="78" height="20" alt="Planet Minecraft"></a>
 </p>
 
