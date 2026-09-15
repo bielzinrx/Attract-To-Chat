@@ -6,7 +6,7 @@ Focus: per-player investigation particles and conflict-free Walkie-Chat coexiste
 
 - Investigation particles are now purely a per-player choice: the server-side `showParticles` master switch is gone and each player opts in with `/atc client particles enable|disable` (stored in `clientParticles`, config schema 17 — existing configs migrate automatically). The `silent` preset no longer touches particles and `/atc status` no longer lists a particle line.
 - Walkie-Chat (mod id `walkietalkie`) runs side by side without conflicts: chat spoken through a handheld walkie is routed by Walkie-Chat and never double-processed, while normal chat keeps attracting mobs. `/atc status` reports the Walkie-Chat state when the mod is present, and `/atc walkiechat on|off` toggles the coexistence guard.
-- The full radio integration — proximity chat attracting mobs and Walkie Block stations — is exclusive to Minecraft 1.20.1, where Walkie-Chat ships its integration API.
+- The full walkie talkie integration — proximity chat attracting mobs and Walkie Block stations — is exclusive to Minecraft 1.20.1, where Walkie-Chat ships its integration API.
 
 ## Changes and fixes
 

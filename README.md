@@ -87,8 +87,8 @@ Use `/atc help` to view the available commands.
 With Walkie-Chat (mod id `walkietalkie`) installed on 1.19.2, both mods coexist cleanly:
 
 * **No double processing** — chat spoken through a handheld walkie is routed by Walkie-Chat; the ATC engine steps aside.
-* **Normal chat keeps attracting mobs** — the sound ecosystem is untouched while the radio layer does its job.
-* **Full radio integration is 1.20.1-only** — proximity chat attracting mobs and Walkie Block stations require the Walkie-Chat builds that ship the integration API (Minecraft 1.20.1).
+* **Normal chat keeps attracting mobs** — the sound ecosystem is untouched while the walkie talkies do their job.
+* **Full walkie talkie integration is 1.20.1-only** — proximity chat attracting mobs and Walkie Block stations require the Walkie-Chat builds that ship the integration API (Minecraft 1.20.1).
 
 `/atc status` reports the Walkie-Chat state when the mod is present; `/atc walkiechat on|off` toggles the coexistence guard. Works with Forge and Fabric.
 
@@ -138,7 +138,7 @@ Every option lives in `config/attracttochat-common.json` and applies live — ed
 * `enableVocalFatigue` / `enableAntiSpam` — OFF by default
 * `enableCapsFeature` — ON by default
 * `enableCapsFeature` — ON by default
-* `walkieChatCompat` — ON by default: Walkie-Chat coexistence guard (full radio integration is 1.20.1-only)
+* `walkieChatCompat` — ON by default: Walkie-Chat coexistence guard (full walkie talkie integration is 1.20.1-only)
 * `walkieChatProximityRange` / `walkieChatProximityCapsBonus` — 15 / 10 blocks: used by the Walkie-Chat integration on 1.20.1
 
 **Command reference**
@@ -191,7 +191,7 @@ Yes. Attract to Chat adds an investigation goal without replacing vanilla mob AI
 
 ### Does it work with Walkie-Chat?
 
-Yes — on 1.19.2 both mods run side by side without conflicts: radio messages are never double-processed and normal chat keeps attracting mobs. The full integration (proximity chat attracting mobs, Walkie Block stations) is available on Minecraft 1.20.1.
+Yes — on 1.19.2 both mods run side by side without conflicts: walkie talkie messages are never double-processed and normal chat keeps attracting mobs. The full integration (proximity chat attracting mobs, Walkie Block stations) is available on Minecraft 1.20.1.
 
 ### Do commands and team chat attract mobs?
 
