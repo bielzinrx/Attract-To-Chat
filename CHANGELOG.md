@@ -1,24 +1,19 @@
 # Attract to Chat 2.1.2
 
-Focus: optional Walkie-Chat integration — proximity chat, walkie block stations and hostile mob attacks.
+Focus: per-player investigation particles and conflict-free Walkie-Chat coexistence.
 
 ## New in 2.1.2
 
-- Optional Walkie-Chat compatibility (mod id `walkietalkie`), enabled by default and toggleable in-game with `/atc walkiechat on|off` or through the `walkieChatCompat` config option.
-- Mobs are attracted to proximity chat spoken through Walkie-Chat, using the effective range Walkie-Chat already resolved; `walkieChatProximityRange` (default 15) and `walkieChatProximityCapsBonus` (default 10) shape the result.
-- Hostile mobs that reach an active Walkie Block station destroy it, and every player tuned to its frequency receives a "signal lost" notification in their own language.
-- Chat spoken through a handheld walkie or next to an active Walkie Block is routed by Walkie-Chat and is no longer double-processed by the ATC engine.
-- `/atc status` reports the Walkie-Chat compatibility state when the mod is present.
+- Investigation particles are now purely a per-player choice: the server-side `showParticles` master switch is gone and each player opts in with `/atc client particles enable|disable` (stored in `clientParticles`, config schema 17 — existing configs migrate automatically). The `silent` preset no longer touches particles and `/atc status` no longer lists a particle line.
+- Walkie-Chat (mod id `walkietalkie`) runs side by side without conflicts: chat spoken through a handheld walkie is routed by Walkie-Chat and never double-processed, while normal chat keeps attracting mobs. `/atc status` reports the Walkie-Chat state when the mod is present, and `/atc walkiechat on|off` toggles the coexistence guard.
+- The full radio integration — proximity chat attracting mobs and Walkie Block stations — is exclusive to Minecraft 1.20.1, where Walkie-Chat ships its integration API.
 
 ## Changes and fixes
 
-- Removed the server-side `showParticles` master switch: investigation particles are now purely a per-player choice made with `/atc client particles enable|disable` (stored in `clientParticles`). The `silent` preset no longer touches particles, `/atc status` no longer lists a particle line, and existing configs migrate automatically (schema 17) dropping the stale key.
-- Walkie-Chat 1.19.2 ships no callback API: the integration detects this at startup and logs it as information (not an error), continuing through chat events and the block relay.
-- "Signal lost" notifications on 1.19.2 fall back to the connection manager and plain system messages when Walkie-Chat's push pipeline is absent.
-- Forge chat handling (1.19.2 and 1.20.1) now listens at the lowest priority and receives canceled events: Walkie-Chat cancels every chat event while re-implementing delivery, so ATC's own guards — not the cancellation — decide what gets processed. Attraction keeps working on Forge with Walkie-Chat installed.
+- Walkie-Chat 1.19.2 builds ship no callback API: this is detected at startup and logged as information (not an error); the coexistence guards stay active.
+- Forge chat handling now listens at the lowest priority and receives canceled events, so attraction keeps working when other mods cancel chat events.
+- Attraction dedupe guard (internal, future-proof): a message relayed through both a broadcast helper and a block relay attracts mobs only once; the guard is cleared on server stop and keys on message identity, so world reloads never leave it stuck and different messages are never swallowed.
 - Fabric chat handling relies on registration order (mods initialize alphabetically by mod id), which places ATC's listener before Walkie-Chat's chat veto.
-
-Both Minecraft 1.19.2 and 1.20.1, Forge and Fabric, receive the same changes.
 
 # Attract to Chat 2.1.1
 

@@ -80,17 +80,17 @@ Use `/atc help` to view the available commands.
 
 ---
 
-## ◈ Walkie-Chat Integration
+## ◈ Walkie-Chat Compatibility
 
-**Optional, on by default, zero setup.**
+**Runs side by side, zero conflicts.**
 
-With Walkie-Chat (mod id `walkietalkie`) installed, its radio layer joins the sound ecosystem:
+With Walkie-Chat (mod id `walkietalkie`) installed on 1.19.2, both mods coexist cleanly:
 
-* **Proximity chat attracts mobs** — messages spoken through a handheld walkie pull nearby mobs in, using the effective range Walkie-Chat already resolved. `walkieChatProximityRange` (default 15) and `walkieChatProximityCapsBonus` (default 10) shape the result.
-* **Walkie Block stations supported** — when the installed Walkie-Chat build ships Walkie Blocks, hostile mobs that reach an active station break it, and every player tuned to its frequency receives a "signal lost" notification in their own language.
-* **No double processing** — chat routed by Walkie-Chat is handled by Walkie-Chat; the ATC engine steps aside.
+* **No double processing** — chat spoken through a handheld walkie is routed by Walkie-Chat; the ATC engine steps aside.
+* **Normal chat keeps attracting mobs** — the sound ecosystem is untouched while the radio layer does its job.
+* **Full radio integration is 1.20.1-only** — proximity chat attracting mobs and Walkie Block stations require the Walkie-Chat builds that ship the integration API (Minecraft 1.20.1).
 
-Toggle it live with `/atc walkiechat on|off` — `/atc status` reports the integration state. Works with Forge and Fabric. Walkie-Chat builds without the callback API are detected at startup and logged as information: the integration simply continues through chat events and the block relay.
+`/atc status` reports the Walkie-Chat state when the mod is present; `/atc walkiechat on|off` toggles the coexistence guard. Works with Forge and Fabric.
 
 ---
 
@@ -138,8 +138,8 @@ Every option lives in `config/attracttochat-common.json` and applies live — ed
 * `enableVocalFatigue` / `enableAntiSpam` — OFF by default
 * `enableCapsFeature` — ON by default
 * `enableCapsFeature` — ON by default
-* `walkieChatCompat` — ON by default: optional Walkie-Chat integration (proximity chat, block stations)
-* `walkieChatProximityRange` / `walkieChatProximityCapsBonus` — 15 / 10 blocks: attraction range for Walkie-Chat proximity chat
+* `walkieChatCompat` — ON by default: Walkie-Chat coexistence guard (full radio integration is 1.20.1-only)
+* `walkieChatProximityRange` / `walkieChatProximityCapsBonus` — 15 / 10 blocks: used by the Walkie-Chat integration on 1.20.1
 
 **Command reference**
 
@@ -191,7 +191,7 @@ Yes. Attract to Chat adds an investigation goal without replacing vanilla mob AI
 
 ### Does it work with Walkie-Chat?
 
-Yes — the optional integration is on by default. Proximity chat attracts mobs, hostile mobs can destroy Walkie Block stations (when the installed Walkie-Chat build ships them), and chat routed by Walkie-Chat is never double-processed. Toggle it with `/atc walkiechat on|off`.
+Yes — on 1.19.2 both mods run side by side without conflicts: radio messages are never double-processed and normal chat keeps attracting mobs. The full integration (proximity chat attracting mobs, Walkie Block stations) is available on Minecraft 1.20.1.
 
 ### Do commands and team chat attract mobs?
 
