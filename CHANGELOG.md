@@ -9,7 +9,7 @@ Focus: optional Walkie-Chat integration on Minecraft 1.20.1 — proximity chat, 
 - Hostile mobs that reach an active Walkie Block station destroy it, and every player tuned to its frequency receives a "signal lost" notification in their own language.
 - Chat spoken through a handheld walkie or next to an active Walkie Block is routed by Walkie-Chat and is no longer double-processed by the ATC engine.
 - `/atc status` reports the Walkie-Chat compatibility state when the mod is present.
-- On Minecraft 1.19.2, Walkie-Chat runs side by side without conflicts: radio chat is never double-processed and normal chat keeps attracting mobs. The radio integration itself is 1.20.1-only — Walkie-Chat's 1.19.2 builds ship no integration API.
+- On Minecraft 1.19.2, Walkie-Chat runs side by side without conflicts: walkie talkie chat is never double-processed and normal chat keeps attracting mobs. The walkie talkie integration itself is 1.20.1-only — Walkie-Chat's 1.19.2 builds ship no integration API.
 
 ## Changes and fixes
 
@@ -18,7 +18,7 @@ Focus: optional Walkie-Chat integration on Minecraft 1.20.1 — proximity chat, 
 - Fabric chat handling relies on registration order (mods initialize alphabetically by mod id), which places ATC's listener before Walkie-Chat's chat veto.
 - Attraction dedupe guard: a message relayed by Walkie-Chat through both its broadcast helper and the block relay attracts mobs only once. The guard keys on message identity and is cleared on server stop, so world reloads never leave it stuck and different messages are never swallowed.
 
-Both Minecraft 1.19.2 and 1.20.1, Forge and Fabric, receive the same code changes; the Walkie-Chat radio integration requires Minecraft 1.20.1.
+Both Minecraft 1.19.2 and 1.20.1, Forge and Fabric, receive the same code changes; the full Walkie-Chat integration requires Minecraft 1.20.1.
 
 # Attract to Chat 2.1.1
 

@@ -84,13 +84,13 @@ Use `/atc help` to view the available commands.
 
 **Optional, on by default, zero setup — Minecraft 1.20.1.**
 
-With Walkie-Chat (mod id `walkietalkie`) installed, its radio layer joins the sound ecosystem:
+With Walkie-Chat (mod id `walkietalkie`) installed, its walkie talkies join the sound ecosystem:
 
 * **Proximity chat attracts mobs** — messages spoken through a handheld walkie or a Walkie Block station pull nearby mobs in, using the effective range Walkie-Chat already resolved. `walkieChatProximityRange` (default 15) and `walkieChatProximityCapsBonus` (default 10) shape the result.
 * **Walkie Blocks can be destroyed** — hostile mobs that reach an active station break it, and every player tuned to its frequency receives a "signal lost" notification in their own language.
 * **No double processing** — chat routed by Walkie-Chat is handled by Walkie-Chat; the ATC engine steps aside.
 
-Toggle it live with `/atc walkiechat on|off` — `/atc status` reports the integration state. Works on Forge and Fabric (Minecraft 1.20.1, Walkie-Chat 1.3.2 or newer). On Minecraft 1.19.2 both mods run side by side without conflicts — radio chat is never double-processed and normal chat keeps attracting mobs — but the radio integration requires the 1.20.1 builds of Walkie-Chat.
+Toggle it live with `/atc walkiechat on|off` — `/atc status` reports the integration state. Works on Forge and Fabric (Minecraft 1.20.1, Walkie-Chat 1.3.2 or newer). On Minecraft 1.19.2 both mods run side by side without conflicts — walkie talkie chat is never double-processed and normal chat keeps attracting mobs — but the walkie talkie integration requires the 1.20.1 builds of Walkie-Chat.
 
 ---
 
@@ -193,7 +193,7 @@ Yes. Attract to Chat adds an investigation goal without replacing vanilla mob AI
 
 ### Does it work with Walkie-Chat?
 
-Yes — on Minecraft 1.20.1 the optional integration is on by default: proximity chat attracts mobs, hostile mobs can destroy Walkie Block stations, and chat routed by Walkie-Chat is never double-processed. Toggle it with `/atc walkiechat on|off`. On Minecraft 1.19.2 both mods coexist without conflicts; the radio integration is 1.20.1-only.
+Yes — on Minecraft 1.20.1 the optional integration is on by default: proximity chat attracts mobs, hostile mobs can destroy Walkie Block stations, and chat routed by Walkie-Chat is never double-processed. Toggle it with `/atc walkiechat on|off`. On Minecraft 1.19.2 both mods coexist without conflicts; the walkie talkie integration is 1.20.1-only.
 
 ### Do commands and team chat attract mobs?
 
