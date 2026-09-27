@@ -28,7 +28,7 @@ public final class AtcForgeMod {
         MinecraftForge.EVENT_BUS.addListener(this::onServerStarting);
         MinecraftForge.EVENT_BUS.addListener(this::onServerStopping);
         MinecraftForge.EVENT_BUS.addListener(
-            EventPriority.LOWEST, true, ServerChatEvent.Submitted.class, this::onServerChat);
+            EventPriority.LOWEST, true, ServerChatEvent.class, this::onServerChat);
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
@@ -44,11 +44,10 @@ public final class AtcForgeMod {
         AtcEngine.refreshCaches();
     }
 
-    private void onServerChat(ServerChatEvent.Submitted event) {
-        // Walkie-Chat 1.19.2 cancels every chat event while re-implementing
-        // delivery (radio, block station or proximity chat), so a canceled
-        // event must still reach the engine; WalkieChatCompat's guards skip
-        // the messages Walkie-Chat already routed elsewhere.
+    private void onServerChat(ServerChatEvent event) {
+        if (event.isCanceled() && !com.bielzinrx.attracttochat.compat.WalkieChatCompat.integrationActive()) {
+            return;
+        }
         ServerPlayer player = event.getPlayer();
         String message = event.getRawText();
 

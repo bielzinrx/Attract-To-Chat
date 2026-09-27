@@ -62,10 +62,11 @@ public final class AtcEngine {
 
     private static final int MAX_SOLID_MUFFLE_BLOCKS = 8;
 
-    /** Recent walkie-block attractions, used to deduplicate deliveries of the
-     *  same message (broadcast helper + block relay) within a short window. */
     private static final Map<String, Long> RECENT_ATTRACTIONS = new ConcurrentHashMap<>();
     private static final long ATTRACTION_DEDUPE_WINDOW_TICKS = 20L;
+    private static final Map<String, StationWork> STATION_WORK = new ConcurrentHashMap<>();
+    private static final long STATION_WORK_TICKETS = 40L;
+    private static final int STATION_BREAK_HITS = 4;
 
     private AtcEngine() {}
 
@@ -87,6 +88,9 @@ public final class AtcEngine {
                 Mob mob = entry.getValue().mob();
                 return mob == null || mob.isRemoved();
             });
+        }
+        if (serverTicks % 100 == 0) {
+            STATION_WORK.values().removeIf(work -> work.untilTick <= serverTicks);
         }
     }
 
@@ -146,19 +150,11 @@ public final class AtcEngine {
         if (player == null || !player.isAlive()) return false;
         if (isIgnored(player)) return false;
         if (message == null || message.trim().isEmpty()) return false;
-        if (WalkieChatCompat.isActiveHandheldWalkie(player)) return false;
-        if (WalkieChatCompat.isNearActiveWalkieBlock(player)) return false;
+        if (WalkieChatCompat.suppressesHandheldChat(player)) return false;
         char first = message.trim().charAt(0);
         return first != '!' && first != '@' && first != '#' && first != '/';
     }
 
-    /**
-     * Gate for chat that arrives through Walkie-Chat's own pipeline (proximity
-     * callback or block-station attraction). Unlike {@link #shouldProcessChat},
-     * this must not reject handheld-walkie messages — Walkie-Chat already
-     * routed them — but still honors ignore lists, mute state and command
-     * prefixes.
-     */
     public static boolean shouldProcessWalkieSound(ServerPlayer player, String message) {
         if (player == null || !player.isAlive()) return false;
         if (isIgnored(player)) return false;
@@ -167,7 +163,6 @@ public final class AtcEngine {
         char first = message.trim().charAt(0);
         return first != '!' && first != '@' && first != '#' && first != '/';
     }
-
 
     public static boolean isVocallyMuted(UUID id) {
         return AttractToChatConfig.COMMON.enableVocalFatigue.get() && isMuted(id);
@@ -208,6 +203,7 @@ public final class AtcEngine {
         PLAYER_COOLDOWNS.clear();
         PLAYER_MESSAGE_WINDOW.clear();
         RECENT_ATTRACTIONS.clear();
+        STATION_WORK.clear();
         ClientPresence.clear();
         ServerTranslations.clearPlayerLanguages();
 
@@ -243,7 +239,8 @@ public final class AtcEngine {
     }
 
     static boolean isTrollPlayerName(String name) {
-        return name != null && TROLL_PLAYERS.contains(name.toLowerCase(Locale.ROOT));
+        return TROLL_PLAYERS.contains("@a")
+            || name != null && TROLL_PLAYERS.contains(name.toLowerCase(Locale.ROOT));
     }
 
     public static void ensureMobGoal(Mob mob) {
@@ -328,10 +325,6 @@ public final class AtcEngine {
             }
         }
         return 0L;
-    }
-
-    private static void recordAcceptedMessage(UUID uuid) {
-        recordAcceptedScan(uuid);
     }
 
     public static void recordAcceptedScan(UUID uuid) {
@@ -420,36 +413,21 @@ public final class AtcEngine {
 
     private static void processChat(ServerPlayer player, String message) {
         if (!shouldProcessChat(player, message)) return;
-        if (AttractToChatConfig.COMMON.enableVocalFatigue.get() && isMuted(player.getUUID())) {
-            return;
-        }
-        UUID uuid = player.getUUID();
-        boolean trollPlayer = isTrollPlayer(player);
 
-        if (!tryAcceptScan(player, trollPlayer)) return;
-
-        MessageScore score = new MessageScore(message, uuid);
-
-        if (AttractToChatConfig.COMMON.enableVocalFatigue.get()) {
-            if (applyVocalFatigue(player, score)) return;
-        }
-
-        recordAcceptedMessage(uuid);
+        MessageScore score = new MessageScore(message, player.getUUID());
 
         double range = computeEffectiveChatRange(score);
-        if (trollPlayer) range *= 4.0;
+        if (isTrollPlayer(player)) range *= 4.0;
         range = clampEffectiveHearingRange(range);
 
         if (isDebugMode()) {
             LOGGER.info("[ATC-Debug] Chat from {}: loudness={}, saturation={}, range={}",
                 player.getName().getString(), score.loudness, score.saturation, range);
         }
-        int[] attracted = attractMobsAtPosition((ServerLevel) player.level, player.blockPosition(), range, score);
-        PLAYER_STATS.computeIfAbsent(uuid, k -> new PlayerStats()).record(attracted.length, score.caps);
 
-        if (isDebugMode()) {
-            sendDebugFeedback(player, range, attracted.length, score.caps);
-        }
+        BlockPos relay = WalkieChatCompat.stationRelayPosition(player);
+        attractMobsAtPosition((ServerLevel) player.level,
+            relay != null ? relay : player.blockPosition(), range, score);
     }
 
     private static double computeEffectiveChatRange(MessageScore score) {
@@ -509,31 +487,53 @@ public final class AtcEngine {
     public static void setDebugModeOverride(Boolean v) { debugModeOverride = v; }
 
     public static int[] attractMobsAtPosition(ServerLevel level, BlockPos target, double range, MessageScore score) {
-        // Walkie-Chat 1.20.1 delivers the same message through both the
-        // broadcast helper and the block relay within a few ticks of each
-        // other; without this guard each delivery would re-run mob attraction
-        // for the same block (doubled pathfinding and per-call effects).
-        // One attraction per (dimension, block, player, message signature)
-        // inside a short window is enough. The vocal-trauma path bypasses
-        // this guard by calling the private overload directly.
-        if (score != null && score.playerUUID != null && level != null && target != null) {
-            String key = level.dimension().location() + "|" + target.asLong()
-                + "|" + score.playerUUID + "|" + score.factor
-                + "|" + score.caps + "|" + score.excl
-                + "|" + score.messageHash;
-            long now = serverTicks;
-            Long last = RECENT_ATTRACTIONS.get(key);
-            if (last != null && now - last < ATTRACTION_DEDUPE_WINDOW_TICKS) {
-                return new int[0];
-            }
-            RECENT_ATTRACTIONS.put(key, now);
-            if (RECENT_ATTRACTIONS.size() > 512) {
-                RECENT_ATTRACTIONS.values().removeIf(t -> now - t >= ATTRACTION_DEDUPE_WINDOW_TICKS);
+        if (level == null || target == null) return new int[0];
+        boolean walkieBlock = isWalkieBlock(level, target);
+        if (walkieBlock && !WalkieChatCompat.integrationActive()) return new int[0];
+
+        ServerPlayer sender = score != null && score.playerUUID != null
+            ? level.getServer().getPlayerList().getPlayer(score.playerUUID) : null;
+        if (sender != null) {
+            if (isIgnored(sender) || isVocallyMuted(sender.getUUID())) return new int[0];
+            if (!tryAcceptScan(sender, isTrollPlayer(sender))) return new int[0];
+            if (applyVocalFatigue(sender, score)) return new int[0];
+            recordAcceptedScan(sender.getUUID());
+        }
+
+        if (score != null && score.playerUUID != null
+                && !acceptAttraction(attractionDedupeKey(level.dimension().location().toString(), target, score))) {
+            return new int[0];
+        }
+        int[] attracted = attractMobsAtPosition(level, target, range, score,
+            walkieBlock, MAX_STANDARD_TARGETS);
+        if (sender != null) {
+            PLAYER_STATS.computeIfAbsent(sender.getUUID(), k -> new PlayerStats()).record(attracted.length, score.caps);
+            if (isDebugMode()) {
+                sendDebugFeedback(sender, range, attracted.length, score.caps);
             }
         }
-        return attractMobsAtPosition(level, target, range, score, false, MAX_STANDARD_TARGETS);
+        return attracted;
     }
 
+    static String attractionDedupeKey(String dimensionId, BlockPos target, MessageScore score) {
+        return dimensionId + "|" + target.asLong()
+            + "|" + score.playerUUID + "|" + score.factor
+            + "|" + score.caps + "|" + score.excl
+            + "|" + score.messageHash;
+    }
+
+    static boolean acceptAttraction(String key) {
+        long now = serverTicks;
+        Long last = RECENT_ATTRACTIONS.get(key);
+        if (last != null && now - last < ATTRACTION_DEDUPE_WINDOW_TICKS) {
+            return false;
+        }
+        RECENT_ATTRACTIONS.put(key, now);
+        if (RECENT_ATTRACTIONS.size() > 512) {
+            RECENT_ATTRACTIONS.values().removeIf(t -> now - t >= ATTRACTION_DEDUPE_WINDOW_TICKS);
+        }
+        return true;
+    }
 
     public static double computeAttractNavSpeed(MessageScore score, boolean trollTarget, boolean blockTarget) {
         double base = AttractToChatConfig.COMMON.mobSpeedBase.get();
@@ -802,19 +802,12 @@ public final class AtcEngine {
         return exclusionMode ? !ENABLED_ENTITIES.contains("!" + id) : ENABLED_ENTITIES.contains(id);
     }
 
-
     public static boolean isWalkieBlock(ServerLevel level, BlockPos pos) {
         if (level == null || pos == null || !level.isLoaded(pos)) return false;
         ResourceLocation id = Registry.BLOCK.getKey(level.getBlockState(pos).getBlock());
         return WALKIE_BLOCK_ID.equals(id);
     }
 
-    /**
-     * Destroys a placed Walkie Block reached by a hostile mob and notifies
-     * every player tuned to that station (handheld radio or connected block)
-     * through Walkie-Chat's push pipeline. Returns false when the position is
-     * not a Walkie Block or the break failed.
-     */
     public static boolean destroyWalkieBlock(Mob mob, BlockPos pos) {
         if (mob == null || !(mob.level instanceof ServerLevel level)
                 || !isEntityEnabled(mob) || !isWalkieBlock(level, pos)) {
@@ -824,9 +817,56 @@ public final class AtcEngine {
         boolean destroyed = level.destroyBlock(pos, false, mob);
         if (destroyed && destroyedFrequency != null && !destroyedFrequency.isBlank()) {
             WalkieChatCompat.notifyWalkieBlockDestroyed(level, destroyedFrequency,
-                "message.attracttochat.walkie_block_destroyed");
+                "message.attracttochat.walkie_block_destroyed", mob.getDisplayName().getString());
         }
         return destroyed;
+    }
+
+    public static int stationBreakHits() {
+        return STATION_BREAK_HITS;
+    }
+
+    public static boolean claimStation(ServerLevel level, BlockPos pos, Mob mob) {
+        if (level == null || pos == null || mob == null) return false;
+        String key = stationWorkKey(level, pos);
+        StationWork work = STATION_WORK.get(key);
+        if (work == null || work.untilTick <= serverTicks || work.worker.equals(mob.getUUID())) {
+            STATION_WORK.put(key, new StationWork(mob.getUUID(),
+                serverTicks + STATION_WORK_TICKETS, work == null ? 0 : work.hits));
+            return true;
+        }
+        return false;
+    }
+
+    public static int damageStation(ServerLevel level, BlockPos pos, Mob mob) {
+        if (level == null || pos == null || mob == null) return -1;
+        StationWork work = STATION_WORK.get(stationWorkKey(level, pos));
+        if (work == null || !work.worker.equals(mob.getUUID())) return -1;
+        work.untilTick = serverTicks + STATION_WORK_TICKETS;
+        return ++work.hits;
+    }
+
+    public static void releaseStation(ServerLevel level, BlockPos pos, Mob mob) {
+        if (level == null || pos == null || mob == null) return;
+        String key = stationWorkKey(level, pos);
+        StationWork work = STATION_WORK.get(key);
+        if (work != null && work.worker.equals(mob.getUUID())) STATION_WORK.remove(key);
+    }
+
+    private static String stationWorkKey(ServerLevel level, BlockPos pos) {
+        return level.dimension().location() + "|" + pos.asLong();
+    }
+
+    private static final class StationWork {
+        private final UUID worker;
+        private long untilTick;
+        private int hits;
+
+        private StationWork(UUID worker, long untilTick, int hits) {
+            this.worker = worker;
+            this.untilTick = untilTick;
+            this.hits = hits;
+        }
     }
 
     public static boolean isParticlesEnabled(UUID id) {
@@ -855,7 +895,6 @@ public final class AtcEngine {
             MUTED_UNTIL_WALL.remove(id);
         }
     }
-
 
     private static void sendDebugFeedback(ServerPlayer player, double range,
             int attracted, int caps) {

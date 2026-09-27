@@ -63,7 +63,27 @@ public class MoveToSoundGoal extends Goal {
 
     private boolean followLivePlayer;
 
+    private boolean detonating;
+
+    private boolean wasOnGround;
+
+    private boolean claimingStation;
+
+    private int stationHitCooldown;
+
     private static final double ARRIVAL_DIST_SQ = 6.25;
+
+    private static final double CREEPER_DETONATE_DIST_SQ = 6.25;
+
+    private static final double STATION_REACH_DIST_SQ = 4.0;
+
+    private static final double STATION_TOUCH_DIST_SQ = 1.0;
+
+    private static final int STATION_STAGE_STEP = 3;
+
+    private static final int STATION_TICKS_PER_HIT = 8;
+
+    private static final int STATION_JUMP_DELAY = 2;
 
     private static final int NEAR_SOUND_LINGER_TICKS = 40;
 
@@ -102,6 +122,10 @@ public class MoveToSoundGoal extends Goal {
         this.lockedToTrollTarget = trollTarget && !blockTarget;
 
         this.followLivePlayer = false;
+        this.detonating = false;
+        this.wasOnGround = false;
+        this.claimingStation = false;
+        this.stationHitCooldown = 0;
         BlockPos safeTarget = sanitizeTarget(pos, range);
         if (safeTarget == null) {
             clearSoundInvestigation();
@@ -317,24 +341,34 @@ public class MoveToSoundGoal extends Goal {
 
         final BlockPos lookAt = targetPos;
 
-        if (blockTarget && mob instanceof Creeper creeper
-                && mob.blockPosition().distSqr(lookAt) <= 2.25) {
-            creeper.ignite();
-            return;
+        if (blockTarget && mob instanceof Creeper creeper) {
+            if (detonating) {
+                if (creeper.getSwelling(1.0F) >= 1.0F) {
+                    AtcEngine.destroyWalkieBlock(mob, lookAt);
+                }
+                return;
+            }
+            if (mob.blockPosition().distSqr(lookAt) <= CREEPER_DETONATE_DIST_SQ) {
+                detonating = true;
+                creeper.ignite();
+                return;
+            }
         }
 
+
         if (blockTarget && mob instanceof Enemy && !(mob instanceof Creeper)
-                && mob.blockPosition().distSqr(lookAt) <= 4.0) {
-            if (AtcEngine.destroyWalkieBlock(mob, lookAt)) {
-                timeout = 0;
-            }
+                && mob.level instanceof ServerLevel stationLevel
+                && assaultStation(stationLevel, lookAt)) {
             return;
         }
 
         mob.getLookControl().setLookAt(
             lookAt.getX() + 0.5, lookAt.getY(), lookAt.getZ() + 0.5);
 
-        if (mob.blockPosition().distSqr(lookAt) > ARRIVAL_DIST_SQ) {
+        double distSq = mob.blockPosition().distSqr(lookAt);
+        double arrivalDistSq = stationArrivalDistSq();
+
+        if (distSq > arrivalDistSq) {
             if (mob instanceof Villager villager) {
                 if (recalcDelay <= 0) setVillagerWalkTarget(villager);
             } else if (mob instanceof Slime) {
@@ -442,7 +476,7 @@ public class MoveToSoundGoal extends Goal {
             ? targetPos.getY() + 0.5D
             : targetPos.getY();
         double z = targetPos.getZ() + 0.5D;
-        if (mob.blockPosition().distSqr(targetPos) <= ARRIVAL_DIST_SQ) {
+        if (mob.blockPosition().distSqr(targetPos) <= stationArrivalDistSq()) {
             return true;
         }
         try {
@@ -454,8 +488,6 @@ public class MoveToSoundGoal extends Goal {
                 mob.getType(), AtcEngine.formatCoordinates(targetPos), ex.toString());
         }
 
-        // A block is not a standable destination. Preserve the direct
-        // approach fallback only for placed Walkie receivers.
         if (blockTarget) {
             try {
                 mob.getMoveControl().setWantedPosition(x, y, z, currentSpeed);
@@ -525,12 +557,15 @@ public class MoveToSoundGoal extends Goal {
                 && !lockedToTrollTarget) {
             mob.setTarget(null);
         }
+        releaseStationWork();
         targetPos = null;
         timeout = 0;
         lockedToTrollTarget = false;
         blockTarget = false;
         urgentShout = false;
         followLivePlayer = false;
+        detonating = false;
+        wasOnGround = false;
         playerUUID = null;
         recalcDelay = 0;
         if (!preserveVillagerBrain && mob instanceof Villager villager) {
@@ -544,6 +579,74 @@ public class MoveToSoundGoal extends Goal {
     @Deprecated
     private void updateTargetTowardLivePlayer() {
 
+    }
+
+    private double stationArrivalDistSq() {
+        if (!blockTarget) return ARRIVAL_DIST_SQ;
+        return mob instanceof Enemy ? STATION_TOUCH_DIST_SQ : STATION_REACH_DIST_SQ;
+    }
+
+    private void releaseStationWork() {
+        if (!claimingStation || targetPos == null || !(mob.level instanceof ServerLevel level)) return;
+        claimingStation = false;
+        if (AtcEngine.isWalkieBlock(level, targetPos)) {
+            level.destroyBlockProgress(mob.getId(), targetPos, -1);
+        }
+        AtcEngine.releaseStation(level, targetPos, mob);
+    }
+
+    private void hopOnStation(BlockPos station) {
+        double dx = station.getX() + 0.5 - mob.getX();
+        double dz = station.getZ() + 0.5 - mob.getZ();
+        double dist = Math.sqrt(dx * dx + dz * dz);
+        if (dist > 0.05) {
+            dx /= dist;
+            dz /= dist;
+        } else {
+            dx = 0.0;
+            dz = 0.0;
+        }
+        mob.setDeltaMovement(dx * 0.15, 0.42, dz * 0.15);
+    }
+
+    private boolean assaultStation(ServerLevel level, BlockPos station) {
+        boolean grounded = mob.fallDistance <= 0.0F;
+        boolean landed = grounded && !wasOnGround;
+        wasOnGround = grounded;
+
+        if (mob.blockPosition().distSqr(station) > STATION_TOUCH_DIST_SQ) return false;
+
+        mob.getLookControl().setLookAt(
+            station.getX() + 0.5, station.getY() + 1.0, station.getZ() + 0.5);
+
+        if (!AtcEngine.claimStation(level, station, mob)) {
+            if (mob instanceof Slime) directSlime();
+            return true;
+        }
+        claimingStation = true;
+
+        boolean hopping = mob instanceof Slime;
+        if (hopping) directSlime();
+        if (!landed && stationHitCooldown > 0) {
+            stationHitCooldown--;
+            return true;
+        }
+        stationHitCooldown = STATION_TICKS_PER_HIT;
+        if (hopping && grounded && !landed) hopOnStation(station);
+
+        int hits = AtcEngine.damageStation(level, station, mob);
+        if (hits < 0) return true;
+
+        level.destroyBlockProgress(mob.getId(), station,
+            Math.min(9, hits * STATION_STAGE_STEP));
+
+        if (mob.getMoveControl() instanceof SlimeMoveControlAccessorMixin control) {
+            control.atc_setJumpDelay(STATION_JUMP_DELAY);
+        }
+        if (hits >= AtcEngine.stationBreakHits() && AtcEngine.destroyWalkieBlock(mob, station)) {
+            timeout = 0;
+        }
+        return true;
     }
 
     private boolean directSlime() {
@@ -589,12 +692,15 @@ public class MoveToSoundGoal extends Goal {
         if (lockedToTrollTarget && player != null && mob.getTarget() == player) {
             mob.setTarget(null);
         }
+        releaseStationWork();
         targetPos = null;
         timeout = 0;
         lockedToTrollTarget = false;
         blockTarget = false;
         urgentShout = false;
         followLivePlayer = false;
+        detonating = false;
+        wasOnGround = false;
         playerUUID = null;
         recalcDelay = 0;
         if (!preserveVillagerBrain && mob instanceof Villager villager) {

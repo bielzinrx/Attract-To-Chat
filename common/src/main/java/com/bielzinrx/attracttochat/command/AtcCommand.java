@@ -149,52 +149,19 @@ public final class AtcCommand {
             .then(Commands.literal("ignore")
                 .requires(src -> src.hasPermission(2))
                 .then(Commands.literal("add")
+                    .then(Commands.literal("@a")
+                        .executes(ctx -> addIgnoredPlayer(ctx.getSource(), "@a")))
                     .then(Commands.argument("player_name", StringArgumentType.word())
                         .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(ignoreAddSuggestions(ctx.getSource()), builder))
-                        .executes(ctx -> {
-                            String name = StringArgumentType.getString(ctx, "player_name");
-                            List<String> list = ensureMutable(AttractToChatConfig.COMMON.ignoredPlayers.get());
-                            if (containsIgnoreCase(list, name)) {
-                                feedback(ctx.getSource(), "message.attracttochat.command.ignore_exists", name);
-                            } else {
-                                list.add(name);
-                                AttractToChatConfig.COMMON.ignoredPlayers.set(list);
-                                if (!saveConfig(ctx.getSource(), AtcEngine::refreshPlayerRules)) return 0;
-                                if (name.equalsIgnoreCase("@a")) {
-                                    int cleared = AtcEngine.clearSoundInvestigations();
-                                    feedback(ctx.getSource(), "message.attracttochat.command.ignore_all_added", cleared);
-                                } else {
-
-                                    for (ServerPlayer p : ctx.getSource().getServer().getPlayerList().getPlayers()) {
-                                        if (p.getName().getString().equalsIgnoreCase(name)) {
-                                            AtcEngine.clearInvestigationsForPlayer(p.getUUID());
-                                            break;
-                                        }
-                                    }
-                                    feedback(ctx.getSource(), "message.attracttochat.command.ignore_added", name);
-                                }
-                            }
-                            return 1;
-                        })))
+                        .executes(ctx -> addIgnoredPlayer(ctx.getSource(),
+                            StringArgumentType.getString(ctx, "player_name")))))
                 .then(Commands.literal("remove")
+                    .then(Commands.literal("@a")
+                        .executes(ctx -> removeIgnoredPlayer(ctx.getSource(), "@a")))
                     .then(Commands.argument("player_name", StringArgumentType.word())
                         .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(AttractToChatConfig.COMMON.ignoredPlayers.get(), builder))
-                        .executes(ctx -> {
-                            String name = StringArgumentType.getString(ctx, "player_name");
-                            List<String> list = ensureMutable(AttractToChatConfig.COMMON.ignoredPlayers.get());
-                            if (removeIgnoreCase(list, name)) {
-                                AttractToChatConfig.COMMON.ignoredPlayers.set(list);
-                                if (!saveConfig(ctx.getSource(), AtcEngine::refreshPlayerRules)) return 0;
-                                if (name.equalsIgnoreCase("@a")) {
-                                    feedback(ctx.getSource(), "message.attracttochat.command.ignore_all_removed");
-                                } else {
-                                    feedback(ctx.getSource(), "message.attracttochat.command.ignore_removed", name);
-                                }
-                            } else {
-                                feedback(ctx.getSource(), "message.attracttochat.command.ignore_not_found", name);
-                            }
-                            return 1;
-                        }))))
+                        .executes(ctx -> removeIgnoredPlayer(ctx.getSource(),
+                            StringArgumentType.getString(ctx, "player_name"))))))
 
             .then(Commands.literal("feature")
                 .requires(src -> src.hasPermission(2))
@@ -249,49 +216,21 @@ public final class AtcCommand {
             .then(Commands.literal("trollmode")
                 .requires(src -> src.hasPermission(2))
                 .then(Commands.literal("add")
+                    .then(Commands.literal("@a")
+                        .executes(ctx -> addTrollPlayer(ctx.getSource(), "@a")))
                     .then(Commands.argument("player_name", StringArgumentType.word())
-                        .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(Arrays.asList(ctx.getSource().getServer().getPlayerNames()), builder))
-                        .executes(ctx -> {
-                            String name = StringArgumentType.getString(ctx, "player_name");
-                            List<String> list = ensureMutable(AttractToChatConfig.COMMON.trollPlayers.get());
-                            if (containsIgnoreCase(list, name)) {
-                                feedback(ctx.getSource(), "message.attracttochat.command.troll_exists", name);
-                                return 0;
-                            }
-                            list.add(name);
-                            AttractToChatConfig.COMMON.trollPlayers.set(list);
-                            if (!saveConfig(ctx.getSource(), AtcEngine::refreshPlayerRules)) return 0;
-                            feedback(ctx.getSource(), "message.attracttochat.command.troll_added", name);
-                            return 1;
-                        })))
+                        .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
+                            Arrays.asList(ctx.getSource().getServer().getPlayerNames()), builder))
+                        .executes(ctx -> addTrollPlayer(ctx.getSource(),
+                            StringArgumentType.getString(ctx, "player_name")))))
                 .then(Commands.literal("remove")
+                    .then(Commands.literal("@a")
+                        .executes(ctx -> clearTrollPlayers(ctx.getSource())))
                     .then(Commands.argument("player_name", StringArgumentType.word())
-                        .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(AttractToChatConfig.COMMON.trollPlayers.get(), builder))
-                        .executes(ctx -> {
-                            String name = StringArgumentType.getString(ctx, "player_name");
-                            List<String> list = ensureMutable(AttractToChatConfig.COMMON.trollPlayers.get());
-                            if (!removeIgnoreCase(list, name)) {
-                                feedback(ctx.getSource(), "message.attracttochat.command.troll_not_found", name);
-                                return 0;
-                            }
-                            AttractToChatConfig.COMMON.trollPlayers.set(list);
-                            if (!saveConfig(ctx.getSource(), AtcEngine::refreshPlayerRules)) return 0;
-
-                            ServerPlayer online = ctx.getSource().getServer()
-                                .getPlayerList().getPlayerByName(name);
-                            if (online != null) {
-                                AtcEngine.clearInvestigationsForPlayer(online.getUUID());
-                            } else {
-                                for (ServerPlayer p : ctx.getSource().getServer().getPlayerList().getPlayers()) {
-                                    if (p.getName().getString().equalsIgnoreCase(name)) {
-                                        AtcEngine.clearInvestigationsForPlayer(p.getUUID());
-                                        break;
-                                    }
-                                }
-                            }
-                            feedback(ctx.getSource(), "message.attracttochat.command.troll_removed", name);
-                            return 1;
-                        })))
+                        .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
+                            AttractToChatConfig.COMMON.trollPlayers.get(), builder))
+                        .executes(ctx -> removeTrollPlayer(ctx.getSource(),
+                            StringArgumentType.getString(ctx, "player_name")))))
                 .then(Commands.literal("list").executes(ctx -> showTrollStatus(ctx.getSource()))))
             .then(Commands.literal("preset")
                 .requires(src -> src.hasPermission(2))
@@ -400,6 +339,10 @@ public final class AtcCommand {
                 src.sendSuccess(ServerTranslations.component(src, "message.attracttochat.command.status_mobspeed_max", AttractToChatConfig.COMMON.mobSpeedMax.get()), false);
                 if (Platform.getHelper().isModLoaded("walkietalkie")) {
                     src.sendSuccess(ServerTranslations.component(src, "message.attracttochat.command.status_walkiechat_compat", AttractToChatConfig.COMMON.walkieChatCompat.get()), false);
+                    src.sendSuccess(ServerTranslations.component(src, "message.attracttochat.command.status_walkiechat_detail",
+                        com.bielzinrx.attracttochat.compat.WalkieChatCompat.integrationActive(),
+                        com.bielzinrx.attracttochat.compat.WalkieChatCompat.isBlockRelayAvailable(),
+                        com.bielzinrx.attracttochat.compat.WalkieChatCompat.isCallbackApiAvailable()), false);
                 }
                 src.sendSuccess(ServerTranslations.component(src, "message.attracttochat.command.status_footer"), false);
                 return 1;
@@ -849,9 +792,92 @@ public final class AtcCommand {
         return 1;
     }
 
+    private static int addIgnoredPlayer(CommandSourceStack src, String name) {
+        List<String> list = ensureMutable(AttractToChatConfig.COMMON.ignoredPlayers.get());
+        if (containsIgnoreCase(list, name)) {
+            feedback(src, "message.attracttochat.command.ignore_exists", name);
+            return 1;
+        }
+        list.add(name);
+        AttractToChatConfig.COMMON.ignoredPlayers.set(list);
+        if (!saveConfig(src, AtcEngine::refreshPlayerRules)) return 0;
+        if (name.equalsIgnoreCase("@a")) {
+            feedback(src, "message.attracttochat.command.ignore_all_added",
+                AtcEngine.clearSoundInvestigations());
+            return 1;
+        }
+        for (ServerPlayer p : src.getServer().getPlayerList().getPlayers()) {
+            if (p.getName().getString().equalsIgnoreCase(name)) {
+                AtcEngine.clearInvestigationsForPlayer(p.getUUID());
+                break;
+            }
+        }
+        feedback(src, "message.attracttochat.command.ignore_added", name);
+        return 1;
+    }
+
+    private static int removeIgnoredPlayer(CommandSourceStack src, String name) {
+        List<String> list = ensureMutable(AttractToChatConfig.COMMON.ignoredPlayers.get());
+        if (!removeIgnoreCase(list, name)) {
+            feedback(src, "message.attracttochat.command.ignore_not_found", name);
+            return 1;
+        }
+        AttractToChatConfig.COMMON.ignoredPlayers.set(list);
+        if (!saveConfig(src, AtcEngine::refreshPlayerRules)) return 0;
+        if (name.equalsIgnoreCase("@a")) {
+            feedback(src, "message.attracttochat.command.ignore_all_removed");
+        } else {
+            feedback(src, "message.attracttochat.command.ignore_removed", name);
+        }
+        return 1;
+    }
+
+    private static int addTrollPlayer(CommandSourceStack src, String name) {
+        List<String> list = ensureMutable(AttractToChatConfig.COMMON.trollPlayers.get());
+        if (containsIgnoreCase(list, name)) {
+            feedback(src, "message.attracttochat.command.troll_exists", name);
+            return 0;
+        }
+        list.add(name);
+        AttractToChatConfig.COMMON.trollPlayers.set(list);
+        if (!saveConfig(src, AtcEngine::refreshPlayerRules)) return 0;
+        feedback(src, "message.attracttochat.command.troll_added", name);
+        return 1;
+    }
+
+    private static int clearTrollPlayers(CommandSourceStack src) {
+        List<String> list = ensureMutable(AttractToChatConfig.COMMON.trollPlayers.get());
+        int cleared = list.size();
+        list.clear();
+        AttractToChatConfig.COMMON.trollPlayers.set(list);
+        if (!saveConfig(src, AtcEngine::refreshPlayerRules)) return 0;
+        for (ServerPlayer p : src.getServer().getPlayerList().getPlayers()) {
+            AtcEngine.clearInvestigationsForPlayer(p.getUUID());
+        }
+        feedback(src, "message.attracttochat.command.troll_all_removed", cleared);
+        return 1;
+    }
+
+    private static int removeTrollPlayer(CommandSourceStack src, String name) {
+        List<String> list = ensureMutable(AttractToChatConfig.COMMON.trollPlayers.get());
+        if (!removeIgnoreCase(list, name)) {
+            feedback(src, "message.attracttochat.command.troll_not_found", name);
+            return 0;
+        }
+        AttractToChatConfig.COMMON.trollPlayers.set(list);
+        if (!saveConfig(src, AtcEngine::refreshPlayerRules)) return 0;
+        for (ServerPlayer p : src.getServer().getPlayerList().getPlayers()) {
+            if (p.getName().getString().equalsIgnoreCase(name)) {
+                AtcEngine.clearInvestigationsForPlayer(p.getUUID());
+                break;
+            }
+        }
+        feedback(src, "message.attracttochat.command.troll_removed", name);
+        return 1;
+    }
+
     private static List<String> ignoreAddSuggestions(CommandSourceStack source) {
         List<String> suggestions = new ArrayList<>();
-        suggestions.add("@a");
         suggestions.addAll(Arrays.asList(source.getServer().getPlayerNames()));
         return suggestions;
     }

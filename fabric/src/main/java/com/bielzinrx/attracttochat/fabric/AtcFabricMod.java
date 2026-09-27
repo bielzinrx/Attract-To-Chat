@@ -8,10 +8,8 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.network.chat.PlayerChatMessage;
 import net.minecraft.resources.ResourceLocation;
 
 public final class AtcFabricMod implements ModInitializer {
@@ -20,15 +18,11 @@ public final class AtcFabricMod implements ModInitializer {
 
     private static final int CLIENT_PROTOCOL = 1;
 
-    private static final ThreadLocal<PlayerChatMessage> COMMAND_MESSAGE =
-        new ThreadLocal<>();
-
     @Override
     public void onInitialize() {
         AttractToChat.init();
 
         registerClientPresence();
-        registerChatEvents();
 
         CommandRegistrationCallback.EVENT.register(
             (dispatcher, registryAccess, environment) ->
@@ -42,10 +36,8 @@ public final class AtcFabricMod implements ModInitializer {
         ServerLifecycleEvents.SERVER_STOPPING.register(server ->
             AtcEngine.onServerStop());
 
-        ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
-            COMMAND_MESSAGE.remove();
-            AttractToChat.setServer(null);
-        });
+        ServerLifecycleEvents.SERVER_STOPPED.register(server ->
+            AttractToChat.setServer(null));
 
         ServerTickEvents.END_SERVER_TICK.register(server ->
             AtcEngine.onServerTick());
@@ -93,38 +85,5 @@ public final class AtcFabricMod implements ModInitializer {
             throw new IllegalStateException(
                 "The Fabric receiver attracttochat:client_presence was already registered.");
         }
-    }
-
-    private static void registerChatEvents() {
-        ServerMessageEvents.ALLOW_COMMAND_MESSAGE.register(
-            (message, source, params) -> {
-                COMMAND_MESSAGE.set(message);
-                return true;
-            });
-
-        ServerMessageEvents.ALLOW_CHAT_MESSAGE.register(
-            (message, sender, params) -> {
-                PlayerChatMessage commandMessage = COMMAND_MESSAGE.get();
-                COMMAND_MESSAGE.remove();
-
-                if (commandMessage == message) {
-                    return true;
-                }
-
-                String content = message.signedContent() == null
-                    ? null
-                    : message.signedContent().plain();
-
-                if (content == null || content.isBlank()) {
-                    return true;
-                }
-
-                if (AtcEngine.handleChatCancellable(sender, content)) {
-                    return false;
-                }
-
-                AtcEngine.handleChatAfter(sender, content);
-                return true;
-            });
     }
 }

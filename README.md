@@ -16,72 +16,109 @@
 </p>
 
 <p align="center">
-  <strong>Minecraft 1.19.2 &amp; 1.20.1 · Java 17 · Server-side with optional client installation</strong><br>
-  <em>Fabric API is required: 0.76.0+ for Minecraft 1.19.2 and 0.92.7+ for Minecraft 1.20.1.</em>
+  <strong>Minecraft 1.19.2 · Java 17 · Server-side with optional client installation</strong><br>
+  <em>The Fabric version requires Fabric API 0.76.0 or newer.</em>
 </p>
 
-***
+---
 
-## ◈ The idea
+## ◈ Messages Become Sound
 
-You're caving. It's been a good run — diamonds, iron, half a stack of lapis. Your friend types a joke in chat. You laugh, type back: _"holy crap this cave is HUGE"_
-
-The typing stops. Somewhere in the dark, something stops too.
-
-In **Attract to Chat**, chat is sound. Every message you type is a voice in the world — and the world listens. Mobs hear it, walk to where you said it and start investigating the area. That is the whole mod. And it quietly changes every conversation your server will ever have.
+Type a message. Nearby mobs hear it, walk to where you said it and start investigating the area.
 
 ![Chat attraction demonstration](https://res.cloudinary.com/diexbbgwe/image/upload/v1785719396/chat_attraction_bri8qk.gif)
 
-Three rules keep it feeling alive:
+Three rules make it feel alive:
 
-*   **Shouting is loud.** CAPS and `!!!` carry your voice further — and bring company faster.
-*   **Walls are quiet.** A cave, a basement, a walled base: safe rooms for quiet people. (Yes — even that cave. Especially that cave.)
-*   **Mobs stay mobs.** Fighting mobs keep their real target, villagers still flee zombies, sleeping villagers can wake up. Vanilla AI is never replaced. The world just… pays attention now.
+* **CAPS and `!!!` shout** — louder messages travel farther and mobs react faster.
+* **Walls muffle** — caves and houses are safer places to talk than open fields.
+* **Mobs stay mobs** — fighting mobs keep their real targets, villagers still flee zombies, sleeping villagers can wake up. Vanilla AI is untouched.
 
-***
+---
 
-## ◈ A tool, not just a trap
+## ◈ More Than Just Danger
 
-Here's the twist: the same rule that gets you killed can work for you.
+Tired of struggling to move villagers with boats and minecarts?
 
-Tired of dragging villagers around with boats and minecarts? **Talk to them** — call them toward farms, bases and trading halls. And while you are at it:
+Use chat to call them toward farms, bases and trading halls. And while you are at it:
 
-*   lure hostile mobs away from a friend in trouble;
-*   fake a distraction — and slip away while they investigate;
-*   turn chat itself into a stealth mechanic on survival and horror servers;
-*   run "Don't Scream" style challenges;
-*   attract creatures added by other mods;
-*   and yes: punish the player who never stops shouting.
+* lure hostile mobs away from a friend in trouble;
+* fake a distraction — and slip away while they investigate;
+* turn chat itself into a stealth mechanic on survival and horror servers;
+* run "Don't Scream" style challenges;
+* attract compatible creatures added by other mods;
+* and yes: punish the player who never stops shouting.
 
 ![CAPS loudness demonstration](https://res.cloudinary.com/diexbbgwe/image/upload/v1785719396/caps_dnnpi4.gif)
 
-***
+---
 
 ## ◈ Troll Mode
 
 **The admin's favorite button.**
 
-Secretly mark a player and every message they type becomes irresistible — mobs hear them from farther away and react faster. No glow. No warning. Just a player slowly realizing that the zombies always know exactly where they are.
-
-They will never know why.
+Secretly mark a player and every message they type becomes irresistible — mobs hear them from farther away and react faster. They will never know why the zombies keep finding them.
 
 ![Troll Mode demonstration](https://res.cloudinary.com/diexbbgwe/image/upload/v1785719396/troll_opvctf.gif)
 
-***
+---
 
-## ◈ Make it yours
+## ◈ Make It Yours
 
 Adjust how intense the mod feels without touching the core mechanic — everything applies live, no restart needed.
 
-**Presets** — swap the whole feel with one command: **Safe**, **Casual**, **Chaos** or **Silent** — or save your own.
+**Presets**<br>
+Swap the whole feel with one command: **Safe**, **Casual**, **Chaos** or **Silent** — or save your own custom configurations.
 
-**Vocal fatigue** _(off by default)_ — shout too much and you go hoarse: a short mute plus curious mobs coming to check on you. Milk clears it instantly, honey helps, death resets it.
+**Vocal Fatigue**<br>
+Shout too much and you go hoarse: a 30-second mute plus curious mobs coming to investigate. Milk clears it instantly, honey helps and death resets it. OFF by default.
 
-**Anti-spam** _(off by default)_ — rapid-fire messages stop attracting mobs. Chat is never cancelled or hidden; it just stops being loud.
+**Anti-Spam**<br>
+Rapid-fire messages stop attracting mobs. Chat itself is never cancelled or hidden — it is only ignored for attraction. Troll Mode players have a bypass. OFF by default.
 
-Use `/atc help` to see everything the mod can do.
+Use `/atc help` to view the available commands.
 
-***
+---
+
+## ◈ Walkie-Chat Compatibility
+
+**Runs side by side, zero conflicts.**
+
+With [Walkie-Chat](https://modrinth.com/mod/walkie-chat) by Theus452 (mod id `walkietalkie`) installed on 1.19.2, both mods coexist cleanly:
+
+* **No double attraction** — one message pulling mobs toward one spot counts once per second, however many paths reported it.
+* **Normal chat keeps attracting mobs** — the sound ecosystem is untouched while the walkie talkies do their job.
+* **Full walkie talkie integration is 1.20.1-only** — proximity chat attracting mobs and Walkie Block stations require the Walkie-Chat builds that ship the integration API (Minecraft 1.20.1).
+
+`/atc status` reports the Walkie-Chat state when the mod is present; `/atc walkiechat compat enable|disable` gates the integration live. Works with Forge and Fabric.
+
+---
+
+## ◈ Quick Start
+
+1. Drop the JAR in your server's `mods` folder — Fabric servers also need Fabric API.
+2. Restart the server.
+3. Type in chat. Watch what happens.
+
+That's it — players join without installing anything. The mod runs entirely on the server.
+
+| Loader | Attract to Chat | Additional dependency |
+|:--|:--|:--|
+| **Forge 1.19.2** | **2.1.3** | None |
+| **Fabric 1.19.2** | **2.1.3** | [Fabric API 0.76.0 or newer](https://modrinth.com/mod/fabric-api/versions?g=1.19.2) |
+
+Do not mix Forge and Fabric files.
+
+**Optional client install** unlocks personal investigation-path particle controls:
+
+```text
+/atc client particles enable
+/atc client particles disable
+```
+
+Particles are opt-in per player: nobody sees them until `/atc client particles enable` is run (requires the client mod).
+
+---
 
 ## ◈ For Server Admins
 
@@ -101,14 +138,14 @@ Every option lives in `config/attracttochat-common.json` and applies live — ed
 * `enableVocalFatigue` / `enableAntiSpam` — OFF by default
 * `enableCapsFeature` — ON by default
 * `enableCapsFeature` — ON by default
-* `walkieChatCompat` — ON by default: optional Walkie-Chat integration (proximity chat, block stations) — Minecraft 1.20.1
-* `walkieChatProximityRange` / `walkieChatProximityCapsBonus` — 15 / 10 blocks: attraction range for Walkie-Chat proximity chat (Minecraft 1.20.1)
+* `walkieChatCompat` — ON by default: Walkie-Chat coexistence guard (full walkie talkie integration is 1.20.1-only)
+* `walkieChatProximityRange` / `walkieChatProximityCapsBonus` — 15 / 10 blocks: used by the Walkie-Chat integration on 1.20.1
 
 **Command reference**
 
 ```text
 /atc status
-/atc walkiechat on|off
+/atc walkiechat compat enable|disable
 /atc config list
 /atc config info <option>
 /atc config hearingrange <value>
@@ -118,55 +155,53 @@ Every option lives in `config/attracttochat-common.json` and applies live — ed
 /atc preset set <name>
 ```
 
-***
+**Presets** — `safe` 24/4/20t · `casual` 32/6/15t · `chaos` 60/14/5t · `silent` 30/5/20t
 
-## ◈ Compatibility
-
-Plays well with others — no setup, no conflicts:
-
-*   [Walkie-Chat](https://www.curseforge.com/minecraft/mc-mods/walkie-chat) _(Minecraft 1.20.1)_ — walkie talkies join the sound world: proximity chat attracts mobs, and hostile mobs that reach a Walkie Block station will smash it. On 1.19.2 both mods run side by side, no conflicts.
-*   **Voice-chat mods** — Attract to Chat listens to typed words, not voice. Both run on the same server.
-*   **AI mods** — the investigation goal walks beside vanilla AI; mobs in combat keep their real target.
-*   **Modded mobs** — creatures added by other mods can hear you too.
-
-***
-
-## ◈ Getting started
-
-1.  Drop the JAR in your server's `mods` folder — Fabric servers also need Fabric API.
-2.  Restart the server.
-3.  Say something. Watch what answers.
-
-That's it — players join without installing anything.
-
-| Minecraft |Loader |Attract to Chat |Additional dependency      |
-| --------- |------ |--------------- |-------------------------- |
-| <strong>1.20.1</strong> |Forge  |<strong>2.1.2</strong> |None                       |
-| <strong>1.20.1</strong> |Fabric |<strong>2.1.2</strong> |<a href="https://www.curseforge.com/minecraft/mc-mods/fabric-api/files" target="_blank" rel="nofollow">Fabric API 0.92.7 or newer</a> |
-| <strong>1.19.2</strong> |Forge  |<strong>2.1.2</strong> |None                       |
-| <strong>1.19.2</strong> |Fabric |<strong>2.1.2</strong> |<a href="https://www.curseforge.com/minecraft/mc-mods/fabric-api/files" target="_blank" rel="nofollow">Fabric API 0.76.0 or newer</a> |
-
-Do not mix Forge and Fabric files.
-
-**Optional client install** — adds a personal switch for the investigation particles (`/atc client particles enable|disable`). Nobody sees them until they ask.
-
-***
+---
 
 ## ◈ FAQ
 
-**Do players need the mod installed?** No. The magic runs on the server.
+### Do players need Attract to Chat installed?
 
-**Does it replace Minecraft's mob AI?** No — it adds an investigation goal alongside it. Mobs already in combat keep their real target; villagers still flee zombies.
+No. The core gameplay mechanics run on the server.
 
-**Do walls really matter?** Yes. Solid terrain muffles messages.
+### What does the optional client installation add?
 
-**Does it work with other mods?** Yes — walkie talkies, voice-chat mods, AI mods and modded creatures all run alongside it.
+Personal investigation-path particle controls.
 
-**Do commands attract mobs?** No — messages starting with `!`, `@`, `#` or `/` are never heard.
+### Does Attract to Chat replace Minecraft's mob AI?
 
-**Modpacks?** Yes, please — MIT License.
+No. It adds an investigation goal alongside vanilla AI — fighting mobs keep their real targets, villagers still flee zombies, sleeping villagers can wake up, and flying, aquatic and jumping mobs use movement that fits them. Invalid or unreachable destinations are simply ignored.
 
-***
+### Do walls affect hearing?
+
+Yes. Solid terrain can muffle messages and reduce how far mobs can hear them.
+
+### Does it support modded mobs?
+
+Compatible creatures added by other mods can be used with the attraction system.
+
+### Does it work with voice-chat mods like Voiceless Survival?
+
+Attract to Chat reacts to text chat, not voice. The hooks are distinct, so both mods can run on the same server without conflict.
+
+### Does it work with AI mods like Enhanced AI?
+
+Yes. Attract to Chat adds an investigation goal without replacing vanilla mob AI. Mobs already in combat keep their real target.
+
+### Does it work with Walkie-Chat?
+
+Yes — on 1.19.2 both mods run side by side without conflicts: a walkie conversation never counts twice and normal chat keeps attracting mobs. The full integration (proximity chat attracting mobs, Walkie Block stations) is available on Minecraft 1.20.1.
+
+### Do commands and team chat attract mobs?
+
+No. Messages starting with `!`, `@`, `#` or `/` never attract anything.
+
+### Can I use Attract to Chat in a modpack?
+
+Yes. Attract to Chat is released under the **MIT License**.
+
+---
 
 ## ◈ Support the Project
 
@@ -179,7 +214,6 @@ Do not mix Forge and Fabric files.
   <a href="https://github.com/bielzinrx/Attract-To-Chat/issues"><img src="https://img.shields.io/badge/GitHub-Report_a_Bug-181717?style=flat-square&amp;logo=github&amp;logoColor=white" alt="Report a Bug"></a>
   <a href="https://github.com/bielzinrx/Attract-To-Chat"><img src="https://img.shields.io/badge/GitHub-Source_Code-181717?style=flat-square&amp;logo=github&amp;logoColor=white" alt="Source Code"></a>
   <a href="https://www.curseforge.com/minecraft/mc-mods/attract-to-chat"><img src="https://img.shields.io/badge/CurseForge-Project_Page-f16436?style=flat-square&amp;logo=curseforge&amp;logoColor=white" alt="CurseForge"></a>
-  <a href="https://modrinth.com/mod/attract-to-chat"><img src="https://img.shields.io/badge/Modrinth-Project_Page-1bd96a?style=flat-square&amp;logo=modrinth&amp;logoColor=white" alt="Modrinth"></a>
   <a href="https://www.planetminecraft.com/mod/attract-to-chat-mob-attraction-by-chat-messages/"><img src="https://cdn.jsdelivr.net/gh/VoxelForge-oss/voxicons@main/badges-248/badges/planet-minecraft.png" width="78" height="20" alt="Planet Minecraft"></a>
 </p>
 

@@ -1,6 +1,7 @@
 package com.bielzinrx.attracttochat.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(targets = "net.minecraft.world.entity.monster.Slime$SlimeMoveControl")
@@ -10,4 +11,7 @@ public interface SlimeMoveControlAccessorMixin {
 
     @Invoker("setWantedMovement")
     void atc_setWantedMovement(double speed);
+
+    @Accessor("jumpDelay")
+    void atc_setJumpDelay(int jumpDelay);
 }

@@ -3,12 +3,6 @@ package com.bielzinrx.attracttochat.config;
 import java.util.List;
 import java.util.function.Supplier;
 
-/**
- * Single source of truth for every numeric/boolean ATC option shown by
- * /atc config list and /atc config info. Each entry pairs the live config
- * value with its default and valid range, plus a lang key that carries the
- * human explanation (unit, example and tip) in the player's language.
- */
 public final class OptionCatalog {
 
     public record Option(String id, Supplier<Object> value, String defaultValue,

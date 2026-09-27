@@ -1,3 +1,21 @@
+# Attract to Chat 2.1.3
+
+Focus: Walkie-Chat integration repairs from auditing the actual reflection contracts shipped by Walkie-Chat builds.
+
+## New
+
+- `/atc trollmode remove @a` clears every Troll Mode mark at once and calms current investigations (mirrors the `/atc ignore ... @a` wildcard).
+
+## Fixed
+
+- Chat from a player holding a configured walkie talkie attracts mobs again on builds where Walkie-Chat ships no proximity callback API (all current 1.3.x builds). Previously ATC suppressed those messages while waiting for a callback that does not exist, so handheld Walkie-Talkie chat attracted nothing.
+- Hostile mobs now actually attack Walkie Block stations: the public attraction entry point deduces the block target, re-enabling station destruction, the "signal lost" notification and block-target behaviors (creeper ignition, enderman teleport).
+- The `walkieChatCompat` toggle (`/atc walkiechat compat enable|disable`) now gates every part of the integration — chat suppression, station-relayed targets and block-target behavior — symmetrically in both directions.
+- The reflective path used by Walkie-Chat's block relay now passes the same gatekeepers as normal chat: ignored players, vocal-fatigue mute and anti-spam windows apply, and per-player stats and debug feedback are recorded for relayed messages too.
+- Forge canceled-chat handling clarified: while the Walkie-Chat integration is on, canceled events still reach the engine, because Walkie-Chat cancels every chat event it re-routes (plain chat included); the suppression guards and shared gatekeepers inside the engine decide what actually attracts. With the integration off, cancellations from other mods are respected.
+- Walkie-Chat reflection resolves classes and methods once at startup instead of per message, logs one clear warning per missing capability instead of swallowing failures, and `/atc status` now reports the real integration state (active, block relay, proximity callback).
+- 1.19.2: no ATC-side suppression is applied to Walkie-Chat-routed chat, because the 1.19.2 Walkie-Chat builds never reflect into ATC — handheld and near-station chat attract through ATC's own pipeline, matching the documented conflict-free coexistence.
+
 # Attract to Chat 2.1.2
 
 Focus: per-player investigation particles and conflict-free Walkie-Chat coexistence.
