@@ -45,10 +45,9 @@ public final class AtcForgeMod {
     }
 
     private void onServerChat(net.minecraftforge.event.ServerChatEvent event) {
-        // Walkie-Chat 1.20.1 cancels every chat event while re-implementing
-        // delivery (radio, block station or proximity chat), so a canceled
-        // event must still reach the engine; WalkieChatCompat's guards skip
-        // the messages Walkie-Chat already routed elsewhere.
+        if (event.isCanceled() && !com.bielzinrx.attracttochat.compat.WalkieChatCompat.integrationActive()) {
+            return;
+        }
         ServerPlayer player = event.getPlayer();
         String message = event.getRawText();
 

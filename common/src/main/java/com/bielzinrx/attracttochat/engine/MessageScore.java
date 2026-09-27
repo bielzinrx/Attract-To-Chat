@@ -12,8 +12,7 @@ public final class MessageScore {
     public final double saturation;
     public final String factor;
     public final UUID playerUUID;
-    /** Identity of the raw message text, used by the attraction dedupe guard
-     *  so that two DIFFERENT messages are never falsely deduplicated. */
+
     public final int messageHash;
 
     public MessageScore(String msg, UUID playerUUID) {

@@ -30,7 +30,6 @@ public final class AttractToChat {
         serverInstance = server;
     }
 
-
     public static void init() {
         instance = new AttractToChat();
         LOGGER.info("[AttractToChat] Initializing Common...");
@@ -41,12 +40,6 @@ public final class AttractToChat {
         WalkieChatCompat.init();
     }
 
-    /**
-     * Resolves the effective range of Walkie-Chat's proximity chat for a
-     * given message. Walkie-Chat reflects on this method before broadcasting
-     * proximity chat, so CAPS-heavy messages reach farther. Returns the
-     * fallback range when the integration is disabled.
-     */
     public static double getEffectiveWalkieProximityRange(String message, double fallbackRange) {
         if (!AttractToChatConfig.COMMON.walkieChatCompat.get()) return fallbackRange;
         com.bielzinrx.attracttochat.engine.MessageScore score =
