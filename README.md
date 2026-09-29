@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://i.imgur.com/3U9J050.png" alt="Attract to Chat" width="100%">
+  <img src="https://i.imgur.com/smzhpln.png" alt="Attract to Chat" width="100%">
 </p>
 
 <p align="center">
