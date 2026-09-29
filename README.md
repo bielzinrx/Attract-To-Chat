@@ -237,6 +237,7 @@ Architectury multi-loader project — `./gradlew build` in the branch named afte
   <a href="https://github.com/bielzinrx/Attract-To-Chat"><img src="https://img.shields.io/badge/GitHub-Source-181717?style=flat-square&logo=github&logoColor=white" alt="Source"></a>
   <a href="https://www.curseforge.com/minecraft/mc-mods/attract-to-chat"><img src="https://img.shields.io/badge/CurseForge-Downloads-f16436?style=flat-square&logo=curseforge&logoColor=white" alt="CurseForge"></a>
   <a href="https://www.planetminecraft.com/mod/attract-to-chat-mob-attraction-by-chat-messages/"><img src="https://cdn.jsdelivr.net/gh/VoxelForge-oss/voxicons@main/badges-248/badges/planet-minecraft.png" width="78" height="20" alt="Planet Minecraft"></a><br>
+[![Modrinth](https://img.shields.io/badge/Modrinth-Downloads-1bd96a?style=flat-square&logo=modrinth&logoColor=white)](https://modrinth.com/mod/attract-to-chat)
 </p>
 
 <p align="center"><em>Created by bielzinrx · Walkie-Chat by Theus452 · Tested by kots_luffyzin</em></p>
