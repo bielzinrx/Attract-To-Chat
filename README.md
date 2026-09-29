@@ -233,7 +233,7 @@ Architectury multi-loader project — `./gradlew build` in the branch named afte
 
 <p align="center">
   <strong>MIT — free in any modpack, no need to ask. Credit appreciated, not required.</strong><br>
-  Bugs go to the <a href="https://github.com/bielzinrx/Attract-To-Chat/issues">issue tracker</a>  · ideas and questions too.<br><br>
+  Bugs, ideas and questions go to the <a href="https://github.com/bielzinrx/Attract-To-Chat/issues">issue tracker</a>.<br><br>
   <a href="https://github.com/bielzinrx/Attract-To-Chat"><img src="https://img.shields.io/badge/GitHub-Source-181717?style=flat-square&logo=github&logoColor=white" alt="Source"></a>
   <a href="https://www.curseforge.com/minecraft/mc-mods/attract-to-chat"><img src="https://img.shields.io/badge/CurseForge-Downloads-f16436?style=flat-square&logo=curseforge&logoColor=white" alt="CurseForge"></a>
   <a href="https://www.planetminecraft.com/mod/attract-to-chat-mob-attraction-by-chat-messages/"><img src="https://cdn.jsdelivr.net/gh/VoxelForge-oss/voxicons@main/badges-248/badges/planet-minecraft.png" width="78" height="20" alt="Planet Minecraft"></a><br>
